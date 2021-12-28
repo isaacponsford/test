@@ -1,7 +1,7 @@
-from flask import Flask
+from flask import Flask, render_template
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return "hello GitHub on both devices from laptop"
+    return render_template("index.html")
