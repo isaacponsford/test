@@ -24,10 +24,6 @@
 
 {% block body %}
 
-<script>
-    var iconsize = 12;
-</script>
-
 <h1>Plane Layout</h1>
 
 {% set icon_size = 28 %}
@@ -36,6 +32,18 @@
 {% set canvas_size = 36 %}
 {% set icon_line_width = 4 %}
 
+<div class="form">
+    <form action="/" method="POST">
+        <select name="planeChoice" id="planeChoice">
+            <option value="777">Boeing 777 300-ER</option>
+            <option value="emb145">Empier 145</option>
+        </select>
+        <input type="submit" value="Switch">
+    </form>
+</div>
+<br>
+<br>
+<br>
 <div class="form">
     <div class="plane-container">
     {% for row in planeLayout %}
@@ -72,6 +80,5 @@
     {% endfor %}
     </div>
 </div>
-
 
 {% endblock %}

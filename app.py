@@ -12,21 +12,28 @@ class airlineModels(db.Model):
     planeModel = db.Column(db.String(200), nullable=False)
     planeLayoutCSV = db.Column(db.String(200), nullable=False)
     
-planeMetrics = planeMetrics("777")
+#planeMetrics = planeMetrics("777")
 
 # noOfRows = planeMetrics[0]
 # capacity = planeMetrics[2]
 # capacityArray = planeMetrics[3]
 
-cTs = ['A','C','D']
-noOfColumns = planeMetrics[1]
-planeLayout = planeMetrics[4]
+# cTs = ['A','C','D']
+# noOfColumns = planeMetrics[1]
+# planeLayout = planeMetrics[4]
 
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
 
-    return render_template('index.html', planeLayout = planeLayout, noOfColumns = noOfColumns)
+    if request.method == 'POST':
+        planeOption = request.form['planeChoice']
+        Metrics = planeMetrics(planeOption)
+        noOfColumns = Metrics[1]
+        planeLayout = Metrics[4]
+        return render_template('index.html', planeLayout = planeLayout, noOfColumns = noOfColumns)
+    else:
+        return render_template('index.html')
 
 @app.route('/log-in')
 def login():
