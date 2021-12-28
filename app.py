@@ -3,22 +3,21 @@ from importCSV import planeMetrics
 
 app = Flask(__name__)
 
-planeMetrics = planeMetrics("emb145")
+planeMetrics = planeMetrics("777")
 
-noOfRows = planeMetrics[0]
+# noOfRows = planeMetrics[0]
+# capacity = planeMetrics[2]
+# capacityArray = planeMetrics[3]
+
+cTs = ['A','C','D']
 noOfColumns = planeMetrics[1]
-capacity = planeMetrics[2]
-capacityArray = planeMetrics[3]
-
-print(noOfRows)
-
 planeLayout = planeMetrics[4]
 
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
 
-    return render_template('index.html', planeLayout = planeLayout)
+    return render_template('index.html', planeLayout = planeLayout, noOfColumns = noOfColumns)
 
 @app.route('/log-in')
 def login():

@@ -32,6 +32,7 @@ def planeMetrics(csv_file):
                 
             rowLayout = row[1::]
             planeLayout.append(rowLayout)
+            
             noOfColumns = len(rowLayout)
             
             for seat in rowLayout:

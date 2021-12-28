@@ -2,12 +2,14 @@
 
 {% block head %}
 
+{% set noOfColumns = noOfColumns %}
+
 <style>
     .plane-container {
       display: inline-grid;
-      grid-template-columns: auto auto auto auto;
-      /* grid-auto-columns: 4; */
+      grid-template-columns: repeat({{noOfColumns}},auto);
       padding: 10px;
+      background-color: rgb(230, 230, 230);
     }
     .grid-item {
       background-color: rgba(255, 255, 255, 0.4);
@@ -16,46 +18,54 @@
       font-size: 30px;
       text-align: center;
     }
-    </style>
+</style>
 
 {% endblock %}
 
 {% block body %}
 
-<h1>Main Page</h1>
+<script>
+    var iconsize = 12;
+</script>
+
+<h1>Plane Layout</h1>
+
+{% set icon_size = 28 %}
+{% set icon_pad = 4 %}
+{% set icon_round = 25 %}
+{% set canvas_size = 36 %}
+{% set icon_line_width = 4 %}
 
 <div class="form">
-
     <div class="plane-container">
     {% for row in planeLayout %}
         {% for seat in row %}
-
             {% if seat == '1' %}
-            <svg width="45" height="45">
-                <rect x="5" y="5" rx="10" ry="10" width="35" height="35"
-                style="fill:white;stroke:rgb(0, 0, 255);stroke-width:5;opacity:1" />
+            <svg width={{canvas_size}} height={{canvas_size}}>
+                <rect x={{icon_pad}} y={{icon_pad}} rx={{icon_round}} ry={{icon_round}} width={{icon_size}} height={{icon_size}}
+                style="fill:white;stroke:rgb(0, 0, 255);stroke-width:{{icon_line_width}};opacity:1" />
             </svg>
             {% endif %}
             {% if seat == '2' %}
-            <svg width="45" height="45">
-                <rect x="5" y="5" rx="10" ry="10" width="35" height="35"
-                style="fill:white;stroke:rgb(25, 214, 25);stroke-width:5;opacity:1" />
+            <svg width={{canvas_size}} height={{canvas_size}}>
+                <rect x={{icon_pad}} y={{icon_pad}} rx={{icon_round}} ry={{icon_round}} width={{icon_size}} height={{icon_size}}
+                style="fill:white;stroke:rgb(25, 214, 25);stroke-width:{{icon_line_width}};opacity:1" />
             </svg>
             {% endif %}
             {% if seat == '3' %}
-            <svg width="45" height="45">
-                <rect x="5" y="5" rx="10" ry="10" width="35" height="35"
-                style="fill:white;stroke:rgb(214, 25, 25);stroke-width:5;opacity:1" />
+            <svg width={{canvas_size}} height={{canvas_size}}>
+                <rect x={{icon_pad}} y={{icon_pad}} rx={{icon_round}} ry={{icon_round}} width={{icon_size}} height={{icon_size}}
+                style="fill:white;stroke:rgb(214, 25, 25);stroke-width:{{icon_line_width}};opacity:1" />
             </svg>
             {% endif %}
             {% if seat == '4' %}
-            <svg width="45" height="45">
-                <rect x="5" y="5" rx="10" ry="10" width="35" height="35"
-                style="fill:white;stroke:rgb(150, 15, 228);stroke-width:5;opacity:1" />
+            <svg width={{canvas_size}} height={{canvas_size}}>
+                <rect x={{icon_pad}} y={{icon_pad}} rx={{icon_round}} ry={{icon_round}} width={{icon_size}} height={{icon_size}}
+                style="fill:white;stroke:rgb(150, 15, 229);stroke-width:{{icon_line_width}};opacity:1" />
             </svg>
             {% endif %}
             {% if seat == '' %}
-            <svg width="45" height="45"> </svg>
+            <svg width={{canvas_size}} height={{canvas_size}}> </svg>
             {% endif %}
 
         {% endfor %}
