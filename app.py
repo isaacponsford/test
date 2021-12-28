@@ -18,9 +18,7 @@ class airlineModels(db.Model):
 # capacity = planeMetrics[2]
 # capacityArray = planeMetrics[3]
 
-# cTs = ['A','C','D']
-# noOfColumns = planeMetrics[1]
-# planeLayout = planeMetrics[4]
+cTs = ['A','','C','D']
 
 
 @app.route('/', methods=['POST', 'GET'])
@@ -31,7 +29,7 @@ def index():
         Metrics = planeMetrics(planeOption)
         noOfColumns = Metrics[1]
         planeLayout = Metrics[4]
-        return render_template('index.html', planeLayout = planeLayout, noOfColumns = noOfColumns)
+        return render_template('index.html', planeLayout = planeLayout, noOfColumns = noOfColumns, cTs=cTs)
     else:
         return render_template('index.html')
 

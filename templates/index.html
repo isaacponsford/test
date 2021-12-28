@@ -18,6 +18,13 @@
       font-size: 30px;
       text-align: center;
     }
+    h3 {
+        text-align: center;
+        font-family:verdana;
+        font-size: medium;
+    }
+
+
 </style>
 
 {% endblock %}
@@ -46,6 +53,11 @@
 <br>
 <div class="form">
     <div class="plane-container">
+
+    {% for title in cTs %}
+        <h3>{{title}}</h3>
+    {% endfor %}
+
     {% for row in planeLayout %}
         {% for seat in row %}
             {% if seat == '1' %}
