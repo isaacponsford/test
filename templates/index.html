@@ -1,20 +1,23 @@
 {% extends 'base.html' %}
 
 {% block head %}
+
 <style>
     .plane-container {
       display: inline-grid;
       grid-template-columns: auto auto auto auto;
+      /* grid-auto-columns: 4; */
       padding: 10px;
     }
     .grid-item {
-      background-color: rgba(255, 255, 255, 0.8);
-      border: 1px solid rgba(0, 0, 0, 0.8);
+      background-color: rgba(255, 255, 255, 0.4);
+      border: 1px solid rgba(0, 0, 0, 0.4);
       padding: 20px;
       font-size: 30px;
       text-align: center;
     }
     </style>
+
 {% endblock %}
 
 {% block body %}
@@ -28,20 +31,33 @@
         {% for seat in row %}
 
             {% if seat == '1' %}
-            <svg width="70" height="70">
-                <rect x="5" y="5" rx="10" ry="10" width="50" height="50"
-                style="fill:white;stroke:rgb(0, 0, 255);stroke-width:8;opacity:1" />
+            <svg width="45" height="45">
+                <rect x="5" y="5" rx="10" ry="10" width="35" height="35"
+                style="fill:white;stroke:rgb(0, 0, 255);stroke-width:5;opacity:1" />
             </svg>
             {% endif %}
             {% if seat == '2' %}
-            <svg width="70" height="70">
-                <rect x="5" y="5" rx="10" ry="10" width="50" height="50"
-                style="fill:white;stroke:rgb(25, 218, 25);stroke-width:8;opacity:1" />
+            <svg width="45" height="45">
+                <rect x="5" y="5" rx="10" ry="10" width="35" height="35"
+                style="fill:white;stroke:rgb(25, 214, 25);stroke-width:5;opacity:1" />
+            </svg>
+            {% endif %}
+            {% if seat == '3' %}
+            <svg width="45" height="45">
+                <rect x="5" y="5" rx="10" ry="10" width="35" height="35"
+                style="fill:white;stroke:rgb(214, 25, 25);stroke-width:5;opacity:1" />
+            </svg>
+            {% endif %}
+            {% if seat == '4' %}
+            <svg width="45" height="45">
+                <rect x="5" y="5" rx="10" ry="10" width="35" height="35"
+                style="fill:white;stroke:rgb(150, 15, 228);stroke-width:5;opacity:1" />
             </svg>
             {% endif %}
             {% if seat == '' %}
-            <svg width="70" height="70"> </svg>
+            <svg width="45" height="45"> </svg>
             {% endif %}
+
         {% endfor %}
     {% endfor %}
     </div>

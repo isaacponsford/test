@@ -10,6 +10,8 @@ noOfColumns = planeMetrics[1]
 capacity = planeMetrics[2]
 capacityArray = planeMetrics[3]
 
+print(noOfRows)
+
 planeLayout = planeMetrics[4]
 
 
