@@ -1,8 +1,17 @@
 from flask import Flask, render_template, request, redirect
+from flask_sqlalchemy import SQLAlchemy
 from importCSV import planeMetrics
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///seatSelector.db'
+db = SQLAlchemy(app)
 
+class airlineModels(db.Model):
+    planeID = db.Column(db.Integer, primary_key=True)
+    planeAirline = db.Column(db.String(200), nullable=False)
+    planeModel = db.Column(db.String(200), nullable=False)
+    planeLayoutCSV = db.Column(db.String(200), nullable=False)
+    
 planeMetrics = planeMetrics("777")
 
 # noOfRows = planeMetrics[0]
