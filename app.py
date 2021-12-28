@@ -4,4 +4,4 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return "hello GitHub"
+    return "hello GitHub on both devices"
