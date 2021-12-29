@@ -12,13 +12,6 @@ class airlineModels(db.Model):
     planeModel = db.Column(db.String(200), nullable=False)
     planeLayoutCSV = db.Column(db.String(200), nullable=False)
     
-# noOfRows = planeMetrics[0]
-# capacity = planeMetrics[2]
-# capacityArray = planeMetrics[3]
-
-cTs = ['A','C','D']
-cTs = ['','A','B','C','D','E','F','G','J','K','L']
-
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
@@ -29,7 +22,9 @@ def index():
         noOfColumns = Metrics[1]
         planeLayout = Metrics[4]
         rowTitles = Metrics[5]
-        return render_template('index.html', planeLayout = planeLayout, noOfColumns = noOfColumns, cTs=cTs, rowTitles=rowTitles)
+        columnTitles = Metrics[6]
+
+        return render_template('index.html', planeLayout = planeLayout, noOfColumns = noOfColumns, cTs=columnTitles, rowTitles=rowTitles)
     else:
         return render_template('index.html')
 

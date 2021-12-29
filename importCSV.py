@@ -21,20 +21,24 @@ def planeMetrics(csv_file):
     noOfColumns = 0
     capacityArray = []
     planeLayout = []
-
-    columnTitles = []
     rowTitles = []
 
     with open(csv_file, 'r', encoding='utf-8-sig') as file:
         reader = csv.reader(file)
+
+        columnTitles = next(reader)
+
         for row in reader:
             
             rowNumber = row[0]
             rowTitles.append(rowNumber)
 
-            if int(rowNumber) > noOfRows:
-                noOfRows = int(rowNumber)
-                
+            try:
+                if int(rowNumber) > noOfRows:
+                    noOfRows = int(rowNumber)
+            except:
+                pass
+
             rowLayout = row[1::]
             planeLayout.append(rowLayout)
 
@@ -47,6 +51,7 @@ def planeMetrics(csv_file):
     
 
 
-    return[noOfRows, noOfColumns, capacity, capacityArray, planeLayout, rowTitles]
+    return[noOfRows, noOfColumns, capacity, capacityArray, planeLayout, rowTitles,columnTitles]
 
-print(os.getcwd())
+Metrics = planeMetrics("777")
+noOfColumns = Metrics[1]
