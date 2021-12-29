@@ -1,4 +1,5 @@
 import csv
+import os
 
 def incrementClassCapacity(classNum, capacityArray):
 
@@ -14,30 +15,38 @@ def incrementClassCapacity(classNum, capacityArray):
 
 def planeMetrics(csv_file):
 
-    csv_file = "C:/Users/Alan/Documents/_Isaac/planeLayouts/" + csv_file + ".csv"
+    csv_file = csv_file + ".csv"
     capacity = 0
     noOfRows = 0
     noOfColumns = 0
     capacityArray = []
     planeLayout = []
 
+    columnTitles = []
+    rowTitles = []
+
     with open(csv_file, 'r', encoding='utf-8-sig') as file:
         reader = csv.reader(file)
         for row in reader:
             
-            rowNumber = int(row[0])
-            
-            if rowNumber > noOfRows:
-                noOfRows = rowNumber
+            rowNumber = row[0]
+            rowTitles.append(rowNumber)
+
+            if int(rowNumber) > noOfRows:
+                noOfRows = int(rowNumber)
                 
             rowLayout = row[1::]
             planeLayout.append(rowLayout)
-            
+
             noOfColumns = len(rowLayout)
             
             for seat in rowLayout:
                 if seat != '':
                     capacity = capacity + 1
                     incrementClassCapacity(seat, capacityArray)
+    
 
-    return[noOfRows, noOfColumns, capacity, capacityArray, planeLayout]
+
+    return[noOfRows, noOfColumns, capacity, capacityArray, planeLayout, rowTitles]
+
+print(os.getcwd())
