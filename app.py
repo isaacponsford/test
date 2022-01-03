@@ -22,6 +22,7 @@ def planeLayoutPage():
 
     if request.method == 'POST':
         planeOption = request.form['planeChoice']
+        
         Metrics = planeMetrics(planeOption)
         noOfColumns = Metrics[1]
         planeLayout = Metrics[4]

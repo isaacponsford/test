@@ -1,5 +1,4 @@
 import csv
-import os
 
 def incrementClassCapacity(classNum, capacityArray):
 
