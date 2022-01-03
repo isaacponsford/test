@@ -15,7 +15,7 @@ def incrementClassCapacity(classNum, capacityArray):
 
 def planeMetrics(csv_file):
 
-    csv_file = csv_file + ".csv"
+    csv_file = "plane_layouts/" + csv_file + ".csv"
     capacity = 0
     noOfRows = 0
     noOfColumns = 0
@@ -52,6 +52,3 @@ def planeMetrics(csv_file):
 
 
     return[noOfRows, noOfColumns, capacity, capacityArray, planeLayout, rowTitles,columnTitles]
-
-Metrics = planeMetrics("777")
-noOfColumns = Metrics[1]

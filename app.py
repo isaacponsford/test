@@ -4,6 +4,7 @@ from importCSV import planeMetrics
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///seatSelector.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 class airlineModels(db.Model):
@@ -12,9 +13,12 @@ class airlineModels(db.Model):
     planeModel = db.Column(db.String(200), nullable=False)
     planeLayoutCSV = db.Column(db.String(200), nullable=False)
     
-
 @app.route('/', methods=['POST', 'GET'])
 def index():
+        return render_template('blank.html')
+
+@app.route('/plane-layouts', methods=['POST', 'GET'])
+def planeLayoutPage():
 
     if request.method == 'POST':
         planeOption = request.form['planeChoice']
@@ -28,9 +32,9 @@ def index():
     else:
         return render_template('index.html')
 
-@app.route('/log-in')
-def login():
-    return render_template("login.html")
+@app.route('/admin')
+def adminPage():
+    return render_template("admin.html")
 
 if __name__ == "__main__":
     app.run(debug=True)

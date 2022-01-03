@@ -4,11 +4,133 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}"> -->
     <title>Seat Selector</title>
+
+    <style>
+        @import "compass/css3";
+
+@import "compass/css3";
+@import "compass/reset";
+*{
+	@include box-sizing(border-box);
+}
+
+body{
+	background-color: #ecf0f1;
+	font-family: helvetica, arial, sans-serif;
+	font-size: 16px;
+	/* padding-top: 140px; */
+	@include transition(padding-top .5s ease);
+}
+header{
+	width: 100%;
+	height: 120px;
+	background-color: #3498db;
+	text-align: center;
+	/* position: relative;
+	position: fixed; */
+	top: 0;
+	overflow: hidden;
+	@include transition(all .5s ease);
+
+	h1{
+		font-size: 42px;
+		color: #fff;
+		line-height: 230px;
+		text-transform: uppercase;
+		font-weight: 100;
+		@include transition(all .3s ease);
+	}
+	nav{
+		/* position: absolute; */
+		bottom: 0;
+		height: 60px;
+		line-height: 60px;
+		width: 100%;
+		background-color: rgba(0,0,0,.1);
+		a{
+			color: #fff;
+			display: inline-block;
+			padding: 10px 15px;
+			line-height: 1;
+			text-decoration: none;
+       @include border-radius(2px);
+        &:hover{
+          @include box-shadow(0 0 0 1px #fff);
+        }
+		}
+	}
+}
+h2{
+	font-size: 34px;
+	text-transform: uppercase;
+	font-weight: 100;
+	line-height: 2;
+	color: #2c3e50;
+}
+p{
+	margin-bottom: 2rem;
+	line-height: 2;
+	color: #7f8c8d;
+}
+.wrapper{
+	width: 800px;
+	margin: 0 auto;
+}
+section{
+	padding: 20px;
+	margin-bottom: 40px;
+	background-color: #fff;
+	@include border-radius(4px);
+	@include box-shadow(0 1px 0 rgba(0,0,0,.2));
+}
+
+/* Sticky Header Style */	
+/* ---------------------------------------- */ 
+body.sticky-header{
+	padding-top: 100px;
+	header{
+		height: 60px;
+		background-color: rgba(52,152,219,.9);
+		h1{
+			@include scale(0);
+		}
+	}
+}
+
+
+    </style>
     {% block head %}{% endblock %}
+
+    
 </head>
 <body>
+
+    <!-- Navbar -->
+    <header>
+        <h1>Seat Selector</h1>
+        <nav>
+          <a href="/">Home</a>
+          <a href="plane-layouts">Plane Layouts</a>
+          <a href="admin">Admin</a>
+        </nav>
+      </header>
+
+      <script>
+          $(function(){
+        $(window).scroll(function(){
+            var winTop = $(window).scrollTop();
+            if(winTop >= 30){
+            $("body").addClass("sticky-header");
+            }else{
+            $("body").removeClass("sticky-header");
+            }//if-else
+        });//win func.
+        });//ready func.
+
+    </script>   
+
+    
     {% block body %}{% endblock %}
 </body>
 </html>

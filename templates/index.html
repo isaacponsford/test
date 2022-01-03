@@ -29,9 +29,6 @@
         font-size: 14px;
     }
 
-   
-
-
 </style>
 
 {% endblock %}
@@ -49,17 +46,19 @@
 {% set rowTitles = rowTitles %}
 
 <div class="form">
-    <form action="/" method="POST">
+    <form action="/plane-layouts" method="POST">
         <select name="planeChoice" id="planeChoice">
             <option value="777">Boeing 777 300-ER</option>
             <option value="emb145">Empier 145</option>
         </select>
-        <input type="submit" value="Switch">
+        <input type="submit" value="Show">
     </form>
 </div>
+
 <br>
 <br>
 <br>
+
 <div class="form">
     <div class="plane-container">
 
