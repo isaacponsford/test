@@ -13,13 +13,13 @@ class airlineModels(db.Model):
     planeModel = db.Column(db.String(200), nullable=False)
     planeLayoutCSV = db.Column(db.String(200), nullable=False)
 
-class airplaneLayout(db,Model):
-    seatID = db.Column(db.Integer, primary_key=True)
-    row = db.Column(db.String(10))
-    column = db.Column(db.String(10))
-    occupied = db.Column(db.Boolean)
+#select columnTitle, rowTitle, class from airplaneLayout where flightNumber = "BA1"
 
-
+# class airplaneLayout(db.Model):
+#     seatID = db.Column(db.Integer, primary_key=True)
+#     row = db.Column(db.String(10))
+#     column = db.Column(db.String(10))
+#     occupied = db.Column(db.Boolean)
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
