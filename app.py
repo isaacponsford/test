@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
+
 from importCSV import planeMetrics
+from SQLHelper import function
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///seatSelector.db'
@@ -12,8 +14,6 @@ class airlineModels(db.Model):
     planeAirline = db.Column(db.String(200), nullable=False)
     planeModel = db.Column(db.String(200), nullable=False)
     planeLayoutCSV = db.Column(db.String(200), nullable=False)
-
-#select columnTitle, rowTitle, class from airplaneLayout where flightNumber = "BA1"
 
 # class airplaneLayout(db.Model):
 #     seatID = db.Column(db.Integer, primary_key=True)
@@ -44,6 +44,19 @@ def planeLayoutPage():
 @app.route('/admin')
 def adminPage():
     return render_template("admin.html")
+
+@app.route('/sql', methods=['POST', 'GET'])
+def sqlPage():
+    
+    Metrics = planeMetrics("emb145")
+    noOfColumns = Metrics[1]
+    planeLayout = function()
+    rowTitles = Metrics[5]
+    columnTitles = Metrics[6]
+
+    print("helloWorld")
+
+    return render_template('sql.html', planeLayout = planeLayout, noOfColumns = noOfColumns, cTs=columnTitles, rowTitles=rowTitles)
 
 if __name__ == "__main__":
     app.run(debug=True)
