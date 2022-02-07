@@ -1,19 +1,21 @@
 from flask import Flask, render_template, request, redirect
-from flask_sqlalchemy import SQLAlchemy
 
 from importCSV import planeMetrics
 from SQLHelper import function
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///seatSelector.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
 
-class airlineModels(db.Model):
-    planeID = db.Column(db.Integer, primary_key=True)
-    planeAirline = db.Column(db.String(200), nullable=False)
-    planeModel = db.Column(db.String(200), nullable=False)
-    planeLayoutCSV = db.Column(db.String(200), nullable=False)
+# from flask_sqlalchemy import SQLAlchemy
+
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///seatSelector.db'
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# db = SQLAlchemy(app)
+
+# class airlineModels(db.Model):
+#     planeID = db.Column(db.Integer, primary_key=True)
+#     planeAirline = db.Column(db.String(200), nullable=False)
+#     planeModel = db.Column(db.String(200), nullable=False)
+#     planeLayoutCSV = db.Column(db.String(200), nullable=False)
 
 # class airplaneLayout(db.Model):
 #     seatID = db.Column(db.Integer, primary_key=True)
@@ -53,8 +55,6 @@ def sqlPage():
     planeLayout = function()
     rowTitles = Metrics[5]
     columnTitles = Metrics[6]
-
-    print("helloWorld")
 
     return render_template('sql.html', planeLayout = planeLayout, noOfColumns = noOfColumns, cTs=columnTitles, rowTitles=rowTitles)
 
