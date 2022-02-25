@@ -73,6 +73,7 @@
         <h4>{{rowTitles[loop.index0]}}</h4>
 
         {% for seat in row %}
+        
             {% if seat == '1' %}
             <svg width={{canvas_size}} height={{canvas_size}}>
                 <rect x={{icon_pad}} y={{icon_pad}} rx={{icon_round}} ry={{icon_round}} width={{icon_size}} height={{icon_size}}
