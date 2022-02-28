@@ -31,8 +31,8 @@ def cleanup(temp, titles):
         return([temp[0],'',temp[1],temp[2]])
 
 def getPlaneInfo(flightNo):
-    cur.execute("SELECT columnTitle, rowTitle, class from airplaneLayout WHERE flightNumber = ? ORDER By sequenceNumber", (flightNo,))
-    rows = cur.fetchall()
+    cur.execute("SELECT columnTitle, rowTitle, class, type from airplaneLayout WHERE flightNumber = ? ORDER By sequenceNumber", (flightNo,))
+    all_data = cur.fetchall()
 
     layout = [] 
     temp = []
@@ -41,19 +41,29 @@ def getPlaneInfo(flightNo):
 
     blank = ['','','','']
 
-    while count + 1 < len(rows):
+    while count < len(all_data):
 
-        current_row = rows[count]
-        temp.append(str(current_row[2]))
-        titles.append(str(current_row[0]))
+        current_data = all_data[count]
+        temp.append(str(current_data[2]))
+        titles.append(str(current_data[0]))
 
-        if rows[count+1][1] > current_row[1]: #Comparing rows
-            temp = cleanup(temp, titles)
-            layout.append(temp)
+        if current_data[3] == 1:
+            try:
+                if all_data[count+1][1] > current_data[1]: #Comparing
+                    temp = cleanup(temp, titles)
+                    layout.append(temp)
+                    temp = []
+                    titles = []
+                else:
+                    pass
+            except IndexError:
+                temp = cleanup(temp, titles)
+                layout.append(temp)
+        elif current_data[3] == 99:
+            layout.append(blank)
             temp = []
             titles = []
-        else:
-            pass
+
         count = count + 1
 
     return(layout)
@@ -61,7 +71,6 @@ def getPlaneInfo(flightNo):
 def CSVtoSQL(flight_number, csv_add):
 
     Metrics = planeMetrics(csv_add)
-    #noOfRows = Metrics[0]
     noOfColumns = Metrics[1]
     planeLayout = Metrics[4]
     rowTitles = Metrics[5]
@@ -71,20 +80,57 @@ def CSVtoSQL(flight_number, csv_add):
     rowCounter = 0
     seqNum = 1
 
-    while rowCounter < len(planeLayout):
-        columnCounter = 0
-        while columnCounter < noOfColumns:
-            current = planeLayout[rowCounter][columnCounter]
-            if current != '':
-                
-                insert_column = columnTitles[columnCounter+1]
-                insert_row = rowTitles[rowCounter]
-                insert_class = current
-                insert_type = 1
+    blank = ['','','','']
 
-                insert_data = (flight_number, insert_column, insert_row, insert_class, insert_type, seqNum)
-                insertPlaneLayout(insert_data)
-                seqNum = seqNum + 1
-                
-            columnCounter+=1
-        rowCounter+=1   
+    while rowCounter < len(planeLayout):
+
+        if planeLayout[rowCounter] == blank:
+          
+            insert_row = int(rowTitles[rowCounter-1]) + 1
+            print(insert_row)
+            insert_data = (flight_number, "", insert_row, "", 99, seqNum)
+            insertPlaneLayout(insert_data)
+            seqNum = seqNum + 1
+        
+        else:
+
+            columnCounter = 0
+            while columnCounter < noOfColumns:
+                current = planeLayout[rowCounter][columnCounter]
+
+                if current != '':
+                    
+                    insert_column = columnTitles[columnCounter+1]
+                    insert_row = rowTitles[rowCounter]
+                    insert_class = current
+                    insert_type = 1
+
+                    insert_data = (flight_number, insert_column, insert_row, insert_class, insert_type, seqNum)
+                    insertPlaneLayout(insert_data)
+                    seqNum = seqNum + 1
+
+                columnCounter+=1
+        
+        rowCounter+=1
+
+def getDistinctFlights():
+    distinct_flights = []
+
+    cur.execute("SELECT DISTINCT flightNumber from airplaneLayout")
+    all_flights = cur.fetchall()
+
+    for flight in all_flights:
+        distinct_flights.append(flight[0])
+
+    return(distinct_flights)
+
+def getDistinctPlanes():
+    distinct_planes = []
+
+    cur.execute("SELECT DISTINCT planeModel from airline_models")
+    all_planes = cur.fetchall()
+
+    for plane in all_planes:
+        distinct_planes.append(plane[0])
+
+    return(distinct_planes)
