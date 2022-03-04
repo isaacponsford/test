@@ -6,3 +6,7 @@ def isBlank(array):
             blank = False
     
     return blank
+
+def cleanFileName(filename):
+    filename = filename.replace(" ", "").upper()
+    return(filename)

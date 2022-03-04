@@ -1,5 +1,4 @@
 import sqlite3
-from turtle import rt
 from importCSV import planeMetrics
 from tools import isBlank
 
@@ -140,7 +139,7 @@ def getDistinctFlights():
 def getDistinctPlanes():
     conn, cur = connect()
 
-    cur.execute("SELECT DISTINCT planeModel, planeLayoutCSV from airline_models")
+    cur.execute("SELECT DISTINCT planeModel, planeLayoutCSV from airlineModels")
     all_planes = cur.fetchall()
 
     conn.close()
@@ -164,9 +163,28 @@ def getFlightAirlineModel(flightNo):
 
 def getClassArray(flightNo):
     conn, cur = connect()
-    
+
     cur.execute("SELECT class, COUNT(columnTitle) FROM airplaneLayout WHERE flightNumber = ? AND class >= 1 GROUP BY class", (flightNo,))
     all_data = cur.fetchall()
     conn.close()
     return(all_data)
     
+def populateSeat(column, row, flightNo): 
+    conn, cur = connect()
+
+    data_tuple = (column, row, flightNo)
+    base_sql = ("UPDATE airplaneLayout set occupied = 1 WHERE columnTitle = ? AND rowTitle = ? AND flightNumber = ?")
+
+    cur.execute(base_sql, data_tuple)
+    conn.commit()
+    conn.close()
+
+def insertModelTable(planeName, filename):
+    conn, cur = connect()
+
+    data_tuple = (planeName, filename)
+    base_sql = ("INSERT INTO airlineModels (planeModel, planeLayoutCSV) VALUES (?,?)")
+
+    cur.execute(base_sql, data_tuple)
+    conn.commit()
+    conn.close()

@@ -6,40 +6,26 @@
 
 <h1>Admin Page</h1>
 
-<label for="browsers">Choose a layout:</label>
-    
-    <!-- <select name="cars" id="cars">
-     {% for flight in flights %}
-        <option value="{{ flight }}"> {{ flight }} </option>
-    {% endfor %}  -->
-    
+<div class="content">
+    <table>
+        <tr>
+            <th>Service</th>
+            <th></th>
+        </tr>
+            <tr>
+                <td>New CSV</td> 
+                <td>
+                    <a href="/new-csv">View</a>
+                </td>
+            </tr>
 
-<!-- <input list="browsers">
-    <datalist id="browsers">
-        {% for layout in layouts %}
-            <option value="{{ layout }}"></option>
-        {% endfor %}
-    </datalist>
-</input> -->
-
-<div class="form">
-    <form action="/admin" method="POST">
-        
-        <select name="browsers" id="browsers">
-
-            {% for layout in layouts %}
-                <option value="{{ layout[1] }}">{{ layout[0] }}</option>
-            {% endfor %}
-
-        </select>
-        
-        <br><br>
-        <label for="flightNo">Insert Flight Number:</label>
-        <input name="a">
-        <br><br>
-
-        <input type="submit" value="Select">
-    </form>
+            <tr>
+                <td>New Plane</td> 
+                <td>
+                    <a href="/new-plane">View</a>
+                </td>
+            </tr>
+    </table>
 </div>
 
 

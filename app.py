@@ -1,12 +1,23 @@
 from flask import Flask, render_template, request, redirect
 
+#from tools import cleanFileName
 from importCSV import planeMetrics
-from SQLHelper import getPlaneInfo, getDistinctFlights, getDistinctPlanes, CSVtoSQL, insertLinkTable, getFlightAirlineModel
+from SQLHelper import getPlaneInfo, getDistinctFlights, getDistinctPlanes, CSVtoSQL, insertLinkTable, getFlightAirlineModel, insertModelTable
+import os
 
 app = Flask(__name__)
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
+    
+    if request.method == 'POST':
+
+        csv = request.files['csvfile']
+        csv.save(os.path.join("plane_layouts", csv.filename))
+
+        print((csv))
+        return render_template('blank.html')
+    else:
         return render_template('blank.html')
 
 @app.route('/plane-layouts', methods=['POST', 'GET'])
@@ -49,7 +60,7 @@ def landing_page(id):
     noOfRows, noOfColumns, capacity, capacityArray, planeLayout, rowTitles, columnTitles = planeMetrics(airlineModel)
     planeLayout = getPlaneInfo(id)
 
-    return render_template('sql.html', fNo = id ,planeLayout = planeLayout, noOfColumns = noOfColumns, cTs=columnTitles, rowTitles=rowTitles)
+    return render_template('sql.html', fNo = id , planeLayout = planeLayout, noOfColumns = noOfColumns, cTs=columnTitles, rowTitles=rowTitles)
 
 @app.route('/admin', methods=['POST', 'GET'])
 def adminPage():
@@ -66,6 +77,40 @@ def adminPage():
     else:
         layouts = getDistinctPlanes()
         return render_template('admin.html', layouts = layouts)
+
+@app.route('/new-plane', methods=['POST', 'GET'])
+def newPlanePage():
+
+    if request.method == 'POST':
+
+        planeOption = request.form['planeLayouts']
+        flightNo = request.form['flightNumber']
+        
+        CSVtoSQL(flightNo, planeOption)
+        insertLinkTable((flightNo, planeOption))
+        layouts = getDistinctPlanes()
+        return render_template('newplane.html', layouts = layouts)
+    else:
+        layouts = getDistinctPlanes()
+        return render_template('newplane.html', layouts = layouts)
+
+@app.route('/new-csv', methods=['POST', 'GET'])
+def newCSVPage():
+
+    if request.method == 'POST':
+        
+        planeName = request.form['planeName']
+
+        csv = request.files['csvfile']
+
+        fn = csv.filename.replace(" ", "").lower()
+        csv.save(os.path.join("plane_layouts", fn))
+
+        insertModelTable(planeName, fn.split(".")[0])
+
+        return render_template('newcsv.html')
+    else:
+        return render_template('newcsv.html')
 
 if __name__ == "__main__":
     app.run(debug=True)

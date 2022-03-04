@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+{% set layouts = layouts %}
+
+<h1>Insert new plane</h1>
+
+<label for="planeLayouts">Choose a layout:</label>
+    
+<div class="form">
+    <form action="/new-plane" method="POST">
+        
+        <select name="planeLayouts" id="planeLayouts">
+
+            {% for layout in layouts %}
+                <option value="{{ layout[1] }}">{{ layout[0] }}</option>
+            {% endfor %}
+
+        </select>
+        
+        <br><br>
+        <label for="flightNumber">Insert Flight Number:</label>
+        <input name="flightNumber">
+        <br><br>
+
+        <input type="submit" value="Select">
+    </form>
+</div>
+
+
+
+<!-- <div class="form">
+    <form action="/admin" method="POST">
+        
+        <input type="submit" value="Add Task">
+    </form>
+</div> -->
+
+
+{% endblock %}

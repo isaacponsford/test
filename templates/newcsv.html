@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+    <style>
+
+    </style>
+
+{% endblock %}
+
+{% block body %}
+
+    <h1>Insert New Plane CSV</h1>
+
+    <div class="form">
+        <form action="/new-csv" method="POST" enctype="multipart/form-data">
+            <input name= "planeName">
+
+            <br><br>
+            
+            <input name = "csvfile" type="file" accept=".csv" />
+            <input type="submit" value="Get">
+        </form>
+    </div>
+
+{% endblock %}
