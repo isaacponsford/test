@@ -13,7 +13,6 @@ from random import randint
 # for i in cArray:
 #     dTuple = i[0], randint(0, i[1])
 #     pArray.append(dTuple)
-
 # print(pArray)
 
 populateSeat('L', '2', "LK90")

@@ -1,5 +1,5 @@
 import sqlite3
-from importCSV import planeMetrics
+from importCSV import planeMetrics, getPlaneLayout
 from tools import isBlank
 
 def connect():
@@ -42,7 +42,7 @@ def getPlaneInfo(flightNo):
     all_data = cur.fetchall()
 
     airlineModel = getFlightAirlineModel(flightNo)
-    noOfRows, noOfColumns, capacity, capacityArray, planeLayout, rowTitles,columnTitles = planeMetrics(airlineModel)
+    noOfColumns, rowTitles, columnTitles = planeMetrics(airlineModel)
 
     blank = []
 
@@ -86,8 +86,9 @@ def getPlaneInfo(flightNo):
 
 def CSVtoSQL(flight_number, csv_add):
 
-    noOfRows, noOfColumns, capacity, capacityArray, planeLayout, rowTitles,columnTitles = planeMetrics(csv_add)
-
+    noOfColumns, rowTitles, columnTitles = planeMetrics(csv_add)
+    planeLayout = getPlaneLayout(csv_add)
+    
     columnCounter = 0
     rowCounter = 0
     seqNum = 1

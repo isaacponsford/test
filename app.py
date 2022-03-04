@@ -4,7 +4,6 @@ import os
 from importCSV import planeMetrics
 from SQLHelper import getPlaneInfo, getDistinctFlights, getDistinctPlanes, CSVtoSQL, insertLinkTable, getFlightAirlineModel, insertModelTable
 
-
 app = Flask(__name__)
 
 @app.route('/', methods=['POST', 'GET'])
@@ -12,17 +11,17 @@ def index():
    
     return render_template('blank.html')
 
-@app.route('/plane-layouts', methods=['POST', 'GET'])
-def planeLayoutPage():
+# @app.route('/plane-layouts', methods=['POST', 'GET'])
+# def planeLayoutPage():
 
-    if request.method == 'POST':
-        planeOption = request.form['planeChoice']
+#     if request.method == 'POST':
+#         planeOption = request.form['planeChoice']
         
-        noOfRows, noOfColumns, capacity, capacityArray, planeLayout, rowTitles,columnTitles = planeMetrics(planeOption)
+#         noOfRows, noOfColumns, capacity, capacityArray, planeLayout, rowTitles,columnTitles = planeMetrics(planeOption)
 
-        return render_template('index.html', planeLayout = planeLayout, noOfColumns = noOfColumns, cTs=columnTitles, rowTitles=rowTitles)
-    else:
-        return render_template('index.html')
+#         return render_template('index.html', planeLayout = planeLayout, noOfColumns = noOfColumns, cTs=columnTitles, rowTitles=rowTitles)
+#     else:
+#         return render_template('index.html')
 
 @app.route('/flights')
 def flightsPage():
@@ -35,7 +34,7 @@ def sqlPage():
     flightNo = "GH777"
     airlineModel = getFlightAirlineModel(flightNo)
 
-    noOfRows, noOfColumns, capacity, capacityArray, planeLayout, rowTitles, columnTitles = planeMetrics(airlineModel)
+    noOfColumns, rowTitles, columnTitles = planeMetrics(airlineModel)
     planeLayout = getPlaneInfo(flightNo)
 
     return render_template('sql.html', planeLayout = planeLayout, noOfColumns = noOfColumns, cTs=columnTitles, rowTitles=rowTitles)
@@ -45,7 +44,7 @@ def landing_page(id):
 
     airlineModel = getFlightAirlineModel(id)
 
-    noOfRows, noOfColumns, capacity, capacityArray, planeLayout, rowTitles, columnTitles = planeMetrics(airlineModel)
+    noOfColumns, rowTitles, columnTitles = planeMetrics(airlineModel)
     planeLayout = getPlaneInfo(id)
 
     return render_template('sql.html', fNo = id , planeLayout = planeLayout, noOfColumns = noOfColumns, cTs=columnTitles, rowTitles=rowTitles)
@@ -53,18 +52,7 @@ def landing_page(id):
 @app.route('/admin', methods=['POST', 'GET'])
 def adminPage():
 
-    if request.method == 'POST':
-
-        planeOption = request.form['browsers']
-        flightNo = request.form['a']
-        
-        CSVtoSQL(flightNo, planeOption)
-        insertLinkTable((flightNo, planeOption))
-        layouts = getDistinctPlanes()
-        return render_template('admin.html', layouts = layouts)
-    else:
-        layouts = getDistinctPlanes()
-        return render_template('admin.html', layouts = layouts)
+    return render_template('admin.html')
 
 @app.route('/new-plane', methods=['POST', 'GET'])
 def newPlanePage():

@@ -1,16 +1,16 @@
 import csv
 
-def incrementClassCapacity(classNum, capacityArray):
+# def incrementClassCapacity(classNum, capacityArray):
 
-    exists = False
+#     exists = False
 
-    for i in capacityArray:
-        if i[0] == classNum:
-            exists = True
-            i[1] += 1
+#     for i in capacityArray:
+#         if i[0] == classNum:
+#             exists = True
+#             i[1] += 1
 
-    if not exists:
-        capacityArray.append([classNum,1])
+#     if not exists:
+#         capacityArray.append([classNum,1])
 
 def planeMetrics(csv_file):
 
@@ -42,14 +42,30 @@ def planeMetrics(csv_file):
             rowLayout = row[1::]
             planeLayout.append(rowLayout)
 
-            noOfColumns = len(rowLayout)
+            noOfColumns = len(rowLayout) 
+
+    return[noOfColumns, rowTitles,columnTitles]
+
+
+def getPlaneLayout(csv_file):
+
+    planeLayout = []
+
+    csv_file = "plane_layouts/" + csv_file + ".csv"
+
+    with open(csv_file, 'r', encoding='utf-8-sig') as file:
+        reader = csv.reader(file)
+
+        columnTitles = next(reader)
+
+        for row in reader:
             
-            for seat in rowLayout:
-                if seat != '':
-                    capacity = capacity + 1
-                    incrementClassCapacity(seat, capacityArray)
+            rowNumber = row[0]
+
+            rowLayout = row[1::]
+            planeLayout.append(rowLayout)
     
 
-
-    return[noOfRows, noOfColumns, capacity, capacityArray, planeLayout, rowTitles,columnTitles]
+    return planeLayout
+        
 
