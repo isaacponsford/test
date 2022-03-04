@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect
 
 from importCSV import planeMetrics
-from SQLHelper import getPlaneInfo, getDistinctFlights, getDistinctPlanes, CSVtoSQL
+from SQLHelper import getPlaneInfo, getDistinctFlights, getDistinctPlanes, CSVtoSQL, insertLinkTable, getFlightAirlineModel
 
 app = Flask(__name__)
 
@@ -33,37 +33,34 @@ def flightsPage():
 @app.route('/sql', methods=['POST', 'GET'])
 def sqlPage():
     
-    Metrics = planeMetrics("emb145")
-    noOfColumns = Metrics[1]
-    planeLayout = getPlaneInfo("BA14")
-    rowTitles = Metrics[5]
-    columnTitles = Metrics[6]
+    flightNo = "GH777"
+    airlineModel = getFlightAirlineModel(flightNo)
+
+    noOfRows, noOfColumns, capacity, capacityArray, planeLayout, rowTitles, columnTitles = planeMetrics(airlineModel)
+    planeLayout = getPlaneInfo(flightNo)
 
     return render_template('sql.html', planeLayout = planeLayout, noOfColumns = noOfColumns, cTs=columnTitles, rowTitles=rowTitles)
 
 @app.route('/plane-view/<id>')
 def landing_page(id):
 
-    Metrics = planeMetrics("emb145")
-    
-    noOfColumns = Metrics[1]
-    rowTitles = Metrics[5]
-    columnTitles = Metrics[6]
+    airlineModel = getFlightAirlineModel(id)
 
+    noOfRows, noOfColumns, capacity, capacityArray, planeLayout, rowTitles, columnTitles = planeMetrics(airlineModel)
     planeLayout = getPlaneInfo(id)
 
-    return render_template('sql.html', planeLayout = planeLayout, noOfColumns = noOfColumns, cTs=columnTitles, rowTitles=rowTitles)
+    return render_template('sql.html', fNo = id ,planeLayout = planeLayout, noOfColumns = noOfColumns, cTs=columnTitles, rowTitles=rowTitles)
 
 @app.route('/admin', methods=['POST', 'GET'])
 def adminPage():
 
     if request.method == 'POST':
-        
+
         planeOption = request.form['browsers']
         flightNo = request.form['a']
         
         CSVtoSQL(flightNo, planeOption)
-
+        insertLinkTable((flightNo, planeOption))
         layouts = getDistinctPlanes()
         return render_template('admin.html', layouts = layouts)
     else:

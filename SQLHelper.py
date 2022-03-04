@@ -1,45 +1,59 @@
-from msilib import sequence
 import sqlite3
+from turtle import rt
 from importCSV import planeMetrics
 from tools import isBlank
 
-#select columnTitle, rowTitle, class from airplaneLayout where flightNumber = "BA1"
-#columnTitles = (planeMetrics("emb145")[6][1::])
-# def titleClean(array):
-#     cleanArray = []
-
-#     for element in array:
-#         if element != '':
-#             cleanArray.append(element)
-    
-#     return(cleanArray)
-
-conn = sqlite3.connect("seatSelector.db", check_same_thread=False)
-cur= conn.cursor()
+def connect():
+    conn = sqlite3.connect("seatSelector.db", check_same_thread=False)
+    cur= conn.cursor()
+    return (conn, cur)
 
 def insertPlaneLayout(data_tuple):
+    conn, cur = connect()
     base_sql = """insert into airplaneLayout (flightNumber, columnTitle, rowTitle, class, type, sequenceNumber) VALUES (?,?,?,?,?,?)"""
     cur.execute(base_sql, data_tuple)
     conn.commit()
+    conn.close()
 
-def cleanup(temp, titles):
+def cleanup(temp, titles, columnTitles):
+    out = []
 
-    if len(temp) == 1:
-        return([temp[0],'','',''])
-    elif len(temp) == 3:
-        return([temp[0],'',temp[1],temp[2]])
+    x = 0 #temp point
+    y = 0 #cT point
+
+    while x < len(columnTitles):
+
+        if y > len(titles)-1:
+            out.append('')
+            x = x + 1
+        elif columnTitles[x] == titles[y]:
+            out.append(temp[y])
+            x = x + 1
+            y = y + 1
+        else:
+            out.append('')
+            x = x + 1
+
+    return(out)
 
 def getPlaneInfo(flightNo):
+    conn, cur = connect()
 
     cur.execute("SELECT columnTitle, rowTitle, class, type from airplaneLayout WHERE flightNumber = ? ORDER By sequenceNumber", (flightNo,))
     all_data = cur.fetchall()
+
+    airlineModel = getFlightAirlineModel(flightNo)
+    noOfRows, noOfColumns, capacity, capacityArray, planeLayout, rowTitles,columnTitles = planeMetrics(airlineModel)
+
+    blank = []
+
+    for i in range(noOfColumns):
+        blank.append('')
 
     layout = [] 
     temp = []
     titles = []
     count = 0
-
-    blank = ['','','','']
 
     while count < len(all_data):
 
@@ -50,14 +64,14 @@ def getPlaneInfo(flightNo):
         if current_data[3] == 1:
             try:
                 if all_data[count+1][1] > current_data[1]:
-                    temp = cleanup(temp, titles)
+                    temp = cleanup(temp, titles, columnTitles[1::])
                     layout.append(temp)
                     temp = []
                     titles = []
                 else:
                     pass
             except IndexError:
-                temp = cleanup(temp, titles)
+                temp = cleanup(temp, titles, columnTitles[1::])
                 layout.append(temp)
 
         elif current_data[3] == 99:
@@ -68,19 +82,17 @@ def getPlaneInfo(flightNo):
 
         count = count + 1
 
+    conn.close()
     return(layout)
 
 def CSVtoSQL(flight_number, csv_add):
 
-    Metrics = planeMetrics(csv_add)
-    noOfColumns = Metrics[1]
-    planeLayout = Metrics[4]
-    rowTitles = Metrics[5]
-    columnTitles = Metrics[6]
+    noOfRows, noOfColumns, capacity, capacityArray, planeLayout, rowTitles,columnTitles = planeMetrics(csv_add)
 
     columnCounter = 0
     rowCounter = 0
     seqNum = 1
+
 
     while rowCounter < len(planeLayout):
 
@@ -112,6 +124,8 @@ def CSVtoSQL(flight_number, csv_add):
         rowCounter+=1
 
 def getDistinctFlights():
+    conn, cur = connect()
+
     distinct_flights = []
 
     cur.execute("SELECT DISTINCT flightNumber from airplaneLayout")
@@ -120,15 +134,29 @@ def getDistinctFlights():
     for flight in all_flights:
         distinct_flights.append(flight[0])
 
+    conn.close()
     return(distinct_flights)
 
 def getDistinctPlanes():
-    distinct_planes = []
+    conn, cur = connect()
 
     cur.execute("SELECT DISTINCT planeModel, planeLayoutCSV from airline_models")
     all_planes = cur.fetchall()
 
-    # for plane in all_planes:
-    #     distinct_planes.append(plane[0])
-
+    conn.close()
     return(all_planes)
+
+def insertLinkTable(data_tuple):
+    conn, cur = connect()
+
+    base_sql = ("""insert into airplaneLinkTable VALUES (?,?)""")
+    cur.execute(base_sql, data_tuple)
+    conn.commit()
+    conn.close()
+
+def getFlightAirlineModel(flightNo):
+    conn, cur = connect()
+    cur.execute("SELECT airplaneModel from airplaneLinkTable WHERE flightNo = ?", (flightNo,))
+    airlineModel = cur.fetchone()
+    conn.close()
+    return(airlineModel[0])
