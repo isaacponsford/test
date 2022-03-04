@@ -6,6 +6,5 @@ from importCSV import planeMetrics
 
 # x = getPlaneInfo("BA45")
 
-CSVtoSQL("BA900", "emb145")
-
-#print(getDistinctPlanes())
+# CSVtoSQL("BA1", "emb145")
+print(getDistinctPlanes())

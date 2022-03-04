@@ -1,8 +1,7 @@
 from msilib import sequence
 import sqlite3
-import csv
-
 from importCSV import planeMetrics
+from tools import isBlank
 
 #select columnTitle, rowTitle, class from airplaneLayout where flightNumber = "BA1"
 #columnTitles = (planeMetrics("emb145")[6][1::])
@@ -31,6 +30,7 @@ def cleanup(temp, titles):
         return([temp[0],'',temp[1],temp[2]])
 
 def getPlaneInfo(flightNo):
+
     cur.execute("SELECT columnTitle, rowTitle, class, type from airplaneLayout WHERE flightNumber = ? ORDER By sequenceNumber", (flightNo,))
     all_data = cur.fetchall()
 
@@ -49,7 +49,7 @@ def getPlaneInfo(flightNo):
 
         if current_data[3] == 1:
             try:
-                if all_data[count+1][1] > current_data[1]: #Comparing
+                if all_data[count+1][1] > current_data[1]:
                     temp = cleanup(temp, titles)
                     layout.append(temp)
                     temp = []
@@ -59,7 +59,9 @@ def getPlaneInfo(flightNo):
             except IndexError:
                 temp = cleanup(temp, titles)
                 layout.append(temp)
+
         elif current_data[3] == 99:
+
             layout.append(blank)
             temp = []
             titles = []
@@ -80,14 +82,10 @@ def CSVtoSQL(flight_number, csv_add):
     rowCounter = 0
     seqNum = 1
 
-    blank = ['','','','']
-
     while rowCounter < len(planeLayout):
 
-        if planeLayout[rowCounter] == blank:
-          
+        if isBlank(planeLayout[rowCounter]):
             insert_row = int(rowTitles[rowCounter-1]) + 1
-            print(insert_row)
             insert_data = (flight_number, "", insert_row, "", 99, seqNum)
             insertPlaneLayout(insert_data)
             seqNum = seqNum + 1
@@ -127,10 +125,10 @@ def getDistinctFlights():
 def getDistinctPlanes():
     distinct_planes = []
 
-    cur.execute("SELECT DISTINCT planeModel from airline_models")
+    cur.execute("SELECT DISTINCT planeModel, planeLayoutCSV from airline_models")
     all_planes = cur.fetchall()
 
-    for plane in all_planes:
-        distinct_planes.append(plane[0])
+    # for plane in all_planes:
+    #     distinct_planes.append(plane[0])
 
-    return(distinct_planes)
+    return(all_planes)

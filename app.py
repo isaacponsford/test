@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect
 
 from importCSV import planeMetrics
-from SQLHelper import getPlaneInfo, getDistinctFlights
+from SQLHelper import getPlaneInfo, getDistinctFlights, getDistinctPlanes, CSVtoSQL
 
 app = Flask(__name__)
 
@@ -26,7 +26,7 @@ def planeLayoutPage():
         return render_template('index.html')
 
 @app.route('/flights')
-def adminPage():
+def flightsPage():
     flights = getDistinctFlights()
     return render_template("layoutselect.html", flights = flights)
 
@@ -53,6 +53,22 @@ def landing_page(id):
     planeLayout = getPlaneInfo(id)
 
     return render_template('sql.html', planeLayout = planeLayout, noOfColumns = noOfColumns, cTs=columnTitles, rowTitles=rowTitles)
+
+@app.route('/admin', methods=['POST', 'GET'])
+def adminPage():
+
+    if request.method == 'POST':
+        
+        planeOption = request.form['browsers']
+        flightNo = request.form['a']
+        
+        CSVtoSQL(flightNo, planeOption)
+
+        layouts = getDistinctPlanes()
+        return render_template('admin.html', layouts = layouts)
+    else:
+        layouts = getDistinctPlanes()
+        return render_template('admin.html', layouts = layouts)
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -2,6 +2,54 @@
 
 {% block body %}
 
+{% set layouts = layouts %}
+
 <h1>Admin Page</h1>
+
+<label for="browsers">Choose a layout:</label>
+    
+    <!-- <select name="cars" id="cars">
+     {% for flight in flights %}
+        <option value="{{ flight }}"> {{ flight }} </option>
+    {% endfor %}  -->
+    
+
+<!-- <input list="browsers">
+    <datalist id="browsers">
+        {% for layout in layouts %}
+            <option value="{{ layout }}"></option>
+        {% endfor %}
+    </datalist>
+</input> -->
+
+<div class="form">
+    <form action="/admin" method="POST">
+        
+        <select name="browsers" id="browsers">
+
+            {% for layout in layouts %}
+                <option value="{{ layout[1] }}">{{ layout[0] }}</option>
+            {% endfor %}
+
+        </select>
+        
+        <br><br>
+        <label for="flightNo">Insert Flight Number:</label>
+        <input name="a">
+        <br><br>
+
+        <input type="submit" value="Select">
+    </form>
+</div>
+
+
+
+<!-- <div class="form">
+    <form action="/admin" method="POST">
+        
+        <input type="submit" value="Add Task">
+    </form>
+</div> -->
+
 
 {% endblock %}
