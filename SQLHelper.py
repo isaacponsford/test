@@ -98,7 +98,7 @@ def CSVtoSQL(flight_number, csv_add):
 
         if isBlank(planeLayout[rowCounter]):
             insert_row = int(rowTitles[rowCounter-1]) + 1
-            insert_data = (flight_number, "", insert_row, "", 99, seqNum)
+            insert_data = (flight_number, "", insert_row, None , 99, seqNum)
             insertPlaneLayout(insert_data)
             seqNum = seqNum + 1
         
@@ -156,7 +156,17 @@ def insertLinkTable(data_tuple):
 
 def getFlightAirlineModel(flightNo):
     conn, cur = connect()
+
     cur.execute("SELECT airplaneModel from airplaneLinkTable WHERE flightNo = ?", (flightNo,))
     airlineModel = cur.fetchone()
     conn.close()
     return(airlineModel[0])
+
+def getClassArray(flightNo):
+    conn, cur = connect()
+    
+    cur.execute("SELECT class, COUNT(columnTitle) FROM airplaneLayout WHERE flightNumber = ? AND class >= 1 GROUP BY class", (flightNo,))
+    all_data = cur.fetchall()
+    conn.close()
+    return(all_data)
+    
