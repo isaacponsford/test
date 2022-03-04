@@ -4,7 +4,6 @@ from random import randint
 
 #noOfRows, noOfColumns, capacity, capacityArray, planeLayout, rowTitles,columnTitles
 
-
 # fNo = "LK90"
 
 # cArray = getClassArray(fNo)
@@ -17,7 +16,4 @@ from random import randint
 
 # print(pArray)
 
-# populateSeat('L', '2', "LK90")
-
-filename = "emb145 ext.csv".split(".")[0]
-print(filename)
+populateSeat('L', '2', "LK90")

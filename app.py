@@ -1,24 +1,16 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request
+import os
 
-#from tools import cleanFileName
 from importCSV import planeMetrics
 from SQLHelper import getPlaneInfo, getDistinctFlights, getDistinctPlanes, CSVtoSQL, insertLinkTable, getFlightAirlineModel, insertModelTable
-import os
+
 
 app = Flask(__name__)
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
-    
-    if request.method == 'POST':
-
-        csv = request.files['csvfile']
-        csv.save(os.path.join("plane_layouts", csv.filename))
-
-        print((csv))
-        return render_template('blank.html')
-    else:
-        return render_template('blank.html')
+   
+    return render_template('blank.html')
 
 @app.route('/plane-layouts', methods=['POST', 'GET'])
 def planeLayoutPage():
@@ -26,11 +18,7 @@ def planeLayoutPage():
     if request.method == 'POST':
         planeOption = request.form['planeChoice']
         
-        Metrics = planeMetrics(planeOption)
-        noOfColumns = Metrics[1]
-        planeLayout = Metrics[4]
-        rowTitles = Metrics[5]
-        columnTitles = Metrics[6]
+        noOfRows, noOfColumns, capacity, capacityArray, planeLayout, rowTitles,columnTitles = planeMetrics(planeOption)
 
         return render_template('index.html', planeLayout = planeLayout, noOfColumns = noOfColumns, cTs=columnTitles, rowTitles=rowTitles)
     else:
