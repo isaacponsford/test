@@ -14,10 +14,8 @@ import csv
 
 def planeMetrics(csv_file):
 
-    capacity = 0
     noOfRows = 0
     noOfColumns = 0
-    capacityArray = []
     planeLayout = []
     rowTitles = []
 
@@ -68,4 +66,18 @@ def getPlaneLayout(csv_file):
 
     return planeLayout
         
+def getPassengerCSV(csv_file):
 
+    passengerData = []
+    
+    csv_file = "passengerCSV/" + csv_file + ".csv"
+    with open(csv_file, 'r', encoding='utf-8-sig') as file:
+        reader = csv.reader(file)
+
+        headings = next(reader)
+
+        for row in reader:
+            #print(row)
+            passengerData.append(row)
+
+        return passengerData

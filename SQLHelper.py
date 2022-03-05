@@ -66,7 +66,7 @@ def getPlaneInfo(flightNo):
             inputData = (occupiedData * 20) + classData
         except:
             pass
-        
+
         temp.append(str(inputData))
         titles.append(str(current_data[0]))
 
@@ -200,3 +200,26 @@ def insertModelTable(planeName, filename):
     cur.execute(base_sql, data_tuple)
     conn.commit()
     conn.close()
+
+def insertPassengerTable(data):
+    conn, cur = connect()
+    base_sql = ("INSERT INTO passengers VALUES (?,?,?,?,?,?)")
+    cur.execute(base_sql, data)
+    conn.commit()
+    conn.close()
+
+def unassignedPlanes():
+    conn, cur = connect()
+
+    cur.execute("SELECT flightNo FROM airplaneLinkTable WHERE passengerFlightRef IS NUll")
+    all_data = cur.fetchall()
+    conn.close()
+    return(all_data)
+
+def getDistinctPassengersRef():
+    conn, cur = connect()
+
+    cur.execute("SELECT DISTINCT flightRef FROM passengers WHERE flightRef NOT IN (SELECT passengerFlightRef FROM airplaneLinkTable where passengerFlightRef IS NOT NULL")
+    all_data = cur.fetchall()
+    conn.close()
+    return(all_data)

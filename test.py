@@ -1,5 +1,5 @@
-from SQLHelper import CSVtoSQL, insertPlaneLayout, getPlaneInfo, getDistinctFlights, getDistinctPlanes, insertLinkTable, getFlightAirlineModel, getClassArray, populateSeat
-from importCSV import planeMetrics
+from SQLHelper import CSVtoSQL, insertPlaneLayout, getPlaneInfo, getDistinctFlights, getDistinctPlanes, insertLinkTable, getFlightAirlineModel, getClassArray, populateSeat, insertPassengerTable
+from importCSV import planeMetrics, getPassengerCSV
 from random import randint
 
 #noOfRows, noOfColumns, capacity, capacityArray, planeLayout, rowTitles,columnTitles
@@ -15,6 +15,13 @@ from random import randint
 #     pArray.append(dTuple)
 # print(pArray)
 
-populateSeat('L', '2', "NRM45")
+#populateSeat('L', '2', "NRM45")
 
-print(getPlaneInfo("PLANE56"))
+#print(getPlaneInfo("PLANE56"))
+
+# d = getPassengerCSV("567")
+# for i in d:
+#     insertPassengerTable(i)
+# #insertPassengerTable(('X1', '567', 'A', '3', '', ''))
+
+print(getClassArray("EXT45"))
