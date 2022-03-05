@@ -47,6 +47,8 @@
 
 {% set rowTitles = rowTitles %}
 
+{% set seatColour = [25, 214, 255] %}
+
 <div class="form">
     <div class="plane-container">
 
@@ -58,34 +60,39 @@
     
         <h4>{{rowTitles[loop.index0]}}</h4>
 
+        
+
         {% for seat in row %}
-            {% if seat == '1' %}
-            <svg width={{canvas_size}} height={{canvas_size}}>
-                <rect x={{icon_pad}} y={{icon_pad}} rx={{icon_round}} ry={{icon_round}} width={{icon_size}} height={{icon_size}}
-                style="fill:white;stroke:rgb(0, 0, 255);stroke-width:{{icon_line_width}};opacity:1" />
-            </svg>
+
+            {% set intSeat = seat | int %}
+
+            {% if intSeat > 20 %}
+                {% set occColour = [150, 150, 150] %}
+                {% set intSeat = intSeat - 20 %}
+            {% else %}
+                {% set occColour = [255, 255, 255] %}
+            {% endif %}    
+
+            {% if intSeat == 1 %}
+                {% set seatColour = [0, 0, 255] %}
+            {% elif intSeat == 2 %}
+                {% set seatColour = [25, 214, 25] %}
+            {% elif intSeat == 3 %}
+                {% set seatColour = [214, 25, 25] %}
+            {% elif intSeat == 4 %}
+                {% set seatColour = [150, 15, 229] %}
             {% endif %}
-            {% if seat == '2' %}
-            <svg width={{canvas_size}} height={{canvas_size}}>
-                <rect x={{icon_pad}} y={{icon_pad}} rx={{icon_round}} ry={{icon_round}} width={{icon_size}} height={{icon_size}}
-                style="fill:white;stroke:rgb(25, 214, 25);stroke-width:{{icon_line_width}};opacity:1" />
-            </svg>
-            {% endif %}
-            {% if seat == '3' %}
-            <svg width={{canvas_size}} height={{canvas_size}}>
-                <rect x={{icon_pad}} y={{icon_pad}} rx={{icon_round}} ry={{icon_round}} width={{icon_size}} height={{icon_size}}
-                style="fill:white;stroke:rgb(214, 25, 25);stroke-width:{{icon_line_width}};opacity:1" />
-            </svg>
-            {% endif %}
-            {% if seat == '4' %}
-            <svg width={{canvas_size}} height={{canvas_size}}>
-                <rect x={{icon_pad}} y={{icon_pad}} rx={{icon_round}} ry={{icon_round}} width={{icon_size}} height={{icon_size}}
-                style="fill:white;stroke:rgb(150, 15, 229);stroke-width:{{icon_line_width}};opacity:1" />
-            </svg>
-            {% endif %}
+
             {% if seat == '' %}
-            <svg width={{canvas_size}} height={{canvas_size}}> </svg>
+                <svg width={{canvas_size}} height={{canvas_size}}> </svg>
+            {% else %}
+                <svg width={{canvas_size}} height={{canvas_size}}>
+                    <rect x={{icon_pad}} y={{icon_pad}} rx={{icon_round}} ry={{icon_round}} width={{icon_size}} height={{icon_size}}
+                    style="fill:rgb({{occColour[0]}},{{occColour[1]}},{{occColour[2]}});stroke:rgb({{seatColour[0]}},{{seatColour[1]}},{{seatColour[2]}});stroke-width:{{icon_line_width}};opacity:1" />
+                </svg>
             {% endif %}
+
+
 
         {% endfor %}
     {% endfor %}

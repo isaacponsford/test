@@ -9,7 +9,8 @@ def connect():
 
 def insertPlaneLayout(data_tuple):
     conn, cur = connect()
-    base_sql = """insert into airplaneLayout (flightNumber, columnTitle, rowTitle, class, type, sequenceNumber) VALUES (?,?,?,?,?,?)"""
+    print(data_tuple)
+    base_sql = """insert into airplaneLayout (flightNumber, columnTitle, rowTitle, class, type, sequenceNumber, occupied) VALUES (?,?,?,?,?,?,?)"""
     cur.execute(base_sql, data_tuple)
     conn.commit()
     conn.close()
@@ -38,7 +39,7 @@ def cleanup(temp, titles, columnTitles):
 def getPlaneInfo(flightNo):
     conn, cur = connect()
 
-    cur.execute("SELECT columnTitle, rowTitle, class, type from airplaneLayout WHERE flightNumber = ? ORDER By sequenceNumber", (flightNo,))
+    cur.execute("SELECT columnTitle, rowTitle, class, type, occupied from airplaneLayout WHERE flightNumber = ? ORDER By sequenceNumber", (flightNo,))
     all_data = cur.fetchall()
 
     airlineModel = getFlightAirlineModel(flightNo)
@@ -57,7 +58,16 @@ def getPlaneInfo(flightNo):
     while count < len(all_data):
 
         current_data = all_data[count]
-        temp.append(str(current_data[2]))
+
+        occupiedData = current_data[4]
+        classData = current_data[2]
+        
+        try:
+            inputData = (occupiedData * 20) + classData
+        except:
+            pass
+        
+        temp.append(str(inputData))
         titles.append(str(current_data[0]))
 
         if current_data[3] == 1:
@@ -98,7 +108,7 @@ def CSVtoSQL(flight_number, csv_add):
 
         if isBlank(planeLayout[rowCounter]):
             insert_row = int(rowTitles[rowCounter-1]) + 1
-            insert_data = (flight_number, "", insert_row, None , 99, seqNum)
+            insert_data = (flight_number, "", insert_row, None , 99, seqNum, None)
             insertPlaneLayout(insert_data)
             seqNum = seqNum + 1
         
@@ -114,8 +124,9 @@ def CSVtoSQL(flight_number, csv_add):
                     insert_row = rowTitles[rowCounter]
                     insert_class = current
                     insert_type = 1
+                    occupied = 0
 
-                    insert_data = (flight_number, insert_column, insert_row, insert_class, insert_type, seqNum)
+                    insert_data = (flight_number, insert_column, insert_row, insert_class, insert_type, seqNum, occupied)
                     insertPlaneLayout(insert_data)
                     seqNum = seqNum + 1
 

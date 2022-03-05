@@ -15,4 +15,6 @@ from random import randint
 #     pArray.append(dTuple)
 # print(pArray)
 
-populateSeat('L', '2', "LK90")
+populateSeat('L', '2', "NRM45")
+
+print(getPlaneInfo("PLANE56"))
