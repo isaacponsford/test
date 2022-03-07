@@ -36,6 +36,15 @@ def cleanup(temp, titles, columnTitles):
 
     return(out)
 
+def SQLSelectClean(all_data):
+    out = []
+
+    for data in all_data:
+        out.append(data[0])
+
+    return(out)
+
+
 def getPlaneInfo(flightNo):
     conn, cur = connect()
 
@@ -137,13 +146,10 @@ def CSVtoSQL(flight_number, csv_add):
 def getDistinctFlights():
     conn, cur = connect()
 
-    distinct_flights = []
-
     cur.execute("SELECT DISTINCT flightNumber from airplaneLayout")
     all_flights = cur.fetchall()
 
-    for flight in all_flights:
-        distinct_flights.append(flight[0])
+    distinct_flights = SQLSelectClean(all_flights)
 
     conn.close()
     return(distinct_flights)
@@ -213,13 +219,30 @@ def unassignedPlanes():
 
     cur.execute("SELECT flightNo FROM airplaneLinkTable WHERE passengerFlightRef IS NUll")
     all_data = cur.fetchall()
+
+    cData = SQLSelectClean(all_data)
+    
     conn.close()
-    return(all_data)
+    return(cData)
 
 def getDistinctPassengersRef():
     conn, cur = connect()
 
-    cur.execute("SELECT DISTINCT flightRef FROM passengers WHERE flightRef NOT IN (SELECT passengerFlightRef FROM airplaneLinkTable where passengerFlightRef IS NOT NULL")
+    cur.execute("SELECT DISTINCT flightRef FROM passengers WHERE flightRef NOT IN (SELECT passengerFlightRef FROM airplaneLinkTable where passengerFlightRef IS NOT NULL)")
     all_data = cur.fetchall()
+
+    passengerRefs = SQLSelectClean(all_data)
+
     conn.close()
-    return(all_data)
+    return(passengerRefs)
+
+def insertPassengerLinkTable(flightNo, passengers):
+    conn, cur = connect()
+
+    data_tuple = (passengers, flightNo)
+    base_sql = ("UPDATE airplaneLinkTable set passengerFlightRef = ? WHERE flightNo = ?")
+
+    cur.execute(base_sql, data_tuple)
+    conn.commit()
+    conn.close()
+

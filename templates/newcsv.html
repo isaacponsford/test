@@ -14,11 +14,16 @@
 
     <div class="form">
         <form action="/new-csv" method="POST" enctype="multipart/form-data">
+            <label for="planeName">Choose a plane name:</label>
             <input name= "planeName">
 
             <br><br>
             
+            <label for="csvfile">Select a CSV file:</label>
             <input name = "csvfile" type="file" accept=".csv" />
+            
+            <br><br>
+
             <input type="submit" value="Get">
         </form>
     </div>

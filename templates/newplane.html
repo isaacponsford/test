@@ -6,10 +6,10 @@
 
 <h1>Insert new plane</h1>
 
-<label for="planeLayouts">Choose a layout:</label>
-    
 <div class="form">
     <form action="/new-plane" method="POST">
+        
+        <label for="planeLayouts">Choose a layout:</label>
         
         <select name="planeLayouts" id="planeLayouts">
 
@@ -27,15 +27,5 @@
         <input type="submit" value="Select">
     </form>
 </div>
-
-
-
-<!-- <div class="form">
-    <form action="/admin" method="POST">
-        
-        <input type="submit" value="Add Task">
-    </form>
-</div> -->
-
 
 {% endblock %}

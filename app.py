@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 import os
 
 from importCSV import planeMetrics
-from SQLHelper import getPlaneInfo, getDistinctFlights, getDistinctPlanes, CSVtoSQL, insertLinkTable, getFlightAirlineModel, insertModelTable
+from SQLHelper import getPlaneInfo, getDistinctFlights, getDistinctPlanes, CSVtoSQL, insertLinkTable, getFlightAirlineModel, insertModelTable, unassignedPlanes, getDistinctPassengersRef, insertPassengerLinkTable
 
 app = Flask(__name__)
 
@@ -87,6 +87,24 @@ def newCSVPage():
         return render_template('newcsv.html')
     else:
         return render_template('newcsv.html')
+
+@app.route('/passenger-assign', methods=['POST', 'GET'])
+def passengerAssignPage():
+
+    if request.method == 'POST':
+
+        planeOption = request.form['planeChoice']
+        passengerOption = request.form['passengerChoice']
+        
+        insertPassengerLinkTable(planeOption, passengerOption)
+
+        planes = unassignedPlanes()
+        passengers = getDistinctPassengersRef()
+        return render_template('passengerassign.html', planes = planes, passengers = passengers)
+    else:
+        planes = unassignedPlanes()
+        passengers = getDistinctPassengersRef()
+        return render_template('passengerassign.html', planes = planes, passengers = passengers)
 
 if __name__ == "__main__":
     app.run(debug=True)

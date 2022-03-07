@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+{% set planes = planes %}
+{% set passengers = passengers %}
+
+<h1>Insert new plane</h1>
+
+<div class="form">
+
+    <form action="/passenger-assign" method="POST">
+        
+        <label for="planeChoice">Choose a layout:</label>
+        
+        <select name="planeChoice" id="planeChoice">
+
+            {% for plane in planes %}
+                <option value="{{ plane }}">{{ plane }}</option>
+            {% endfor %}
+
+        </select>
+        
+        <br><br>
+
+        <label for="passengerChoice">Choose a layout:</label>
+
+        <select name="passengerChoice" id="passengerChoice">
+
+            {% for passenger in passengers %}
+                <option value="{{ passenger }}">{{ passenger }}</option>
+            {% endfor %}
+
+        </select>
+        
+        <br>
+        <br>
+        
+        <input type="submit" value="Select">
+    </form>
+</div>
+
+{% endblock %}

@@ -47,7 +47,8 @@
 
 {% set rowTitles = rowTitles %}
 
-{% set seatColour = [25, 214, 255] %}
+{% set seatColourArray = [[255, 0, 255],[25, 214, 25],[214, 25, 25], [150, 15, 229],[255,0,255]]%}
+ 
 
 <div class="form">
     <div class="plane-container">
@@ -60,28 +61,19 @@
     
         <h4>{{rowTitles[loop.index0]}}</h4>
 
-        
-
         {% for seat in row %}
 
             {% set intSeat = seat | int %}
 
             {% if intSeat > 20 %}
                 {% set occColour = [150, 150, 150] %}
-                {% set intSeat = intSeat - 20 %}
+                {% set intSeat = intSeat - 21 %}
             {% else %}
                 {% set occColour = [255, 255, 255] %}
+                {% set intSeat = intSeat - 1 %}
             {% endif %}    
 
-            {% if intSeat == 1 %}
-                {% set seatColour = [0, 0, 255] %}
-            {% elif intSeat == 2 %}
-                {% set seatColour = [25, 214, 25] %}
-            {% elif intSeat == 3 %}
-                {% set seatColour = [214, 25, 25] %}
-            {% elif intSeat == 4 %}
-                {% set seatColour = [150, 15, 229] %}
-            {% endif %}
+            {% set seatColour = seatColourArray[intSeat] %}
 
             {% if seat == '' %}
                 <svg width={{canvas_size}} height={{canvas_size}}> </svg>

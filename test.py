@@ -25,3 +25,13 @@ from random import randint
 # #insertPassengerTable(('X1', '567', 'A', '3', '', ''))
 
 print(getClassArray("EXT45"))
+
+# {% if intSeat == 1 %}
+#                 {% set seatColour = [0, 0, 255] %}
+#             {% elif intSeat == 2 %}
+#                 {% set seatColour = [25, 214, 25] %}
+#             {% elif intSeat == 3 %}
+#                 {% set seatColour = [214, 25, 25] %}
+#             {% elif intSeat == 4 %}
+#                 {% set seatColour = [150, 15, 229] %}
+#             {% endif %}
