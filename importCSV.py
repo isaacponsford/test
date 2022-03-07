@@ -1,17 +1,5 @@
 import csv
 
-# def incrementClassCapacity(classNum, capacityArray):
-
-#     exists = False
-
-#     for i in capacityArray:
-#         if i[0] == classNum:
-#             exists = True
-#             i[1] += 1
-
-#     if not exists:
-#         capacityArray.append([classNum,1])
-
 def planeMetrics(csv_file):
 
     noOfRows = 0

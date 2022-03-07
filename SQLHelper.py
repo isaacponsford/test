@@ -246,3 +246,15 @@ def insertPassengerLinkTable(flightNo, passengers):
     conn.commit()
     conn.close()
 
+def getClassSeats(flightNo, classNo):
+    conn, cur = connect()
+
+    data_tuple = (classNo,flightNo)
+    base_sql = ("SELECT columnTitle, rowTitle from airplaneLayout where class = ? AND flightNumber = ?")
+
+    cur.execute(base_sql, data_tuple)
+    all_data = cur.fetchall()
+    conn.close()
+
+    return(all_data)
+    

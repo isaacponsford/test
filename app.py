@@ -125,6 +125,7 @@ def passengerAssignPage():
             passengerOption = request.form['passengerChoice']
 
             insertPassengerLinkTable(planeOption, passengerOption)
+            
             msg = "Data Successfully Inserted"
         except:
             msg = "Data was not successfully inserted. Try again"

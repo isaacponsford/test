@@ -1,19 +1,18 @@
-from SQLHelper import CSVtoSQL, insertPlaneLayout, getPlaneInfo, getDistinctFlights, getDistinctPlanes, insertLinkTable, getFlightAirlineModel, getClassArray, populateSeat, insertPassengerTable
+from SQLHelper import getClassSeats, CSVtoSQL, insertPlaneLayout, getPlaneInfo, getDistinctFlights, getDistinctPlanes, insertLinkTable, getFlightAirlineModel, getClassArray, populateSeat, insertPassengerTable
 from importCSV import planeMetrics, getPassengerCSV
 from random import randint
+from tools import createPassengerCSV
 
-# fNo = "LK90"
+createPassengerCSV()    
 
-# cArray = getClassArray(fNo)
-# print(cArray)
-# pArray = []
+# x=45
+# flightNo = "NRM45"
 
-# for i in cArray:
-#     dTuple = i[0], randint(0, i[1])
-#     pArray.append(dTuple)
-# print(pArray)
+# classSeats = getClassSeats(flightNo, 4)
+# NoOfseats = len(classSeats)
 
-#populateSeat('L', '2', "NRM45")
-
-#print(getPlaneInfo("PLANE56"))
-print(getClassArray("EXT45"))
+# if NoOfseats > x:
+#     for i in range(x):
+#         r = randint(0,NoOfseats)
+#         cur = classSeats[r]
+#         populateSeat(cur[0], cur[1], flightNo)
