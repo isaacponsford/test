@@ -3,8 +3,9 @@ import os
 import sqlite3
 
 from importCSV import planeMetrics
-from SQLHelper import getPlaneInfo, getDistinctFlights, getDistinctPlanes, CSVtoSQL, insertLinkTable, getFlightAirlineModel, insertModelTable, unassignedPlanes, getDistinctPassengersRef, insertPassengerLinkTable
-from SeatSelectorErrors import BlankNameError
+from SQLHelper import getPlaneInfo, getDistinctFlights, getDistinctPlanes, CSVtoSQL, insertLinkTable, getFlightAirlineModel, insertModelTable, unassignedPlanes, getDistinctPassengersRef, insertPassengerLinkTable, getClassArray, getPassengerCount
+from SeatSelectorErrors import BlankNameError, OverCapacityError
+from tools import totalCapacity
 
 app = Flask(__name__)
 
@@ -124,9 +125,15 @@ def passengerAssignPage():
             planeOption = request.form['planeChoice']
             passengerOption = request.form['passengerChoice']
 
+            if (totalCapacity(getClassArray(planeOption))) < (getPassengerCount(passengerOption)):
+                raise OverCapacityError
+
             insertPassengerLinkTable(planeOption, passengerOption)
             
+
             msg = "Data Successfully Inserted"
+        except OverCapacityError:
+            msg = "Too many passengers to fit in that plane, please choose new passenger set or plane"
         except:
             msg = "Data was not successfully inserted. Try again"
             

@@ -20,6 +20,7 @@ def createPassengerCSV():
     code = str(codeLetter) + str(codeNum)
     
     for i in range(groupSize):
+
         keyNum = randint(1,100)
         if keyNum < 70:
             key = 'A'
@@ -42,3 +43,10 @@ def isBlank(array):
             blank = False
     
     return blank
+
+def totalCapacity(array):
+    total = 0
+    for i in array:
+        total = total + i[1]
+
+    return(total)

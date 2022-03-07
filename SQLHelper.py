@@ -1,3 +1,4 @@
+from itertools import count
 import sqlite3
 from importCSV import planeMetrics, getPlaneLayout
 from tools import isBlank
@@ -257,4 +258,22 @@ def getClassSeats(flightNo, classNo):
     conn.close()
 
     return(all_data)
-    
+
+def getPassengerCount(flightRef):
+    conn, cur = connect()
+
+    cur.execute("SELECT Count(*) from passengers where flightRef = ?", (flightRef,))
+    all_data = cur.fetchall()
+    count = all_data[0][0]
+
+    conn.close()
+
+    return(count)
+
+def getPassengerClassArray(flightRef):
+    conn, cur = connect()
+
+    cur.execute("SELECT class, COUNT(ticketID) FROM passengers WHERE flightRef = ? AND class >= 1 GROUP BY class", (flightRef,))
+    all_data = cur.fetchall()
+    conn.close()
+    return(all_data)
