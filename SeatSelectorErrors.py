@@ -1,0 +1,2 @@
+class BlankNameError(Exception):
+    pass

@@ -5,6 +5,7 @@
 {% set planes = planes %}
 {% set passengers = passengers %}
 
+{% set msg = msg %}
 <h1>Insert new plane</h1>
 
 <div class="form">
@@ -37,6 +38,11 @@
         <br>
         
         <input type="submit" value="Select">
+
+        <br>
+        <br>
+
+        <small> {{ msg }} </small>
     </form>
 </div>
 

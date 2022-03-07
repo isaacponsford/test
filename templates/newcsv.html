@@ -10,6 +10,8 @@
 
 {% block body %}
 
+{% set msg = msg %}
+
     <h1>Insert New Plane CSV</h1>
 
     <div class="form">
@@ -25,6 +27,11 @@
             <br><br>
 
             <input type="submit" value="Get">
+
+            <br>
+            <br>
+
+            <small> {{ msg }} </small>
         </form>
     </div>
 
