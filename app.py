@@ -3,9 +3,9 @@ import os
 import sqlite3
 
 from importCSV import planeMetrics
-from SQLHelper import getPlaneInfo, getDistinctFlights, getDistinctPlanes, CSVtoSQL, insertLinkTable, getFlightAirlineModel, insertModelTable, unassignedPlanes, getDistinctPassengersRef, insertPassengerLinkTable, getClassArray, getPassengerCount
+from SQLHelper import getPlaneInfo, getDistinctFlights, getDistinctPlanes, CSVtoSQL, insertLinkTable, getFlightAirlineModel, insertModelTable, unassignedPlanes, getDistinctPassengersRef, insertPassengerLinkTable, getPassengerClassArray, getClassArray, getPassengerCount
 from SeatSelectorErrors import BlankNameError, OverCapacityError
-from tools import totalCapacity
+from tools import totalCapacity, getFullClassArray
 
 app = Flask(__name__)
 
@@ -68,11 +68,13 @@ def newPlanePage():
             
             CSVtoSQL(flightNo, planeOption)
             insertLinkTable((flightNo, planeOption))
+
             msg = "Data has been successfully inserted"
         except sqlite3.IntegrityError:
             msg = "Flight Number already exists, go to flight select to see flight"
-        except:
+        except Exception as e:
             msg = "Data has not been successfully inserted. Try again"
+            print(e)
 
         layouts = getDistinctPlanes()
         return render_template('newplane.html', layouts = layouts, msg = msg)
@@ -99,19 +101,45 @@ def newCSVPage():
 
             insertModelTable(planeName, fn.split(".")[0])
             msg = "Data inputed successfully"
+
         except FileNotFoundError:
             msg = "Please select a CSV file"
         except BlankNameError:
             msg = "Please dont leave the plane name empty"
         except sqlite3.IntegrityError:
             msg = "Plane name already exists. Go to 'new plane' on \n admin page to create a new instance of this plane"
-        except Exception as e:
+        except:
             msg = "Data not inputed successfully. Please try again"
-            print(e)
 
         return render_template('newcsv.html', msg = msg)
     else:
         return render_template('newcsv.html', msg = "")
+
+@app.route('/new-passengers', methods=['POST', 'GET'])
+def newPassengerPage():
+
+    if request.method == 'POST':
+        
+        msg = ""
+
+        try:
+            csv = request.files['csvfile']
+            
+            fn = csv.filename.replace(" ", "").lower()
+            csv.save(os.path.join("passengerCSV", fn))
+
+            msg = "Data inputed successfully"
+
+        except FileNotFoundError:
+            msg = "Please select a CSV file"
+        except sqlite3.IntegrityError:
+            msg = "Plane name already exists. Go to 'new plane' on \n admin page to create a new instance of this plane"
+        except:
+            msg = "Data not inputed successfully. Please try again"
+
+        return render_template('newpassengers.html', msg = msg)
+    else:
+        return render_template('newpassengers.html', msg = "")
 
 @app.route('/passenger-assign', methods=['POST', 'GET'])
 def passengerAssignPage():
@@ -119,6 +147,7 @@ def passengerAssignPage():
     if request.method == 'POST':
 
         msg = ""
+        classArray = []
        
         try:
 
@@ -130,20 +159,23 @@ def passengerAssignPage():
 
             insertPassengerLinkTable(planeOption, passengerOption)
             
-
+            classArray = getFullClassArray(getClassArray(planeOption), getPassengerClassArray(passengerOption))
+            
             msg = "Data Successfully Inserted"
+
         except OverCapacityError:
             msg = "Too many passengers to fit in that plane, please choose new passenger set or plane"
-        except:
+        except Exception as e:
             msg = "Data was not successfully inserted. Try again"
+            print(e)
             
         planes = unassignedPlanes()
         passengers = getDistinctPassengersRef()
-        return render_template('passengerassign.html', planes = planes, passengers = passengers, msg = msg)
+        return render_template('passengerassign.html', planes = planes, passengers = passengers, msg = msg, classArray=classArray)
     else:
         planes = unassignedPlanes()
         passengers = getDistinctPassengersRef()
-        return render_template('passengerassign.html', planes = planes, passengers = passengers, msg = "")
+        return render_template('passengerassign.html', planes = planes, passengers = passengers, msg = "", classArray = [])
 
 if __name__ == "__main__":
     app.run(debug=True)

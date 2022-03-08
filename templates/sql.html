@@ -47,7 +47,7 @@
 
 {% set rowTitles = rowTitles %}
 
-{% set seatColourArray = [[255, 0, 255],[25, 214, 25],[214, 25, 25], [150, 15, 229],[255,0,255]]%}
+{% set seatColourArray = [[255, 0, 255],[25, 214, 25],[214, 25, 25], [150, 15, 229],[255,0,255],[255,128,0],[255,51,153],[204,153,255]]%}
  
 
 <div class="form">
@@ -73,7 +73,11 @@
                 {% set intSeat = intSeat - 1 %}
             {% endif %}    
 
-            {% set seatColour = seatColourArray[intSeat] %}
+            {% if intSeat > 8 %}
+            {% set seatColour = [255,255,0] %}
+            {% else %}
+                {% set seatColour = seatColourArray[intSeat] %}
+            {% endif %}    
 
             {% if seat == '' %}
                 <svg width={{canvas_size}} height={{canvas_size}}> </svg>

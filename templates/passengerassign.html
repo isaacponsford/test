@@ -4,7 +4,7 @@
 
 {% set planes = planes %}
 {% set passengers = passengers %}
-
+{% set classArray = classArray %}
 {% set msg = msg %}
 <h1>Insert new plane</h1>
 
@@ -17,7 +17,7 @@
         <select name="planeChoice" id="planeChoice">
 
             {% for plane in planes %}
-                <option value="{{ plane }}">{{ plane }}</option>
+                <option value="{{ plane[0] }}">{{ plane[1] }}</option>
             {% endfor %}
 
         </select>
@@ -29,7 +29,7 @@
         <select name="passengerChoice" id="passengerChoice">
 
             {% for passenger in passengers %}
-                <option value="{{ passenger }}">{{ passenger }}</option>
+                <option value="{{ passenger[0] }}">{{ passenger[1] }}</option>
             {% endfor %}
 
         </select>
@@ -44,6 +44,37 @@
 
         <small> {{ msg }} </small>
     </form>
+</div>
+
+<div class="content">
+    {% if classArray|length < 1 %}
+    <h4 style="text-align: center">Please select A plane</h4>
+    {% else %}
+    <br><br>
+    <table>
+        <tr>
+            <th>Class</th>
+            <th>Seats</th>
+            <th>Passengers</th>
+            <th>Capacity</th>
+        </tr>
+        {% for class in classArray %}
+            <tr>
+                <td>{{ class[0] }}</td>
+                <td>{{ class[1] }}</td>
+                <td>{{ class[2] }} </td>
+
+                {% if class[3] > 0 %}
+                    {% set fontColour = "green" %}
+                {% else %}
+                    {% set fontColour = "red" %}
+                {% endif %}
+                
+                <td style = "color:{{ fontColour }}">{{ class[3] }} </td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
 </div>
 
 {% endblock %}

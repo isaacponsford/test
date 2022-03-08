@@ -65,7 +65,32 @@ def getPassengerCSV(csv_file):
         headings = next(reader)
 
         for row in reader:
-            #print(row)
             passengerData.append(row)
 
         return passengerData
+
+def getValidCSV(csv_file):
+
+    minVal = maxVal = 1
+
+    csv_file = "plane_layouts/" + csv_file + ".csv"
+
+    with open(csv_file, 'r', encoding='utf-8-sig') as file:
+        
+        reader = csv.reader(file)
+
+        for row in reader:
+
+            rowLayout = row[1::]
+            for seat in rowLayout:
+                
+                if seat.isnumeric() == True:
+                    
+                    seat = int(seat)
+                    if seat > maxVal:
+                        maxVal = seat
+                    elif seat < minVal:
+                        minVal = seat
+    
+    return((minVal, maxVal))
+    

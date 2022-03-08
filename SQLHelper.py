@@ -1,7 +1,7 @@
 from itertools import count
 import sqlite3
 from importCSV import planeMetrics, getPlaneLayout
-from tools import isBlank
+from tools import isBlank, totalCapacity
 
 def connect():
     conn = sqlite3.connect("seatSelector.db", check_same_thread=False)
@@ -10,7 +10,6 @@ def connect():
 
 def insertPlaneLayout(data_tuple):
     conn, cur = connect()
-    print(data_tuple)
     base_sql = """insert into airplaneLayout (flightNumber, columnTitle, rowTitle, class, type, sequenceNumber, occupied) VALUES (?,?,?,?,?,?,?)"""
     cur.execute(base_sql, data_tuple)
     conn.commit()
@@ -167,7 +166,7 @@ def getDistinctPlanes():
 def insertLinkTable(data_tuple):
     conn, cur = connect()
 
-    base_sql = ("""insert into airplaneLinkTable VALUES (?,?)""")
+    base_sql = ("insert into airplaneLinkTable (flightNo, airplaneModel) VALUES (?,?)")
     cur.execute(base_sql, data_tuple)
     conn.commit()
     conn.close()
@@ -224,7 +223,15 @@ def unassignedPlanes():
     cData = SQLSelectClean(all_data)
     
     conn.close()
-    return(cData)
+
+    planeArray = []
+
+    for plane in cData:
+        capacity = (totalCapacity(getClassArray(plane)))
+        string = plane + " (" + str(capacity) + ")"
+        planeArray.append([plane, string])
+
+    return(planeArray)
 
 def getDistinctPassengersRef():
     conn, cur = connect()
@@ -235,7 +242,15 @@ def getDistinctPassengersRef():
     passengerRefs = SQLSelectClean(all_data)
 
     conn.close()
-    return(passengerRefs)
+
+    passengerArray = []
+
+    for passenger in passengerRefs:
+            capacity = getPassengerCount(passenger)
+            string = passenger + " (" + str(capacity) + ")"
+            passengerArray.append([passenger, string])
+
+    return(passengerArray)
 
 def insertPassengerLinkTable(flightNo, passengers):
     conn, cur = connect()
@@ -274,6 +289,14 @@ def getPassengerClassArray(flightRef):
     conn, cur = connect()
 
     cur.execute("SELECT class, COUNT(ticketID) FROM passengers WHERE flightRef = ? AND class >= 1 GROUP BY class", (flightRef,))
+    all_data = cur.fetchall()
+    conn.close()
+    return(all_data)
+
+def getPassengerGroupDecending(flightRef):
+    conn, cur = connect()
+
+    cur.execute("SELECT ticketID, COUNT(flightRef) FROM passengers WHERE flightRef = ? GROUP BY ticketID ORDER BY COUNT(flightRef) DESC", (flightRef,))
     all_data = cur.fetchall()
     conn.close()
     return(all_data)

@@ -1,4 +1,5 @@
-from SQLHelper import getClassSeats, CSVtoSQL, insertPlaneLayout, getPlaneInfo, getDistinctFlights, getDistinctPlanes, insertLinkTable, getFlightAirlineModel, getClassArray, populateSeat, insertPassengerTable, getPassengerCount, getPassengerClassArray
+from calendar import c
+from SQLHelper import getClassSeats, CSVtoSQL, getDistinctPassengersRef, getPassengerGroupDecending, insertPlaneLayout, getPlaneInfo, getDistinctFlights, getDistinctPlanes, insertLinkTable, getFlightAirlineModel, getClassArray, populateSeat, insertPassengerTable, getPassengerCount, getPassengerClassArray, unassignedPlanes
 from importCSV import planeMetrics, getPassengerCSV
 from random import randint
 from tools import createPassengerCSV, totalCapacity
@@ -11,8 +12,6 @@ from tools import createPassengerCSV, totalCapacity
 # classSeats = getClassSeats(flightNo, 4)
 # NoOfseats = len(classSeats)
 
-
-
 # if NoOfseats > x:
 #     for i in range(x):
 #         r = randint(0,NoOfseats)
@@ -20,8 +19,11 @@ from tools import createPassengerCSV, totalCapacity
 #         populateSeat(cur[0], cur[1], flightNo)
 
 
+# newFlight = "804"
+# createPassengerCSV(newFlight, 75)
+# passengerArray = getPassengerCSV(newFlight)
 
-#print(getPassengerCount("567"))
+# for passenger in passengerArray:
+#     insertPassengerTable(passenger)
 
-print((getClassArray("NRM45")))
-print(getPassengerClassArray("567"))
+print(getPassengerGroupDecending("804"))
