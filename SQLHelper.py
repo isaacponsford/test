@@ -296,7 +296,7 @@ def getPassengerClassArray(flightRef):
 def getPassengerGroupDecending(flightRef):
     conn, cur = connect()
 
-    cur.execute("SELECT ticketID, COUNT(flightRef) FROM passengers WHERE flightRef = ? GROUP BY ticketID ORDER BY COUNT(flightRef) DESC", (flightRef,))
+    cur.execute("SELECT ticketID, COUNT(flightRef), class FROM passengers WHERE flightRef = ? GROUP BY ticketID ORDER BY class ASC, COUNT(flightRef) DESC", (flightRef,))
     all_data = cur.fetchall()
     conn.close()
     return(all_data)
