@@ -293,10 +293,32 @@ def getPassengerClassArray(flightRef):
     conn.close()
     return(all_data)
 
-def getPassengerGroupDecending(flightRef):
+def getPassengerGroupDecending(flightRef, classRef):
     conn, cur = connect()
 
-    cur.execute("SELECT ticketID, COUNT(flightRef), class FROM passengers WHERE flightRef = ? GROUP BY ticketID ORDER BY class ASC, COUNT(flightRef) DESC", (flightRef,))
+    data_tuple = (flightRef, classRef)
+    base_sql = ("SELECT ticketID, COUNT(flightRef), class FROM passengers WHERE flightRef = ? AND class = ? GROUP BY ticketID ORDER BY COUNT(flightRef) DESC")
+    
+    cur.execute(base_sql, data_tuple)
     all_data = cur.fetchall()
     conn.close()
     return(all_data)
+
+def getFlightPassengerRef(flightRef):
+
+    conn, cur = connect()
+
+    cur.execute("SELECT passengerFlightRef from airplaneLinkTable WHERE flightNo = ?", (flightRef,))
+    all_data = cur.fetchall()[0][0]
+    conn.close()
+    return(all_data)
+
+def insertPassengerRefFlight(flight, column, row, passengerRef):
+    conn, cur = connect()
+    
+    data_tuple = (passengerRef, flight, row, column)
+    base_sql = ("UPDATE airplaneLayout SET passengerRef = ? WHERE flightNumber = ? AND rowTitle = ? AND columnTitle = ?")
+
+    cur.execute(base_sql, data_tuple)
+    conn.commit()
+    conn.close()

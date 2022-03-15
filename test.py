@@ -1,35 +1,41 @@
-from SQLHelper import getClassSeats, CSVtoSQL, getDistinctPassengersRef, getPassengerGroupDecending, insertPlaneLayout, getPlaneInfo, getDistinctFlights, getDistinctPlanes, insertLinkTable, getFlightAirlineModel, getClassArray, populateSeat, insertPassengerTable, getPassengerCount, getPassengerClassArray, unassignedPlanes
+from SQLHelper import getClassSeats, CSVtoSQL, getDistinctPassengersRef, getFlightPassengerRef, getPassengerGroupDecending, insertPassengerRefFlight, insertPlaneLayout, getPlaneInfo, getDistinctFlights, getDistinctPlanes, insertLinkTable, getFlightAirlineModel, getClassArray, populateSeat, insertPassengerTable, getPassengerCount, getPassengerClassArray, unassignedPlanes
 from importCSV import getValidCSV, planeMetrics, getPassengerCSV
 from random import randint
 from tools import createPassengerCSV, totalCapacity
 
-testPlane = [[1,20], [2,40], [3,50], [4,100]]
-testPassenger = [[1,5],[2,10],[3,90],[4,60]]
-#excess = [[1, -15], [2, -30], [3, 40], [4, -40]]
+def getAssignedClassTicket(classRef, amount, flightRef):
+    seatCount = 0
+    passRef = getFlightPassengerRef(flightRef)
+    
+    all_pass = getPassengerGroupDecending(passRef, str(classRef))
+    all_seat = getClassSeats(flightRef, classRef)
 
-def arrayAdd(list1,list2, index):
-    return [list1[index][0], (list1[index][1] + list2[index][1])]
+    assigned_tickets =[]
 
-excess = []
-x = len(testPlane)
+    loop_amount = amount
 
-for i in range(x):
-    excess.append([testPlane[i][0], (testPassenger[i][1] - testPlane[i][1])])
-
-actual = []
-
-for i in range(x):
-
-    index = x-(i+1)
-    curentClass = excess[index]
-
-    print(testPassenger[index][0], testPassenger[index][1] , excess[index][1], testPlane[index][1])
-
-    if curentClass[1] > 0:
-        actual.append(testPlane[index])
-    else:
-        if (testPassenger[index] + excess[index]) > testPlane[index]:
-            actual.append(testPlane[index])
-            excess[index-1][1] = excess[index-1][1]  + (testPassenger[index][1] + excess[index][1]) - testPlane[index][1]
+    for passenger in all_pass:
+        currGroupSize = passenger[1]
+        if loop_amount >= currGroupSize:
+            loop_amount = loop_amount - currGroupSize
+            assigned_tickets.append((passenger[0], all_seat[seatCount:(seatCount+currGroupSize)]))
+            seatCount = seatCount + currGroupSize
         else:
-            actual.append(arrayAdd(testPassenger, excess, index))
+            pass
+    
+    if loop_amount > 0:
+        print("Seating Waring @getAssignedClassTicket")
+
+    return (assigned_tickets)
+
+
+#populatePlaneClass(4, 20, "ADD90")
+
+#insertPassengerRefFlight("EXT45", "C", 6, "x78")
+
+all_tickets = getAssignedClassTicket(4, 20, "ADD90")
+
+for group_tickets in all_tickets:
+    group = group_tickets[1]
+    for ticket in group:
+        insertPassengerRefFlight("ADD90", ticket[0], ticket[1], group_tickets[0])
