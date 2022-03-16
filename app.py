@@ -187,8 +187,6 @@ def passengerAssignPage():
         passengers = getDistinctPassengersRef()
         return render_template('passengerassign.html', planes = planes, passengers = passengers, msg = "", classArray = [])
 
-
-
 @app.route('/passenger-remove', methods=['POST', 'GET'])
 def passengerRemovePage():
 

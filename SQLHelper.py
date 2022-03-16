@@ -276,7 +276,7 @@ def getClassSeats(flightNo, classNo):
     conn, cur = connect()
 
     data_tuple = (classNo,flightNo)
-    base_sql = ("SELECT columnTitle, rowTitle from airplaneLayout where class = ? AND flightNumber = ?")
+    base_sql = ("SELECT columnTitle, rowTitle from airplaneLayout where class = ? AND flightNumber = ? AND passengerRef IS NULL")
 
     cur.execute(base_sql, data_tuple)
     all_data = cur.fetchall()
@@ -303,12 +303,13 @@ def getPassengerClassArray(flightRef):
     conn.close()
     return(all_data)
 
-def getPassengerGroupDecending(flightRef, classRef):
+#passs=067, flight=add90
+
+def getPassengerGroupDecending(passRef, classRef, flightRef):
     conn, cur = connect()
 
-    data_tuple = (flightRef, classRef)
-    base_sql = ("SELECT ticketID, COUNT(flightRef), class FROM passengers WHERE flightRef = ? AND class = ? GROUP BY ticketID ORDER BY COUNT(flightRef) DESC")
-    
+    data_tuple = (passRef, classRef, flightRef)
+    base_sql = ("SELECT ticketID, COUNT(*) AS passengerCount, class FROM passengers WHERE flightRef = ? AND class >= ? AND ticketID NOT IN(SELECT passengerRef from airplaneLayout WHERE flightNumber = ? AND passengerRef NOT NULL) GROUP BY ticketID ORDER BY class DESC , passengerCount DESC")
     cur.execute(base_sql, data_tuple)
     all_data = cur.fetchall()
     conn.close()
