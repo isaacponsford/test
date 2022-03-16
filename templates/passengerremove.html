@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+{% set planes = planes %}
+{% set passengers = passengers %}
+{% set classArray = classArray %}
+{% set msg = msg %}
+<h1>Insert new plane</h1>
+
+<div class="form">
+
+    <form action="/passenger-remove" method="POST">
+        
+        <label for="planeChoice">Choose a layout:</label>
+        
+        <select name="planeChoice" id="planeChoice">
+
+            {% for plane in planes %}
+                <option value="{{ plane}}">{{ plane }}</option>
+            {% endfor %}
+
+        </select>
+        
+        <br>
+        <br>
+        
+        <input type="submit" value="Clear">
+
+        <br>
+        <br>
+
+        <small> {{ msg }} </small>
+
+    </form>
+
+{% endblock %}

@@ -1,7 +1,7 @@
-from SQLHelper import getClassSeats, CSVtoSQL, getDistinctPassengersRef, getFlightPassengerRef, getPassengerGroupDecending, insertPassengerRefFlight, insertPlaneLayout, getPlaneInfo, getDistinctFlights, getDistinctPlanes, insertLinkTable, getFlightAirlineModel, getClassArray, populateSeat, insertPassengerTable, getPassengerCount, getPassengerClassArray, unassignedPlanes
+from SQLHelper import clearPassengersFlightNumber, getClassSeats, CSVtoSQL, getDistinctPassengersRef, getFlightPassengerRef, getPassengerGroupDecending, insertPassengerRefFlight, insertPlaneLayout, getPlaneInfo, getDistinctFlights, getDistinctPlanes, insertLinkTable, getFlightAirlineModel, getClassArray, populateSeat, insertPassengerTable, getPassengerCount, getPassengerClassArray, unassignedPlanes
 from importCSV import getValidCSV, planeMetrics, getPassengerCSV
 from random import randint
-from tools import createPassengerCSV, totalCapacity
+from tools import createPassengerCSV, getFullClassArray, totalCapacity
 
 def getAssignedClassTicket(classRef, amount, flightRef):
     seatCount = 0
@@ -29,13 +29,21 @@ def getAssignedClassTicket(classRef, amount, flightRef):
     return (assigned_tickets)
 
 
-#populatePlaneClass(4, 20, "ADD90")
+# #populatePlaneClass(4, 20, "ADD90")
 
-#insertPassengerRefFlight("EXT45", "C", 6, "x78")
+# #insertPassengerRefFlight("EXT45", "C", 6, "x78")
 
-all_tickets = getAssignedClassTicket(4, 20, "ADD90")
+# all_tickets = getAssignedClassTicket(4, 20, "ADD90")
 
-for group_tickets in all_tickets:
-    group = group_tickets[1]
-    for ticket in group:
-        insertPassengerRefFlight("ADD90", ticket[0], ticket[1], group_tickets[0])
+# for group_tickets in all_tickets:
+#     group = group_tickets[1]
+#     for ticket in group:
+#         insertPassengerRefFlight("ADD90", ticket[0], ticket[1], group_tickets[0])
+
+print(getPlaneInfo("ADD90"))
+
+# {% if seatData[0] == "XX" %}
+#     { % set passengerData = "Seat is unoccupied" % }
+# {% else %}
+#     { % set passengerData = seatData[0] % }
+# {% endif %}    

@@ -3,7 +3,7 @@ import os
 import sqlite3
 
 from importCSV import planeMetrics
-from SQLHelper import getPlaneInfo, getDistinctFlights, getDistinctPlanes, CSVtoSQL, insertLinkTable, getFlightAirlineModel, insertModelTable, unassignedPlanes, getDistinctPassengersRef, insertPassengerLinkTable, getPassengerClassArray, getClassArray, getPassengerCount
+from SQLHelper import clearPassengersFlightNumber, getPlaneInfo, getDistinctFlights, getDistinctPlanes, CSVtoSQL, insertLinkTable, getFlightAirlineModel, insertModelTable, unassignedPlanes, getDistinctPassengersRef, insertPassengerLinkTable, getPassengerClassArray, getClassArray, getPassengerCount
 from SeatSelectorErrors import BlankNameError, OverCapacityError
 from tools import totalCapacity, getFullClassArray
 
@@ -148,27 +148,37 @@ def passengerAssignPage():
 
         msg = ""
         classArray = []
-       
-        try:
 
-            planeOption = request.form['planeChoice']
-            passengerOption = request.form['passengerChoice']
+        if request.form["btn"]=="View":
 
-            if (totalCapacity(getClassArray(planeOption))) < (getPassengerCount(passengerOption)):
-                raise OverCapacityError
+            try:
 
-            insertPassengerLinkTable(planeOption, passengerOption)
-            
-            classArray = getFullClassArray(getClassArray(planeOption), getPassengerClassArray(passengerOption))
-            
-            msg = "Data Successfully Inserted"
+                planeOption = request.form['planeChoice']
+                passengerOption = request.form['passengerChoice']
 
-        except OverCapacityError:
-            msg = "Too many passengers to fit in that plane, please choose new passenger set or plane"
-        except Exception as e:
-            msg = "Data was not successfully inserted. Try again"
-            print(e)
-            
+                if (totalCapacity(getClassArray(planeOption))) < (getPassengerCount(passengerOption)):
+                    raise OverCapacityError
+                
+                classArray = getFullClassArray(getClassArray(planeOption), getPassengerClassArray(passengerOption))
+                
+                msg = "Data Shown"
+
+            except OverCapacityError:
+                msg = "Too many passengers to fit in that plane, please choose new passenger set or plane"
+
+        elif request.form["btn"]=="Input":
+
+            try:
+                planeOption = request.form['planeChoice']
+                passengerOption = request.form['passengerChoice']
+
+                insertPassengerLinkTable(planeOption, passengerOption)
+
+                classArray = getFullClassArray(getClassArray(planeOption), getPassengerClassArray(passengerOption))
+                msg = "Data Successfully Inserted"
+            except Exception as e:
+                msg = "Data was not successfully inserted. Try again"
+
         planes = unassignedPlanes()
         passengers = getDistinctPassengersRef()
         return render_template('passengerassign.html', planes = planes, passengers = passengers, msg = msg, classArray=classArray)
@@ -176,6 +186,27 @@ def passengerAssignPage():
         planes = unassignedPlanes()
         passengers = getDistinctPassengersRef()
         return render_template('passengerassign.html', planes = planes, passengers = passengers, msg = "", classArray = [])
+
+
+
+@app.route('/passenger-remove', methods=['POST', 'GET'])
+def passengerRemovePage():
+
+    if request.method == 'POST':
+        msg = ""
+
+        try:
+            planeOption = request.form['planeChoice']
+            clearPassengersFlightNumber(planeOption)
+            msg = "Plane successfully cleared"
+        except Exception as e:
+            msg = "Plane NOT successfully cleared"
+            print(e)
+        planes = getDistinctFlights()
+        return render_template('passengerremove.html', planes = planes, msg = msg)
+    else:
+        planes = getDistinctFlights()
+        return render_template('passengerremove.html', planes = planes, msg = "")
 
 if __name__ == "__main__":
     app.run(debug=True)

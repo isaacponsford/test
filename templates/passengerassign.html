@@ -37,44 +37,44 @@
         <br>
         <br>
         
-        <input type="submit" value="Select">
+        <input type="submit" name = "btn" value="View">
 
         <br>
         <br>
 
         <small> {{ msg }} </small>
-    </form>
-</div>
 
-<div class="content">
-    {% if classArray|length < 1 %}
-    <h4 style="text-align: center">Please select A plane</h4>
-    {% else %}
-    <br><br>
-    <table>
-        <tr>
-            <th>Class</th>
-            <th>Seats</th>
-            <th>Passengers</th>
-            <th>Capacity</th>
-        </tr>
-        {% for class in classArray %}
+        {% if classArray|length < 1 %}
+        <h4 style="text-align: center">Please select A plane</h4>
+        {% else %}
+        <br><br>
+        <table>
             <tr>
-                <td>{{ class[0] }}</td>
-                <td>{{ class[1] }}</td>
-                <td>{{ class[2] }} </td>
-
-                {% if class[3] > 0 %}
-                    {% set fontColour = "green" %}
-                {% else %}
-                    {% set fontColour = "red" %}
-                {% endif %}
-                
-                <td style = "color:{{ fontColour }}">{{ class[3] }} </td>
+                <th>Class</th>
+                <th>Seats</th>
+                <th>Passengers</th>
+                <th>Capacity</th>
             </tr>
-        {% endfor %}
-    </table>
-    {% endif %}
-</div>
+            {% for class in classArray %}
+                <tr>
+                    <td>{{ class[0] }}</td>
+                    <td>{{ class[1] }}</td>
+                    <td>{{ class[2] }} </td>
+
+                    {% if class[3] > 0 %}
+                        {% set fontColour = "green" %}
+                    {% else %}
+                        {% set fontColour = "red" %}
+                    {% endif %}
+                    
+                    <td style = "color:{{ fontColour }}">{{ class[3] }} </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <br><br>
+        <input type="submit" name = "btn" value="Input">
+        {% endif %}
+
+    </form>
 
 {% endblock %}

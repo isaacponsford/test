@@ -62,27 +62,29 @@
         <h4>{{rowTitles[loop.index0]}}</h4>
 
         {% for seat in row %}
-
-            {% set intSeat = seat | int %}
-
-            {% if intSeat > 20 %}
-                {% set occColour = [150, 150, 150] %}
-                {% set intSeat = intSeat - 21 %}
-            {% else %}
-                {% set occColour = [255, 255, 255] %}
-                {% set intSeat = intSeat - 1 %}
-            {% endif %}    
-
-            {% if intSeat > 8 %}
-            {% set seatColour = [255,255,0] %}
-            {% else %}
-                {% set seatColour = seatColourArray[intSeat] %}
-            {% endif %}    
-
+            
             {% if seat == '' %}
                 <svg width={{canvas_size}} height={{canvas_size}}> </svg>
             {% else %}
-                <svg width={{canvas_size}} height={{canvas_size}}>
+
+                {% set seatData = seat.split(':') %}
+                {% set intSeat = seatData[1] | int %}
+                
+                {% if intSeat > 20 %}
+                    {% set occColour = [150, 150, 150] %}
+                    {% set intSeat = intSeat - 21 %}
+                {% else %}
+                    {% set occColour = [255, 255, 255] %}
+                    {% set intSeat = intSeat - 1 %}
+                {% endif %}    
+
+                {% if intSeat > 7 %}
+                    {% set seatColour = [255,255,0] %}
+                {% else %}
+                    {% set seatColour = seatColourArray[intSeat] %}
+                {% endif %}    
+
+                <svg width={{canvas_size}} height={{canvas_size}} onclick = "alert('{{seatData[0]}}')">
                     <rect x={{icon_pad}} y={{icon_pad}} rx={{icon_round}} ry={{icon_round}} width={{icon_size}} height={{icon_size}}
                     style="fill:rgb({{occColour[0]}},{{occColour[1]}},{{occColour[2]}});stroke:rgb({{seatColour[0]}},{{seatColour[1]}},{{seatColour[2]}});stroke-width:{{icon_line_width}};opacity:1" />
                 </svg>

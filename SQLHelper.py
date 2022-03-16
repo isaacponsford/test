@@ -48,7 +48,7 @@ def SQLSelectClean(all_data):
 def getPlaneInfo(flightNo):
     conn, cur = connect()
 
-    cur.execute("SELECT columnTitle, rowTitle, class, type, occupied from airplaneLayout WHERE flightNumber = ? ORDER By sequenceNumber", (flightNo,))
+    cur.execute("SELECT columnTitle, rowTitle, class, type, passengerRef from airplaneLayout WHERE flightNumber = ? ORDER By sequenceNumber", (flightNo,))
     all_data = cur.fetchall()
 
     airlineModel = getFlightAirlineModel(flightNo)
@@ -68,14 +68,23 @@ def getPlaneInfo(flightNo):
 
         current_data = all_data[count]
 
-        occupiedData = current_data[4]
+        passengerData = current_data[4]
+
+        if passengerData == None:
+            occupiedData = 0
+            passengerData = "XX"
+        else:
+            occupiedData = 1
+
         classData = current_data[2]
-        
+
         try:
             inputData = (occupiedData * 20) + classData
         except:
             pass
 
+        inputData = passengerData + ":" + str(inputData)
+        
         temp.append(str(inputData))
         titles.append(str(current_data[0]))
 
@@ -102,6 +111,7 @@ def getPlaneInfo(flightNo):
 
     conn.close()
     return(layout)
+    #print(layout)
 
 def CSVtoSQL(flight_number, csv_add):
 
@@ -320,5 +330,26 @@ def insertPassengerRefFlight(flight, column, row, passengerRef):
     base_sql = ("UPDATE airplaneLayout SET passengerRef = ? WHERE flightNumber = ? AND rowTitle = ? AND columnTitle = ?")
 
     cur.execute(base_sql, data_tuple)
+    conn.commit()
+    conn.close()
+
+def passengerPlanes():
+    conn, cur = connect()
+
+    #SELECT flightNumber, count(*) from airplaneLayout AS a2 WHERE passengerRef NOT NULL GROUP by flightNumber
+
+    cur.execute("SELECT DISTINCT flightNumber from airplaneLayout")
+    all_flights = cur.fetchall()
+
+    distinct_flights = SQLSelectClean(all_flights)
+
+    conn.close()
+    return(distinct_flights)
+
+def clearPassengersFlightNumber(flightRef):
+    conn, cur = connect()
+    
+    cur.execute("UPDATE airplaneLayout SET passengerRef = NULL WHERE flightNumber = ?", (flightRef,))
+
     conn.commit()
     conn.close()
