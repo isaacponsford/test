@@ -353,3 +353,18 @@ def clearPassengersFlightNumber(flightRef):
 
     conn.commit()
     conn.close()
+
+def passengerExists(passRef):
+    conn, cur = connect()
+    
+    cur.execute("SELECT * from passengers WHERE flightRef = ?", (passRef,))
+    data = len(cur.fetchall())
+    conn.close()
+
+    if data > 0:
+        return True
+    else:
+        return False
+
+    
+    

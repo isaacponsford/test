@@ -3,3 +3,6 @@ class BlankNameError(Exception):
 
 class OverCapacityError(Exception):
     pass
+
+class PassengerExistsError(Exception):
+    pass

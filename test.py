@@ -1,4 +1,4 @@
-from SQLHelper import clearPassengersFlightNumber, getClassSeats, CSVtoSQL, getDistinctPassengersRef, getFlightPassengerRef, getPassengerGroupDecending, insertPassengerRefFlight, insertPlaneLayout, getPlaneInfo, getDistinctFlights, getDistinctPlanes, insertLinkTable, getFlightAirlineModel, getClassArray, populateSeat, insertPassengerTable, getPassengerCount, getPassengerClassArray, unassignedPlanes
+from SQLHelper import clearPassengersFlightNumber, getClassSeats, CSVtoSQL, getDistinctPassengersRef, getFlightPassengerRef, getPassengerGroupDecending, insertPassengerRefFlight, insertPlaneLayout, getPlaneInfo, getDistinctFlights, getDistinctPlanes, insertLinkTable, getFlightAirlineModel, getClassArray, passengerExists, populateSeat, insertPassengerTable, getPassengerCount, getPassengerClassArray, unassignedPlanes
 from importCSV import getValidCSV, planeMetrics, getPassengerCSV
 from random import randint
 from tools import createPassengerCSV, getFullClassArray, totalCapacity
@@ -39,8 +39,6 @@ def getAssignedClassTicket(classRef, amount, flightRef):
 #     group = group_tickets[1]
 #     for ticket in group:
 #         insertPassengerRefFlight("ADD90", ticket[0], ticket[1], group_tickets[0])
-
-print(getPlaneInfo("ADD90"))
 
 # {% if seatData[0] == "XX" %}
 #     { % set passengerData = "Seat is unoccupied" % }

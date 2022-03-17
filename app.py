@@ -4,7 +4,7 @@ import sqlite3
 
 from importCSV import planeMetrics
 from SQLHelper import clearPassengersFlightNumber, getPlaneInfo, getDistinctFlights, getDistinctPlanes, CSVtoSQL, insertLinkTable, getFlightAirlineModel, insertModelTable, unassignedPlanes, getDistinctPassengersRef, insertPassengerLinkTable, getPassengerClassArray, getClassArray, getPassengerCount
-from SeatSelectorErrors import BlankNameError, OverCapacityError
+from SeatSelectorErrors import BlankNameError, OverCapacityError, PassengerExistsError
 from tools import totalCapacity, getFullClassArray
 
 app = Flask(__name__)
@@ -123,17 +123,22 @@ def newPassengerPage():
         msg = ""
 
         try:
+            
             csv = request.files['csvfile']
             
             fn = csv.filename.replace(" ", "").lower()
+            if fn.split('.')[0] == True:
+                raise PassengerExistsError
+
             csv.save(os.path.join("passengerCSV", fn))
 
+    
             msg = "Data inputed successfully"
 
         except FileNotFoundError:
             msg = "Please select a CSV file"
-        except sqlite3.IntegrityError:
-            msg = "Plane name already exists. Go to 'new plane' on \n admin page to create a new instance of this plane"
+        except PassengerExistsError:
+            msg = "Passengers already exists"
         except:
             msg = "Data not inputed successfully. Please try again"
 
