@@ -2,8 +2,8 @@ from flask import Flask, render_template, request
 import os
 import sqlite3
 
-from importCSV import planeMetrics
-from SQLHelper import clearPassengersFlightNumber, getPlaneInfo, getDistinctFlights, getDistinctPlanes, CSVtoSQL, insertLinkTable, getFlightAirlineModel, insertModelTable, unassignedPlanes, getDistinctPassengersRef, insertPassengerLinkTable, getPassengerClassArray, getClassArray, getPassengerCount
+from importCSV import getPassengerCSV, planeMetrics
+from SQLHelper import clearPassengersFlightNumber, getPlaneInfo, getDistinctFlights, getDistinctPlanes, CSVtoSQL, insertLinkTable, getFlightAirlineModel, insertModelTable, insertPassengerTable, passengerExists, unassignedPlanes, getDistinctPassengersRef, insertPassengerLinkTable, getPassengerClassArray, getClassArray, getPassengerCount
 from SeatSelectorErrors import BlankNameError, OverCapacityError, PassengerExistsError
 from tools import totalCapacity, getFullClassArray
 
@@ -127,12 +127,18 @@ def newPassengerPage():
             csv = request.files['csvfile']
             
             fn = csv.filename.replace(" ", "").lower()
-            if fn.split('.')[0] == True:
+            passRef = fn.split('.')[0]
+
+            if passengerExists(passRef) == True:
                 raise PassengerExistsError
 
             csv.save(os.path.join("passengerCSV", fn))
 
-    
+            passengers = (getPassengerCSV(passRef))
+            
+            for x in passengers:
+                insertPassengerTable(x)
+
             msg = "Data inputed successfully"
 
         except FileNotFoundError:

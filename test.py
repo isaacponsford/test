@@ -53,17 +53,18 @@ all_tickets = getAssignedClassTicket(3, 70, "DDD70")
 
 # passengers = (getPassengerCSV("700"))
 
-<<<<<<< HEAD
 # {% if seatData[0] == "XX" %}
 #     { % set passengerData = "Seat is unoccupied" % }
 # {% else %}
 #     { % set passengerData = seatData[0] % }
 # {% endif %}    
-=======
+
 # for x in passengers:
 #     insertPassengerTable(x)
 
 #print(getPassengerGroupDecending("444", str(4)))
 
-#
->>>>>>> 0f2b20c496c3226c21dce79f20e7658f345e65cb
+# for x in passengers:
+#     insertPassengerTable(x)
+
+#print(getPassengerGroupDecending("444", str(4)))
