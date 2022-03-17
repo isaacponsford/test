@@ -9,28 +9,6 @@ from tools import totalCapacity, getFullClassArray
 
 app = Flask(__name__)
 
-# @app.route('/plane-layouts', methods=['POST', 'GET'])
-# def planeLayoutPage():
-
-#     if request.method == 'POST':
-#         planeOption = request.form['planeChoice']
-        
-#         noOfRows, noOfColumns, capacity, capacityArray, planeLayout, rowTitles,columnTitles = planeMetrics(planeOption)
-
-#         return render_template('index.html', planeLayout = planeLayout, noOfColumns = noOfColumns, cTs=columnTitles, rowTitles=rowTitles)
-#     else:
-#         return render_template('index.html')
-#@app.route('/sql', methods=['POST', 'GET'])
-# def sqlPage():
-    
-#     flightNo = "GH777"
-#     airlineModel = getFlightAirlineModel(flightNo)
-
-#     noOfColumns, rowTitles, columnTitles = planeMetrics(airlineModel)
-#     planeLayout = getPlaneInfo(flightNo)
-
-#     return render_template('sql.html', planeLayout = planeLayout, noOfColumns = noOfColumns, cTs=columnTitles, rowTitles=rowTitles)
-
 @app.route('/', methods=['POST', 'GET'])
 def index():
    
