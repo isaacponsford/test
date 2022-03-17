@@ -78,8 +78,8 @@ def fix(testPlane, testPassenger):
 
     print(testPassenger)
 
-testPlane = [[1,20], [2,40], [3,50], [4,100]]
-testPassenger = [[1,5],[2,10],[3,90],[4,40]]
+testPlane = [[1,60], [2,24], [3,62], [4,204]]
+testPassenger = [[1,95],[2,73],[3,66],[4,68]]
 
 fix(testPlane, testPassenger)
 

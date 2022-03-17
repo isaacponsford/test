@@ -3,11 +3,25 @@ from importCSV import getValidCSV, planeMetrics, getPassengerCSV
 from random import randint
 from tools import createPassengerCSV, getFullClassArray, totalCapacity
 
+
+# print(getPlaneInfo("ADD90"))
+
+# # {% if seatData[0] == "XX" %}
+# #     { % set passengerData = "Seat is unoccupied" % }
+# # {% else %}
+# #     { % set passengerData = seatData[0] % }
+# # {% endif %}    
+
+
+# #populatePlaneClass(4, 20, "ADD90")
+
+# #insertPassengerRefFlight("EXT45", "C", 6, "x78")
+
 def getAssignedClassTicket(classRef, amount, flightRef):
     seatCount = 0
     passRef = getFlightPassengerRef(flightRef)
     
-    all_pass = getPassengerGroupDecending(passRef, str(classRef))
+    all_pass = getPassengerGroupDecending(passRef, str(classRef), flightRef)
     all_seat = getClassSeats(flightRef, classRef)
 
     assigned_tickets =[]
@@ -26,22 +40,30 @@ def getAssignedClassTicket(classRef, amount, flightRef):
     if loop_amount > 0:
         print("Seating Waring @getAssignedClassTicket")
 
-    return (assigned_tickets)
+    for group_tickets in assigned_tickets:
+        group = group_tickets[1]
+        for ticket in group:
+            insertPassengerRefFlight(flightRef, ticket[0], ticket[1], group_tickets[0])
 
 
-# #populatePlaneClass(4, 20, "ADD90")
 
-# #insertPassengerRefFlight("EXT45", "C", 6, "x78")
+all_tickets = getAssignedClassTicket(3, 70, "DDD70")
 
-# all_tickets = getAssignedClassTicket(4, 20, "ADD90")
+# createPassengerCSV("700", 300)
 
-# for group_tickets in all_tickets:
-#     group = group_tickets[1]
-#     for ticket in group:
-#         insertPassengerRefFlight("ADD90", ticket[0], ticket[1], group_tickets[0])
+# passengers = (getPassengerCSV("700"))
 
+<<<<<<< HEAD
 # {% if seatData[0] == "XX" %}
 #     { % set passengerData = "Seat is unoccupied" % }
 # {% else %}
 #     { % set passengerData = seatData[0] % }
 # {% endif %}    
+=======
+# for x in passengers:
+#     insertPassengerTable(x)
+
+#print(getPassengerGroupDecending("444", str(4)))
+
+#
+>>>>>>> 0f2b20c496c3226c21dce79f20e7658f345e65cb
