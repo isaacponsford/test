@@ -146,18 +146,20 @@ def moveUp(passengers, actual, index, upgradeAmount, seats, upDowns):
 def getPlaneActual(seats, passengers):
     actual = []
     upDowns = []
-
-    length = max(len(seats),len(passengers))
     
-    for i in range(length):
+    length = len(seats)
+    
+    for i in range(9):
         actual.append([i+1,0])
 
-    for i in range(length-1):
+    for i in range(9):
         upDowns.append([0,0])
 
-    moveUp(passengers, actual, length-1, 0, seats, upDowns)
+    passengersTemp = listExtend(passengers, 9)
+    seatsTemp = listExtend(seats, 9)
 
-    
+    moveUp(passengersTemp, actual, 8, 0, seatsTemp, upDowns)
+
 # for x in upDowns:
 #     currentUp, currentDown = x
 
@@ -169,7 +171,7 @@ def getPlaneActual(seats, passengers):
 #             currentDown = currentDown - currentUp
 #             currentUp = 0
 
-
+    actual = actual[0:length]
     return[actual, upDowns]
 
 def getFullClassArray(classArray, passengerClassArray):
@@ -208,12 +210,19 @@ def getFullClassArray(classArray, passengerClassArray):
     return(fullClassArray)
 
 def getFullActualArray(seats, passengers, actual, upDowns):
+
+    length = max(len(seats), len(passengers), len(actual)) 
+
+    seats = listExtend(seats, length)
+    passengers = listExtend(passengers, length)
+    actual = listExtend(actual, length)
+
     fullActualArray = []
 
     seatCumSum = 0
     passCumSum = 0
 
-    for i in range(len(seats)):
+    for i in range(length):
         classTitle = seats[i][0]
 
         seatNum = seats[i][1]
@@ -240,3 +249,15 @@ def getFullActualArray(seats, passengers, actual, upDowns):
     fullActualArray.append(["Total", seatCumSum, passCumSum,passCumSum, (seatCumSum - passCumSum)])
 
     return(fullActualArray)
+
+def listExtend(array, desiredLength):
+
+    out = []
+
+    for i in range(desiredLength):
+        try:
+            out.append(array[i])
+        except:
+            out.append((i+1, 0))
+
+    return out

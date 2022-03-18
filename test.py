@@ -41,15 +41,4 @@ def getAssignedClassTicket(classRef, amount, flightRef):
         for ticket in group:
             insertPassengerRefFlight(flightRef, ticket[0], ticket[1], group_tickets[0])
 
-#all_tickets = getAssignedClassTicket(3, 70, "DDD70")
-
-# seats = getClassArray("PLANE56")
-# passengers = getPassengerClassArray("223")
-
-# classArray = getFullClassArray(seats, passengers)
-
-# actual, upDowns = getPlaneActual(seats, passengers)
-# actualArray = getFullActualArray(seats, passengers, actual, upDowns)
-
-# print(upDowns)
-# print(actualArray)
+all_tickets = getAssignedClassTicket(3, 70, "DDD70")

@@ -172,25 +172,32 @@ def passengerAssignPage():
 
         elif request.form["btn"]=="Input":
 
-            try:
-                planeOption = request.form['planeChoice']
-                passengerOption = request.form['passengerChoice']
+            #try:
+            planeOption = request.form['planeChoice']
+            passengerOption = request.form['passengerChoice']
 
-                seats = getClassArray(planeOption)
-                passengers = getPassengerClassArray(passengerOption)
+            seats = getClassArray(planeOption)
+            passengers = getPassengerClassArray(passengerOption)
 
-                classArray = getFullClassArray(seats, passengers)
+            classArray = getFullClassArray(seats, passengers)
 
-                actual, upDowns = getPlaneActual(seats, passengers)
-                actualArray = getFullActualArray(seats, passengers, actual, upDowns)
+            actual, upDowns = getPlaneActual(seats, passengers)
 
-                insertPassengerLinkTable(planeOption, passengerOption)
+            actualArray = getFullActualArray(seats, passengers, actual, upDowns)
 
-                msg = "Data Successfully Inserted"
-            except:
-                msg = "Data was not successfully inserted. Try again"
+            insertPassengerLinkTable(planeOption, passengerOption)
+
+            msg = "Data Successfully Inserted"
+
+
+            # except Exception as e: 
+
+            #     print(e)
+            #     msg = "Data was not successfully inserted. Try again"
+
         elif request.form["btn"]=="Display":
-            return redirect(url_for('planeViewPage', id="ADD90"))
+            planeOption = request.form['planeChoice']
+            return redirect(url_for('planeViewPage', id=planeOption))
             
         planes = unassignedPlanes()
         passengers = getDistinctPassengersRef()
