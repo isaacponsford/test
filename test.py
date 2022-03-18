@@ -10,22 +10,10 @@ from tools import createPassCSVArray, createPassengerCSV, getFullActualArray, ge
 
 # #populatePlaneClass(4, 20, "ADD90")
 
-# createPassengerCSV("700", 300)
-
-# passengers = (getPassengerCSV("700"))
-
-# for x in passengers:
-#     insertPassengerTable(x)
-
 #print(getPassengerGroupDecending("444", str(4)))
 
-# {% if seatData[0] == "XX" %}
-#     { % set passengerData = "Seat is unoccupied" % }
-# {% else %}
-#     { % set passengerData = seatData[0] % }
-# {% endif %}    
-
 def getAssignedClassTicket(classRef, amount, flightRef):
+    
     seatCount = 0
     passRef = getFlightPassengerRef(flightRef)
     
@@ -53,7 +41,6 @@ def getAssignedClassTicket(classRef, amount, flightRef):
         for ticket in group:
             insertPassengerRefFlight(flightRef, ticket[0], ticket[1], group_tickets[0])
 
-
 #all_tickets = getAssignedClassTicket(3, 70, "DDD70")
 
 # seats = getClassArray("PLANE56")
@@ -65,5 +52,4 @@ def getAssignedClassTicket(classRef, amount, flightRef):
 # actualArray = getFullActualArray(seats, passengers, actual, upDowns)
 
 # print(upDowns)
-
 # print(actualArray)

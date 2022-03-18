@@ -187,9 +187,8 @@ def passengerAssignPage():
                 insertPassengerLinkTable(planeOption, passengerOption)
 
                 msg = "Data Successfully Inserted"
-            except Exception as e:
+            except:
                 msg = "Data was not successfully inserted. Try again"
-                print(e)
         elif request.form["btn"]=="Display":
             return redirect(url_for('planeViewPage', id="ADD90"))
             

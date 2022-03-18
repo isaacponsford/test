@@ -13,5 +13,3 @@ from tools import createPassCSVArray
 #     insertPassengerTable(x)
 
 # print(getPassengerClassArray("AAA50"))
-
-clearAll()

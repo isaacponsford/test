@@ -70,7 +70,6 @@ def createPassCSVArray(passengerNum, array):
 
                 currentGroupSize = 0
 
-            
             keyNum = randint(1,100)
             if keyNum < 70:
                 key = 'A'
@@ -83,7 +82,6 @@ def createPassCSVArray(passengerNum, array):
             row = [code,passengerNum,key,str(currentClass),"", pref]
             writer.writerow(row)
             currentGroupSize = currentGroupSize + 1
-
 
 def isBlank(array):
     blank = True
