@@ -56,14 +56,14 @@ def getAssignedClassTicket(classRef, amount, flightRef):
 
 #all_tickets = getAssignedClassTicket(3, 70, "DDD70")
 
-seats = getClassArray("PLANE56")
-passengers = getPassengerClassArray("223")
+# seats = getClassArray("PLANE56")
+# passengers = getPassengerClassArray("223")
 
-classArray = getFullClassArray(seats, passengers)
+# classArray = getFullClassArray(seats, passengers)
 
-actual, upDowns = getPlaneActual(seats, passengers)
-actualArray = getFullActualArray(seats, passengers, actual, upDowns)
+# actual, upDowns = getPlaneActual(seats, passengers)
+# actualArray = getFullActualArray(seats, passengers, actual, upDowns)
 
-print(upDowns)
+# print(upDowns)
 
-print(actualArray)
+# print(actualArray)

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, redirect, render_template, request, url_for
 import os
 import sqlite3
 
@@ -20,7 +20,7 @@ def flightsPage():
     return render_template("layoutselect.html", flights = flights)
 
 @app.route('/plane-view/<id>')
-def landing_page(id):
+def planeViewPage(id):
 
     airlineModel = getFlightAirlineModel(id)
 
@@ -190,7 +190,9 @@ def passengerAssignPage():
             except Exception as e:
                 msg = "Data was not successfully inserted. Try again"
                 print(e)
-
+        elif request.form["btn"]=="Display":
+            return redirect(url_for('planeViewPage', id="ADD90"))
+            
         planes = unassignedPlanes()
         passengers = getDistinctPassengersRef()
         return render_template('passengerassign.html', planes = planes, passengers = passengers, msg = msg, classArray=classArray, actualArray = actualArray)

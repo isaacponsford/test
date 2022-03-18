@@ -45,7 +45,7 @@ def createPassCSVArray(passengerNum, array):
     passengerCount = 0
 
     prefArray = ['W', 'A']
-    maxGroupSize = 4
+    maxGroupSize = 5
     csv_file = "passengerCSV/" + passengerNum + ".csv"
 
     file = open(csv_file, 'w', encoding='UTF8', newline='')
@@ -55,34 +55,35 @@ def createPassCSVArray(passengerNum, array):
 
         currentClass = i[0]
         currentAmount = i[1]
-        passengerCount = 0
+        currentGroupSize = 0
+        groupSize = 0
 
-        while True:
-            groupSize = randint(1, maxGroupSize)
+        for j in range(currentAmount):
+            
+            if currentGroupSize == groupSize or groupSize == 0:
 
-            codeLetter = (chr(96 + randint(1,26)))
-            codeNum = randint(0,9)
-            code = str(codeLetter) + str(codeNum)
+                groupSize = randint(1, maxGroupSize)
 
-            for i in range(groupSize):
-                
-                if passengerCount > currentAmount:
-                    break
-                else:
+                codeLetter = (chr(96 + randint(1,26)))
+                codeNum = randint(0,9)
+                code = str(codeLetter) + str(codeNum)
 
-                    keyNum = randint(1,100)
-                    if keyNum < 70:
-                        key = 'A'
-                    else:
-                        key = 'C'
-                    
-                    prefNum = randint(0,1)
-                    pref = prefArray[prefNum]
+                currentGroupSize = 0
 
-                    row = [code,passengerNum,key,str(currentClass),"", pref]
-                    writer.writerow(row)
-                    passengerCount = passengerCount + 1
-            break
+            
+            keyNum = randint(1,100)
+            if keyNum < 70:
+                key = 'A'
+            else:
+                key = 'C'
+            
+            prefNum = randint(0,1)
+            pref = prefArray[prefNum]
+
+            row = [code,passengerNum,key,str(currentClass),"", pref]
+            writer.writerow(row)
+            currentGroupSize = currentGroupSize + 1
+
 
 def isBlank(array):
     blank = True
@@ -158,6 +159,19 @@ def getPlaneActual(seats, passengers):
 
     moveUp(passengers, actual, length-1, 0, seats, upDowns)
 
+    
+# for x in upDowns:
+#     currentUp, currentDown = x
+
+#     if currentUp != 0 and currentDown != 0:
+#         if currentUp > currentDown:
+#             currentUp = currentUp - currentDown
+#             currentDown = 0
+#         elif currentUp < currentDown:
+#             currentDown = currentDown - currentUp
+#             currentUp = 0
+
+
     return[actual, upDowns]
 
 def getFullClassArray(classArray, passengerClassArray):
@@ -213,7 +227,17 @@ def getFullActualArray(seats, passengers, actual, upDowns):
         seatCumSum = seatCumSum + seatNum
         passCumSum = passCumSum + passengerNum
 
-        fullActualArray.append([classTitle, seatNum, passengerNum, actualNum, diffNum])
+        try:
+            upNum = upDowns[i][0]
+        except:
+            upNum = 0
+        
+        try:
+            downNum = upDowns[i][1]
+        except:
+            downNum=0
+
+        fullActualArray.append([classTitle, seatNum, passengerNum, actualNum, diffNum, upNum, downNum])
 
     fullActualArray.append(["Total", seatCumSum, passCumSum,passCumSum, (seatCumSum - passCumSum)])
 
