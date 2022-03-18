@@ -98,6 +98,7 @@
             </tr>
 
             {% for class in actualArray %}
+
                 <tr>
                     <td>{{ class[0] }}</td>
                     <td>{{ class[1] }}</td>
@@ -111,9 +112,23 @@
                     {% endif %}
                     
                     <td style = "color:{{ fontColour }}">{{ class[4] }} </td>
+                    
+                    {% if class[5] == 0 %}
+                        {% set currUpgrade = "" %}
+                    {% else %}
+                        {% set currUpgrade = class[5] %}
+                    {% endif %}
+                    
+                    <td>{{ currUpgrade }} </td>
 
-                    <td>{{ class[5] }} </td>
-                    <td>{{ class[6] }} </td>
+                    {% if class[6] == 0 %}
+                        {% set currDowngrade = "" %}
+                    {% else %}
+                        {% set currDowngrade = class[6] %}
+                    {% endif %}
+
+                    <td>{{ currDowngrade }} </td>
+
                 </tr>
             {% endfor %}
         </table>

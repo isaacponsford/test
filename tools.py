@@ -160,16 +160,18 @@ def getPlaneActual(seats, passengers):
 
     moveUp(passengersTemp, actual, 8, 0, seatsTemp, upDowns)
 
-# for x in upDowns:
-#     currentUp, currentDown = x
-
-#     if currentUp != 0 and currentDown != 0:
-#         if currentUp > currentDown:
-#             currentUp = currentUp - currentDown
-#             currentDown = 0
-#         elif currentUp < currentDown:
-#             currentDown = currentDown - currentUp
-#             currentUp = 0
+    for x in upDowns:
+        currentUp, currentDown = x
+        if currentUp != 0 and currentDown != 0:
+            if currentUp > currentDown:
+                x[0] = currentUp - currentDown
+                x[1] = 0
+            elif currentUp < currentDown:
+                x[1] = currentDown - currentUp
+                x[0] = 0
+            else:
+                x[0] = 0
+                x[1] = 0
 
     actual = actual[0:length]
     return[actual, upDowns]

@@ -34,11 +34,28 @@ def getAssignedClassTicket(classRef, amount, flightRef):
             pass
     
     if loop_amount > 0:
-        print("Seating Waring @getAssignedClassTicket")
+        print("Seating Warning @getAssignedClassTicket")
 
     for group_tickets in assigned_tickets:
         group = group_tickets[1]
         for ticket in group:
             insertPassengerRefFlight(flightRef, ticket[0], ticket[1], group_tickets[0])
 
-all_tickets = getAssignedClassTicket(3, 70, "DDD70")
+#all_tickets = getAssignedClassTicket(3, 70, "DDD70")
+
+planeRef = "EMB5-62"
+passRef = "3-55"
+
+# seats = getClassArray(planeRef)
+# passengers = getPassengerClassArray(passRef)
+
+# array = getPlaneActual(seats, passengers)[0]
+
+# print(array)
+
+#EMB5-62 Actual Array: [[1, 6], [2, 14], [3, 12], [4, 15], [5, 7]]
+
+all_tickets = getAssignedClassTicket(5, 7, planeRef)
+
+# for i in reverse(array):
+#     getAssignedClassTicket(i[0], i[1], "EMB5-62")

@@ -368,12 +368,14 @@ def passengerExists(passRef):
 
 def clearAll():
     conn, cur = connect()
-    
-    cur.execute("SELECT name FROM sqlite_schema WHERE type ='table' AND name NOT LIKE 'sqlite_%'")
-    tables = cur.fetchall()
 
-    for table in tables:
-        cur.execute("DELETE from ?", (table[0],))
-
+    cur.execute("DELETE FROM airlineModels")
     conn.commit()
+    cur.execute("DELETE FROM passengers")
+    conn.commit()
+    cur.execute("DELETE FROM airplaneLinkTable")
+    conn.commit()
+    cur.execute("DELETE FROM airplaneLayout")
+    conn.commit()
+
     conn.close()

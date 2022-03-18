@@ -75,20 +75,24 @@ def newCSVPage():
                 raise BlankNameError
             
             fn = csv.filename.replace(" ", "").lower()
-            csv.save("temp.csv")
+            #csv.save("temp.csv")
 
-            tempMin, tempMax = tempValid()
+            csv.save(os.path.join("plane_layouts", fn))
+            insertModelTable(planeName, fn.split(".")[0])
+
+            # tempMin, tempMax = tempValid()
             
-            if tempMin < 0:
-                raise ClassBelowZeroError
-            elif tempMax > 9:
-                raise ClassAboveNineError
-            else:
-                final = request.files['csvfile']
-                final.save(os.path.join("plane_layouts", fn))
-                insertModelTable(planeName, fn.split(".")[0])
+            # if tempMin < 0:
+            #     raise ClassBelowZeroError
+            # elif tempMax > 9:
+            #     raise ClassAboveNineError
+            # else:
+
+            #     final = request.files['csvfile']
+            #     final.save(os.path.join("plane_layouts", fn))
+            #     insertModelTable(planeName, fn.split(".")[0])
                 
-                msg = "Data inputed successfully"
+            #     msg = "Data inputed successfully"
 
         except FileNotFoundError:
             msg = "Please select a CSV file"
@@ -184,7 +188,7 @@ def passengerAssignPage():
             actual, upDowns = getPlaneActual(seats, passengers)
 
             actualArray = getFullActualArray(seats, passengers, actual, upDowns)
-
+            print(actualArray)
             insertPassengerLinkTable(planeOption, passengerOption)
 
             msg = "Data Successfully Inserted"

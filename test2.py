@@ -12,19 +12,9 @@ from tools import createPassCSVArray, getPlaneActual
 
 # print(getPassengerClassArray("AAA50"))
 
-passengers = getPassengerClassArray("AAA50")
-seats = getClassArray("AXD30")
+#Plane Array: [(1, 6), (2, 14), (3, 12), (4, 15), (5, 15)] | 62
 
-# print(passengers)
-# print(seats)
-passengers = listExtend(passengers, 9)
-seats = listExtend(seats, 9)
-# passLen = len(passengers)
-# for i in range(9-passLen):
-#     passengers.append((i+passLen+1, 0))
+# array = [[1,20],[2,15],[3,20]]
+# createPassCSVArray("3-55", array)
 
-# seatLen = len(seats)
-# for i in range(9-seatLen):
-#     seats.append((seatLen+i+1, 0))
-
-print(getPlaneActual(seats, passengers)[0][0:4])
+# # print(getClassArray("EMB5-62"))

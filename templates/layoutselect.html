@@ -7,6 +7,9 @@
 <div class="content">
     <h1 style="text-align: center">Plane Layout</h1>
 
+    {% if flights|length < 1 %}
+        <a href="/new-plane">No Planes Available. Please create a plane from Admin > Create Plane</a>
+    {% else %}
     <table>
         <tr>
             <th>Flight Number</th>
@@ -22,6 +25,7 @@
             </tr>
         {% endfor %}
     </table>
+    {% endif %}
 </div>
 
 {% endblock %}
