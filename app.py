@@ -76,7 +76,6 @@ def newCSVPage():
                 raise BlankNameError
             
             fn = csv.filename.replace(" ", "").lower()
-
             csv.save(os.path.join("plane_layouts", fn))
             tempMin, tempMax = tempValid(fn.split(".")[0])
             print(tempValid(fn.split(".")[0]))
@@ -90,8 +89,8 @@ def newCSVPage():
                 msg = "Data inputed successfully"
 
         except FileNotFoundError:
-            print("@FNFError")
             msg = "Please select a CSV file"
+            #os.remove(os.path.join("plane_layouts", fn))
         except BlankNameError:
             msg = "Please dont leave the plane name empty"
         except sqlite3.IntegrityError:

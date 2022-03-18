@@ -73,7 +73,7 @@ def tempValid(csv_file):
 
     minVal = maxVal = 1
 
-    csv_file = "passengerCSV/" + csv_file + ".csv"
+    csv_file = "plane_layouts/" + csv_file + ".csv"
 
     with open(csv_file, 'r', encoding='utf-8-sig') as file:
         
