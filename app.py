@@ -90,7 +90,6 @@ def newCSVPage():
 
         except FileNotFoundError:
             msg = "Please select a CSV file"
-            #os.remove(os.path.join("plane_layouts", fn))
         except BlankNameError:
             msg = "Please dont leave the plane name empty"
         except sqlite3.IntegrityError:
