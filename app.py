@@ -70,7 +70,7 @@ def newCSVPage():
         try:
             planeName = request.form['planeName']
             csv = request.files['csvfile']
-            final = csv
+
             if planeName == "":
                 raise BlankNameError
             
@@ -84,8 +84,10 @@ def newCSVPage():
             elif tempMax > 9:
                 raise ClassAboveNineError
             else:
+                final = request.files['csvfile']
                 final.save(os.path.join("plane_layouts", fn))
                 insertModelTable(planeName, fn.split(".")[0])
+                
                 msg = "Data inputed successfully"
 
         except FileNotFoundError:

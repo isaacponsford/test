@@ -68,7 +68,7 @@ def getPlaneActual(seats, passengers):
 
 
 testPlane = [[1,50], [2,20], [3,60], [4,200],[5,80]]
-testPassenger = [[1,0],[2,40],[3,60],[4,150],[5,100]]
+testPassenger = [[1,20],[2,60],[3,45],[4,150],[5,20]]
 
 testSum(testPassenger)
 

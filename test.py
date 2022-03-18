@@ -1,6 +1,6 @@
 from SQLHelper import clearPassengersFlightNumber, getClassSeats, CSVtoSQL, getDistinctPassengersRef, getFlightPassengerRef, getPassengerGroupDecending, insertPassengerRefFlight, insertPlaneLayout, getPlaneInfo, getDistinctFlights, getDistinctPlanes, insertLinkTable, getFlightAirlineModel, getClassArray, passengerExists, populateSeat, insertPassengerTable, getPassengerCount, getPassengerClassArray, unassignedPlanes
-from importCSV import planeMetrics, getPassengerCSV, testValid
-from tools import createPassCSVArray, createPassengerCSV, getFullClassArray, totalCapacity
+from importCSV import planeMetrics, getPassengerCSV
+from tools import createPassCSVArray, createPassengerCSV, getFullActualArray, getFullClassArray, getPlaneActual, totalCapacity
 
 # # {% if seatData[0] == "XX" %}
 # #     { % set passengerData = "Seat is unoccupied" % }
@@ -56,9 +56,14 @@ def getAssignedClassTicket(classRef, amount, flightRef):
 
 #all_tickets = getAssignedClassTicket(3, 70, "DDD70")
 
-# array = [[1,20],[2,40],[3,40],[4,120]]
-# createPassCSVArray("1004", array)
+seats = getClassArray("PLANE56")
+passengers = getPassengerClassArray("223")
 
-# print(getPassengerClassArray("1004"))
+classArray = getFullClassArray(seats, passengers)
 
-print(testValid())
+actual, upDowns = getPlaneActual(seats, passengers)
+actualArray = getFullActualArray(seats, passengers, actual, upDowns)
+
+print(upDowns)
+
+print(actualArray)
