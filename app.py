@@ -2,9 +2,9 @@ from flask import Flask, render_template, request
 import os
 import sqlite3
 
-from importCSV import getPassengerCSV, planeMetrics
+from importCSV import getPassengerCSV, planeMetrics, tempValid
 from SQLHelper import clearPassengersFlightNumber, getPlaneInfo, getDistinctFlights, getDistinctPlanes, CSVtoSQL, insertLinkTable, getFlightAirlineModel, insertModelTable, insertPassengerTable, passengerExists, unassignedPlanes, getDistinctPassengersRef, insertPassengerLinkTable, getPassengerClassArray, getClassArray, getPassengerCount
-from SeatSelectorErrors import BlankNameError, OverCapacityError, PassengerExistsError
+from SeatSelectorErrors import BlankNameError, ClassAboveNineError, ClassBelowZeroError, OverCapacityError, PassengerExistsError
 from tools import getFullActualArray, getPlaneActual, totalCapacity, getFullClassArray
 
 app = Flask(__name__)
@@ -70,15 +70,23 @@ def newCSVPage():
         try:
             planeName = request.form['planeName']
             csv = request.files['csvfile']
-
+            final = csv
             if planeName == "":
                 raise BlankNameError
             
             fn = csv.filename.replace(" ", "").lower()
-            csv.save(os.path.join("plane_layouts", fn))
+            csv.save("temp.csv")
 
-            insertModelTable(planeName, fn.split(".")[0])
-            msg = "Data inputed successfully"
+            tempMin, tempMax = tempValid()
+            
+            if tempMin < 0:
+                raise ClassBelowZeroError
+            elif tempMax > 9:
+                raise ClassAboveNineError
+            else:
+                final.save(os.path.join("plane_layouts", fn))
+                insertModelTable(planeName, fn.split(".")[0])
+                msg = "Data inputed successfully"
 
         except FileNotFoundError:
             msg = "Please select a CSV file"
@@ -86,6 +94,10 @@ def newCSVPage():
             msg = "Please dont leave the plane name empty"
         except sqlite3.IntegrityError:
             msg = "Plane name already exists. Go to 'new plane' on \n admin page to create a new instance of this plane"
+        except ClassBelowZeroError:
+            msg = "Current CSV includes classes which are less than 0. \nThis application only accepts classes from 1 to 9"
+        except ClassAboveNineError:
+            msg = "Current CSV includes classes which are greater than 9. \nThis application only accepts classes from 1 to 9"
         except:
             msg = "Data not inputed successfully. Please try again"
 

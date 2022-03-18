@@ -1,10 +1,6 @@
 from SQLHelper import clearPassengersFlightNumber, getClassSeats, CSVtoSQL, getDistinctPassengersRef, getFlightPassengerRef, getPassengerGroupDecending, insertPassengerRefFlight, insertPlaneLayout, getPlaneInfo, getDistinctFlights, getDistinctPlanes, insertLinkTable, getFlightAirlineModel, getClassArray, passengerExists, populateSeat, insertPassengerTable, getPassengerCount, getPassengerClassArray, unassignedPlanes
-from importCSV import getValidCSV, planeMetrics, getPassengerCSV
-from random import randint
+from importCSV import planeMetrics, getPassengerCSV, testValid
 from tools import createPassCSVArray, createPassengerCSV, getFullClassArray, totalCapacity
-
-
-# print(getPlaneInfo("ADD90"))
 
 # # {% if seatData[0] == "XX" %}
 # #     { % set passengerData = "Seat is unoccupied" % }
@@ -12,30 +8,22 @@ from tools import createPassCSVArray, createPassengerCSV, getFullClassArray, tot
 # #     { % set passengerData = seatData[0] % }
 # # {% endif %}    
 
-
 # #populatePlaneClass(4, 20, "ADD90")
-
-# #insertPassengerRefFlight("EXT45", "C", 6, "x78")
 
 # createPassengerCSV("700", 300)
 
 # passengers = (getPassengerCSV("700"))
+
+# for x in passengers:
+#     insertPassengerTable(x)
+
+#print(getPassengerGroupDecending("444", str(4)))
 
 # {% if seatData[0] == "XX" %}
 #     { % set passengerData = "Seat is unoccupied" % }
 # {% else %}
 #     { % set passengerData = seatData[0] % }
 # {% endif %}    
-
-# for x in passengers:
-#     insertPassengerTable(x)
-
-#print(getPassengerGroupDecending("444", str(4)))
-
-# for x in passengers:
-#     insertPassengerTable(x)
-
-#print(getPassengerGroupDecending("444", str(4)))
 
 def getAssignedClassTicket(classRef, amount, flightRef):
     seatCount = 0
@@ -66,10 +54,11 @@ def getAssignedClassTicket(classRef, amount, flightRef):
             insertPassengerRefFlight(flightRef, ticket[0], ticket[1], group_tickets[0])
 
 
-
 #all_tickets = getAssignedClassTicket(3, 70, "DDD70")
 
 # array = [[1,20],[2,40],[3,40],[4,120]]
 # createPassCSVArray("1004", array)
 
 # print(getPassengerClassArray("1004"))
+
+print(testValid())

@@ -6,3 +6,9 @@ class OverCapacityError(Exception):
 
 class PassengerExistsError(Exception):
     pass
+
+class ClassBelowZeroError(Exception):
+    pass
+
+class ClassAboveNineError(Exception):
+    pass
