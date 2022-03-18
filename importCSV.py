@@ -69,11 +69,11 @@ def getPassengerCSV(csv_file):
 
         return passengerData
 
-def tempValid():
+def tempValid(csv_file):
 
     minVal = maxVal = 1
 
-    csv_file = "temp.csv"
+    csv_file = "passengerCSV/" + csv_file + ".csv"
 
     with open(csv_file, 'r', encoding='utf-8-sig') as file:
         

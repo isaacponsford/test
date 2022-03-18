@@ -68,33 +68,29 @@ def newCSVPage():
         msg = ""
 
         try:
+
             planeName = request.form['planeName']
             csv = request.files['csvfile']
-
+            
             if planeName == "":
                 raise BlankNameError
             
             fn = csv.filename.replace(" ", "").lower()
-            #csv.save("temp.csv")
 
             csv.save(os.path.join("plane_layouts", fn))
-            insertModelTable(planeName, fn.split(".")[0])
+            tempMin, tempMax = tempValid(fn.split(".")[0])
+            print(tempValid(fn.split(".")[0]))
 
-            # tempMin, tempMax = tempValid()
-            
-            # if tempMin < 0:
-            #     raise ClassBelowZeroError
-            # elif tempMax > 9:
-            #     raise ClassAboveNineError
-            # else:
-
-            #     final = request.files['csvfile']
-            #     final.save(os.path.join("plane_layouts", fn))
-            #     insertModelTable(planeName, fn.split(".")[0])
-                
-            #     msg = "Data inputed successfully"
+            if tempMin < 0:
+                raise ClassBelowZeroError
+            elif tempMax > 9:
+                raise ClassAboveNineError
+            else:
+                insertModelTable(planeName, fn.split(".")[0])
+                msg = "Data inputed successfully"
 
         except FileNotFoundError:
+            print("@FNFError")
             msg = "Please select a CSV file"
         except BlankNameError:
             msg = "Please dont leave the plane name empty"
@@ -102,8 +98,10 @@ def newCSVPage():
             msg = "Plane name already exists. Go to 'new plane' on \n admin page to create a new instance of this plane"
         except ClassBelowZeroError:
             msg = "Current CSV includes classes which are less than 0. \nThis application only accepts classes from 1 to 9"
+            os.remove(os.path.join("plane_layouts", fn))
         except ClassAboveNineError:
             msg = "Current CSV includes classes which are greater than 9. \nThis application only accepts classes from 1 to 9"
+            os.remove(os.path.join("plane_layouts", fn))
         except:
             msg = "Data not inputed successfully. Please try again"
 
@@ -176,28 +174,28 @@ def passengerAssignPage():
 
         elif request.form["btn"]=="Input":
 
-            #try:
-            planeOption = request.form['planeChoice']
-            passengerOption = request.form['passengerChoice']
+            try:
+                planeOption = request.form['planeChoice']
+                passengerOption = request.form['passengerChoice']
 
-            seats = getClassArray(planeOption)
-            passengers = getPassengerClassArray(passengerOption)
+                seats = getClassArray(planeOption)
+                passengers = getPassengerClassArray(passengerOption)
 
-            classArray = getFullClassArray(seats, passengers)
+                classArray = getFullClassArray(seats, passengers)
 
-            actual, upDowns = getPlaneActual(seats, passengers)
+                actual, upDowns = getPlaneActual(seats, passengers)
 
-            actualArray = getFullActualArray(seats, passengers, actual, upDowns)
-            print(actualArray)
-            insertPassengerLinkTable(planeOption, passengerOption)
+                actualArray = getFullActualArray(seats, passengers, actual, upDowns)
+                print(actualArray)
+                insertPassengerLinkTable(planeOption, passengerOption)
 
-            msg = "Data Successfully Inserted"
+                msg = "Data Successfully Inserted"
 
 
-            # except Exception as e: 
+            except Exception as e: 
 
-            #     print(e)
-            #     msg = "Data was not successfully inserted. Try again"
+                print(e)
+                msg = "Data was not successfully inserted. Try again"
 
         elif request.form["btn"]=="Display":
             planeOption = request.form['planeChoice']
