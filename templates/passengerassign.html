@@ -5,8 +5,10 @@
 {% set planes = planes %}
 {% set passengers = passengers %}
 {% set classArray = classArray %}
+{% set actualArray = actualArray %}
 {% set msg = msg %}
-<h1>Insert new plane</h1>
+
+<h1>Assign Passengers to Planes</h1>
 
 <div class="form">
 
@@ -73,6 +75,40 @@
         </table>
         <br><br>
         <input type="submit" name = "btn" value="Input">
+        {% endif %}
+    
+        {% if actualArray|length < 1 %}
+            <h4 style="text-align: center">Placeholder</h4>
+        {% else %}
+        <br><br>
+        <table>
+            <tr>
+                <th>Class</th>
+                <th>Seats</th>
+                <th>Passengers</th>
+                <th>Actual</th>
+                <th>Capacity</th>
+            </tr>
+
+            {% for class in actualArray %}
+                <tr>
+                    <td>{{ class[0] }}</td>
+                    <td>{{ class[1] }}</td>
+                    <td>{{ class[2] }} </td>
+                    <td>{{ class[3] }} </td>
+                    {% if class[4] > 0 %}
+                        {% set fontColour = "green" %}
+                    {% else %}
+                        {% set fontColour = "red" %}
+                    {% endif %}
+                    
+                    <td style = "color:{{ fontColour }}">{{ class[4] }} </td>
+                </tr>
+            {% endfor %}
+        </table>
+        
+        <br><br>
+        <input type="submit" name = "btn" value="Display">
         {% endif %}
 
     </form>

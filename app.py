@@ -5,7 +5,7 @@ import sqlite3
 from importCSV import getPassengerCSV, planeMetrics
 from SQLHelper import clearPassengersFlightNumber, getPlaneInfo, getDistinctFlights, getDistinctPlanes, CSVtoSQL, insertLinkTable, getFlightAirlineModel, insertModelTable, insertPassengerTable, passengerExists, unassignedPlanes, getDistinctPassengersRef, insertPassengerLinkTable, getPassengerClassArray, getClassArray, getPassengerCount
 from SeatSelectorErrors import BlankNameError, OverCapacityError, PassengerExistsError
-from tools import totalCapacity, getFullClassArray
+from tools import getFullActualArray, getPlaneActual, totalCapacity, getFullClassArray
 
 app = Flask(__name__)
 
@@ -137,6 +137,7 @@ def passengerAssignPage():
 
         msg = ""
         classArray = []
+        actualArray = []
 
         if request.form["btn"]=="View":
 
@@ -161,20 +162,28 @@ def passengerAssignPage():
                 planeOption = request.form['planeChoice']
                 passengerOption = request.form['passengerChoice']
 
+                seats = getClassArray(planeOption)
+                passengers = getPassengerClassArray(passengerOption)
+
+                classArray = getFullClassArray(seats, passengers)
+
+                actual, upDowns = getPlaneActual(seats, passengers)
+                actualArray = getFullActualArray(seats, passengers, actual, upDowns)
+
                 insertPassengerLinkTable(planeOption, passengerOption)
 
-                classArray = getFullClassArray(getClassArray(planeOption), getPassengerClassArray(passengerOption))
                 msg = "Data Successfully Inserted"
             except Exception as e:
                 msg = "Data was not successfully inserted. Try again"
+                print(e)
 
         planes = unassignedPlanes()
         passengers = getDistinctPassengersRef()
-        return render_template('passengerassign.html', planes = planes, passengers = passengers, msg = msg, classArray=classArray)
+        return render_template('passengerassign.html', planes = planes, passengers = passengers, msg = msg, classArray=classArray, actualArray = actualArray)
     else:
         planes = unassignedPlanes()
         passengers = getDistinctPassengersRef()
-        return render_template('passengerassign.html', planes = planes, passengers = passengers, msg = "", classArray = [])
+        return render_template('passengerassign.html', planes = planes, passengers = passengers, msg = "", classArray = [], actualArray=[])
 
 @app.route('/passenger-remove', methods=['POST', 'GET'])
 def passengerRemovePage():

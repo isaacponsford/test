@@ -1,7 +1,7 @@
 from SQLHelper import clearPassengersFlightNumber, getClassSeats, CSVtoSQL, getDistinctPassengersRef, getFlightPassengerRef, getPassengerGroupDecending, insertPassengerRefFlight, insertPlaneLayout, getPlaneInfo, getDistinctFlights, getDistinctPlanes, insertLinkTable, getFlightAirlineModel, getClassArray, passengerExists, populateSeat, insertPassengerTable, getPassengerCount, getPassengerClassArray, unassignedPlanes
 from importCSV import getValidCSV, planeMetrics, getPassengerCSV
 from random import randint
-from tools import createPassengerCSV, getFullClassArray, totalCapacity
+from tools import createPassCSVArray, createPassengerCSV, getFullClassArray, totalCapacity
 
 
 # print(getPlaneInfo("ADD90"))
@@ -16,6 +16,26 @@ from tools import createPassengerCSV, getFullClassArray, totalCapacity
 # #populatePlaneClass(4, 20, "ADD90")
 
 # #insertPassengerRefFlight("EXT45", "C", 6, "x78")
+
+# createPassengerCSV("700", 300)
+
+# passengers = (getPassengerCSV("700"))
+
+# {% if seatData[0] == "XX" %}
+#     { % set passengerData = "Seat is unoccupied" % }
+# {% else %}
+#     { % set passengerData = seatData[0] % }
+# {% endif %}    
+
+# for x in passengers:
+#     insertPassengerTable(x)
+
+#print(getPassengerGroupDecending("444", str(4)))
+
+# for x in passengers:
+#     insertPassengerTable(x)
+
+#print(getPassengerGroupDecending("444", str(4)))
 
 def getAssignedClassTicket(classRef, amount, flightRef):
     seatCount = 0
@@ -47,24 +67,9 @@ def getAssignedClassTicket(classRef, amount, flightRef):
 
 
 
-all_tickets = getAssignedClassTicket(3, 70, "DDD70")
+#all_tickets = getAssignedClassTicket(3, 70, "DDD70")
 
-# createPassengerCSV("700", 300)
+# array = [[1,20],[2,40],[3,40],[4,120]]
+# createPassCSVArray("1004", array)
 
-# passengers = (getPassengerCSV("700"))
-
-# {% if seatData[0] == "XX" %}
-#     { % set passengerData = "Seat is unoccupied" % }
-# {% else %}
-#     { % set passengerData = seatData[0] % }
-# {% endif %}    
-
-# for x in passengers:
-#     insertPassengerTable(x)
-
-#print(getPassengerGroupDecending("444", str(4)))
-
-# for x in passengers:
-#     insertPassengerTable(x)
-
-#print(getPassengerGroupDecending("444", str(4)))
+# print(getPassengerClassArray("1004"))

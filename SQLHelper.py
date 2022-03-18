@@ -10,7 +10,7 @@ def connect():
 
 def insertPlaneLayout(data_tuple):
     conn, cur = connect()
-    base_sql = """insert into airplaneLayout (flightNumber, columnTitle, rowTitle, class, type, sequenceNumber, occupied) VALUES (?,?,?,?,?,?,?)"""
+    base_sql = """insert into airplaneLayout (flightNumber, columnTitle, rowTitle, class, type, sequenceNumber) VALUES (?,?,?,?,?,?)"""
     cur.execute(base_sql, data_tuple)
     conn.commit()
     conn.close()
@@ -122,12 +122,11 @@ def CSVtoSQL(flight_number, csv_add):
     rowCounter = 0
     seqNum = 1
 
-
     while rowCounter < len(planeLayout):
 
         if isBlank(planeLayout[rowCounter]):
             insert_row = int(rowTitles[rowCounter-1]) + 1
-            insert_data = (flight_number, "", insert_row, None , 99, seqNum, None)
+            insert_data = (flight_number, "", insert_row, None , 99, seqNum)
             insertPlaneLayout(insert_data)
             seqNum = seqNum + 1
         
@@ -145,7 +144,7 @@ def CSVtoSQL(flight_number, csv_add):
                     insert_type = 1
                     occupied = 0
 
-                    insert_data = (flight_number, insert_column, insert_row, insert_class, insert_type, seqNum, occupied)
+                    insert_data = (flight_number, insert_column, insert_row, insert_class, insert_type, seqNum)
                     insertPlaneLayout(insert_data)
                     seqNum = seqNum + 1
 
