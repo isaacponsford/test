@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+    <style>
+
+    </style>
+
+{% endblock %}
+
+{% block body %}
+
+{% set msg = msg %}
+
+    <h1>Insert New Passnger CSV</h1>
+
+    <div class="form">
+        <form action="/db-clear" method="POST" enctype="multipart/form-data">
+            
+            <label>Are you sure you want to clear the DB:</label>
+            
+            <br><br>
+
+            <input type="button" value="Clear">
+
+            <br>
+            <br>
+
+            <small> {{ msg }} </small>
+        </form>
+    </div>
+
+{% endblock %}

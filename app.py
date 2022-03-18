@@ -3,7 +3,7 @@ import os
 import sqlite3
 
 from importCSV import getPassengerCSV, planeMetrics, tempValid
-from SQLHelper import clearPassengersFlightNumber, getPlaneInfo, getDistinctFlights, getDistinctPlanes, CSVtoSQL, insertLinkTable, getFlightAirlineModel, insertModelTable, insertPassengerTable, passengerExists, unassignedPlanes, getDistinctPassengersRef, insertPassengerLinkTable, getPassengerClassArray, getClassArray, getPassengerCount
+from SQLHelper import clearAll, clearPassengersFlightNumber, getPlaneInfo, getDistinctFlights, getDistinctPlanes, CSVtoSQL, insertLinkTable, getFlightAirlineModel, insertModelTable, insertPassengerTable, passengerExists, unassignedPlanes, getDistinctPassengersRef, insertPassengerLinkTable, getPassengerClassArray, getClassArray, getPassengerCount
 from SeatSelectorErrors import BlankNameError, ClassAboveNineError, ClassBelowZeroError, OverCapacityError, PassengerExistsError
 from tools import getFullActualArray, getPlaneActual, totalCapacity, getFullClassArray
 
@@ -219,6 +219,20 @@ def passengerRemovePage():
     else:
         planes = getDistinctFlights()
         return render_template('passengerremove.html', planes = planes, msg = "")
+
+@app.route('/db-clear', methods=['POST', 'GET'])
+def databaseClearPage():
+
+    if request.method == 'POST':
+        msg= ""
+        try:
+            clearAll()
+            msg = "Database sucessfully cleared"
+        except:
+            msg = "Error"
+        return render_template('cleardb.html', msg = msg)
+    else:
+        return render_template('cleardb.html', msg = "")
 
 if __name__ == "__main__":
     app.run(debug=True)
