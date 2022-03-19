@@ -46,6 +46,12 @@
         font-family:verdana;
         font-size: 12px;
     }
+    h6 {
+        text-align: left;
+        font-family:verdana;
+        font-size: 15px;
+    }
+
 
 </style>
 
@@ -54,7 +60,7 @@
 {% block body %}
 
 <h1> {{title}} </h1>
-
+<h6> {{info}} </h6>
 {% set icon_size = 16 %}
 {% set icon_pad = 3 %}
 <!-- canvas size = 2 pad + icon size -->

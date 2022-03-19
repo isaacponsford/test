@@ -29,14 +29,21 @@ def planeViewPage(id):
     noOfColumns, rowTitles, columnTitles = planeMetrics(airlineModel)
     planeLayout = getPlaneInfo(id)
     keyClassArray = getPlaneSeatClasses(id)
+    seatCapacity = totalCapacity(getClassArray(id))
+    info = "Number of Seats: " + str(seatCapacity)
 
     try:
         passRef = getFlightPassengerRef(id)
+        passAmount = totalCapacity(getPassengerClassArray(passRef))
+
         title = str(id) + " Layout (" + passRef + ")"
+        info=info + " - Passengers: " + str(passAmount) + " - Percentage Occupancy: " + str(round((passAmount / seatCapacity) * 100)) + "%"
     except:
         title = str(id) + " Layout"
     
-    return render_template('sql.html', title = title , planeLayout = planeLayout, noOfColumns = noOfColumns, cTs=columnTitles, rowTitles=rowTitles,keyClassArray=keyClassArray)
+    
+
+    return render_template('sql.html', title = title, info = info, planeLayout = planeLayout, noOfColumns = noOfColumns, cTs=columnTitles, rowTitles=rowTitles,keyClassArray=keyClassArray)
 
 @app.route('/admin', methods=['POST', 'GET'])
 def adminPage():
