@@ -51,6 +51,9 @@ def createPassCSVArray(passengerNum, array):
     file = open(csv_file, 'w', encoding='UTF8', newline='')
     writer = csv.writer(file)
 
+    row = ["groupID","flightRef","key","class","requirements", "preferences"]
+    writer.writerow(row)
+
     for i in array:
 
         currentClass = i[0]
@@ -66,7 +69,7 @@ def createPassCSVArray(passengerNum, array):
 
                 codeLetter = (chr(96 + randint(1,26)))
                 codeNum = randint(0,9)
-                code = str(codeLetter) + str(codeNum)
+                code = str(currentClass) + str(codeLetter) + str(codeNum)
 
                 currentGroupSize = 0
 

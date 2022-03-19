@@ -112,7 +112,6 @@ def getPlaneInfo(flightNo):
 
     conn.close()
     return(layout)
-    #print(layout)
 
 def CSVtoSQL(flight_number, csv_add):
 
@@ -444,16 +443,12 @@ def getAssignedClassTicket(inClassRef, amount, flightRef):
     if loop_amount > 0:
         print("Seating Warning @getAssignedClassTicket")
 
-    print(assigned_tickets)
-
     for group_tickets in assigned_tickets:
 
         group = group_tickets[1]
         groupId = group_tickets[0]
         ids = getIndividualTicketRefs(groupId)
         counter = 0
-
-        print(group_tickets)
 
         for ticket in group:
             

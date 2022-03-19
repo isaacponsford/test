@@ -1,5 +1,16 @@
 {% extends 'base.html' %}
 
+{% block head %}
+
+<style>
+   table, th, td {
+  border-style: outset;
+}
+
+</style>
+
+{% endblock %}
+
 {% block body %}
 
 {% set planes = planes %}
@@ -67,9 +78,9 @@
             </tr>
             {% for class in classArray %}
                 <tr>
-                    <td>{{ class[0] }}</td>
-                    <td>{{ class[1] }}</td>
-                    <td>{{ class[2] }} </td>
+                    <td style="text-align: center">{{ class[0] }}</td>
+                    <td style="text-align: center">{{ class[1] }}</td>
+                    <td style="text-align: center">{{ class[2] }} </td>
 
                     {% if class[3] > 0 %}
                         {% set fontColour = "green" %}
@@ -77,7 +88,7 @@
                         {% set fontColour = "red" %}
                     {% endif %}
                     
-                    <td style = "color:{{ fontColour }}">{{ class[3] }} </td>
+                    <td style = "color:{{ fontColour }};text-align: center">{{ class[3] }} </td>
                 </tr>
             {% endfor %}
         </table>
@@ -103,10 +114,10 @@
             {% for class in actualArray %}
 
                 <tr>
-                    <td>{{ class[0] }}</td>
-                    <td>{{ class[1] }}</td>
-                    <td>{{ class[2] }} </td>
-                    <td>{{ class[3] }} </td>
+                    <td style="text-align: center">{{ class[0] }}</td>
+                    <td style="text-align: center">{{ class[1] }}</td>
+                    <td style="text-align: center">{{ class[2] }} </td>
+                    <td style="text-align: center">{{ class[3] }} </td>
                     
                     {% if class[4] > 0 %}
                         {% set fontColour = "green" %}
@@ -114,7 +125,7 @@
                         {% set fontColour = "red" %}
                     {% endif %}
                     
-                    <td style = "color:{{ fontColour }}">{{ class[4] }} </td>
+                    <td style = "color:{{ fontColour }};text-align: center">{{ class[4] }} </td>
                     
                     {% if class[5] == 0 %}
                         {% set currUpgrade = "" %}
@@ -122,7 +133,7 @@
                         {% set currUpgrade = class[5] %}
                     {% endif %}
                     
-                    <td>{{ currUpgrade }} </td>
+                    <td style="text-align: center">{{ currUpgrade }} </td>
 
                     {% if class[6] == 0 %}
                         {% set currDowngrade = "" %}
@@ -130,7 +141,7 @@
                         {% set currDowngrade = class[6] %}
                     {% endif %}
 
-                    <td>{{ currDowngrade }} </td>
+                    <td style="text-align: center">{{ currDowngrade }} </td>
 
                 </tr>
             {% endfor %}
