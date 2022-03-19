@@ -1,3 +1,4 @@
+from ftplib import all_errors
 from SQLHelper import clearAll, clearPassengersFlightNumber, getClassSeats, CSVtoSQL, getDistinctPassengersRef, getFlightPassengerRef, getIndividualTicketRefs, getPassengerGroupDecending, insertPassengerRefFlight, insertPlaneLayout, getPlaneInfo, getDistinctFlights, getDistinctPlanes, insertLinkTable, getFlightAirlineModel, getClassArray, passengerAlertData, passengerExists, populateSeat, insertPassengerTable, getPassengerCount, getPassengerClassArray, unassignedPlanes
 from importCSV import planeMetrics, getPassengerCSV
 from tools import createPassCSVArray, createPassengerCSV, getFullActualArray, getFullClassArray, getPlaneActual, totalCapacity
@@ -27,8 +28,6 @@ from tools import createPassCSVArray, createPassengerCSV, getFullActualArray, ge
 
 # #EMB5-62 Actual Array: [[1, 6], [2, 14], [3, 12], [4, 8], [5, 10]]
 
-
-
 # # for i in reverse(array):
 # #     getAssignedClassTicket(i[0], i[1], "EMB5-62")
 
@@ -41,6 +40,13 @@ from tools import createPassCSVArray, createPassengerCSV, getFullActualArray, ge
 # # for x in getPassengerCSV(passRef):
 # #     insertPassengerTable(x)
 
-# clearAll()
+flightRef = "EMB5-62"
 
-print(passengerAlertData(2))
+passRef = getFlightPassengerRef(flightRef)
+
+    #Return a list of passgerers grouped by Group ID, at the current class or lower (greater class number), in order of group size deceding, where passenger are unassigned a seat 
+all_pass = getPassengerGroupDecending(passRef, str(5), flightRef)
+
+all_seat = getClassSeats(flightRef, 5)
+
+print(all_seat)

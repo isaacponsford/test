@@ -275,7 +275,7 @@ def getClassSeats(flightNo, classNo):
     conn, cur = connect()
 
     data_tuple = (classNo,flightNo)
-    base_sql = ("SELECT columnTitle, rowTitle from airplaneLayout where class = ? AND flightNumber = ? AND passengerRef IS NULL")
+    base_sql = ("SELECT columnTitle, rowTitle from airplaneLayout where class = ? AND flightNumber = ? AND passengerRef IS NULL ORDER by rowTitle, columnTitle")
 
     cur.execute(base_sql, data_tuple)
     all_data = cur.fetchall()
@@ -403,19 +403,45 @@ def getAssignedClassTicket(passClassRef,seatClassRef, amount, flightRef):
     seatCount = 0
     passRef = getFlightPassengerRef(flightRef)
 
+    #Return a list of passgerers grouped by Group ID, at the current class or lower (greater class number), in order of group size deceding, where passenger are unassigned a seat 
     all_pass = getPassengerGroupDecending(passRef, str(passClassRef), flightRef)
+    
+    #Returns location of all empty seats at for a given class 
     all_seat = getClassSeats(flightRef, seatClassRef)
     
-    if len(all_seat) < amount:
-        all_seat.append(getClassSeats(flightRef, seatClassRef-1))
+    # if len(all_seat) < amount:
+    #     all_seat.append(getClassSeats(flightRef, seatClassRef-1))
+    
+    classRef = seatClassRef - 1
+
+    # while len(all_seat) < amount:
+    #     if classRef < 0:
+    #         print("Class Reference Error @getAssignedClassTicket")
+    #         break
+    #     all_seat.append(getClassSeats(flightRef, classRef))
+    #     classRef = classRef - 1
+    
+    while len(all_pass) < amount:
+        if classRef < 0:
+            print("Class Reference Error @getAssignedClassTicket")
+            break
+        all_pass = getPassengerGroupDecending(passRef, str(classRef), flightRef)
+        classRef = classRef - 1
 
     assigned_tickets =[]
 
     loop_amount = amount
 
+    # all pass in a array of tuples of passengers, with the first element being the group ID, 
+    # and the second being the number of passengers with the corresponding group ID (number of passengers in the group)
+
     for passenger in all_pass:
         currGroupSize = passenger[1]
+
+        #If there is space to put the entire group into this class, then allocate those seats
+
         if loop_amount >= currGroupSize:
+
             loop_amount = loop_amount - currGroupSize
             assigned_tickets.append((passenger[0], all_seat[seatCount:(seatCount+currGroupSize)]))
             seatCount = seatCount + currGroupSize
@@ -444,26 +470,47 @@ def getAssignedClassTicket(passClassRef,seatClassRef, amount, flightRef):
 def passengerAlertData(passengerID):
     conn, cur = connect()
 
-    cur.execute("SELECT groupID, flightRef from passengers WHERE ticketID = ?", (passengerID,))
+    cur.execute("SELECT groupID, flightRef, key, class from passengers WHERE ticketID = ?", (passengerID,))
     
     data1 = cur.fetchall()[0]
+
+    if data1[2] == "A":
+        ac = "Adult"
+    elif data1[2] == "C":
+        ac = "Child"
+    else:
+        ac = "Error"
 
     cur.execute("SELECT flightNumber, columnTitle, rowTitle, class from airplaneLayout WHERE passengerRef = ?", (passengerID,))
 
     data2 = cur.fetchall()[0]
 
-    base_sql = ("SELECT passengerRef , columnTitle, rowTitle from airplaneLayout WHERE passengerRef IN (SELECT ticketID from passengers WHERE groupID = ? AND flightRef = ? AND passengerRef != ?) ORDER BY columnTitle, rowTitle")
+    base_sql = ("SELECT a.passengerRef , a.columnTitle, a.rowTitle, p.key, a.class, p.class from airplaneLayout AS a, passengers AS p WHERE a.passengerRef IN (SELECT ticketID from passengers WHERE groupID = ? AND flightRef = ? AND passengerRef != ?)  AND a.passengerRef = p.ticketID ORDER BY columnTitle, rowTitle")
     data_tuple = (data1[0], data1[1], passengerID)
 
     cur.execute(base_sql, data_tuple)
     group_data = cur.fetchall()
     
-    finalString = "Passenger ID: " + str(passengerID)  + "\\nGroup ID: " + data1[0] + "\\nSeat: " + data2[1] + str(data2[2]) + "\\nClass: " + str(data2[3]) 
+    finalString = "Passenger ID: " + str(passengerID)  + " (" + ac + ")" + "\\nGroup ID: " + data1[0] + " (Group Size: " + str(len(group_data) + 1) + " People)\\nSeat: " + data2[1] + str(data2[2]) + "\\nSeat Class: " + str(data2[3]) 
+
+    if data1[3] != data2[3]:
+        finalString = finalString + " (Ticket Class: " + str(data1[3]) + ")"
 
     if len(group_data) > 0 :
         finalString = finalString + "\\n\\nGroup Members:"
         for data in group_data:
-            finalString = finalString + "\\nID: " + data[0] + " Seat: " + data[1] + str(data[2])
 
+            if data[3] == "A":
+                ac = "Adult"
+            elif data[3] == "C":
+                ac = "Child"
+            else:
+                ac = "Error"
+
+            finalString = finalString + "\\nSeat: " + data[1] + str(data[2]) + " - ID: " + data[0] + " (" + ac + ") - Seat Class: " + str(data[4])
+            if data[4] != data[5]:
+                finalString = finalString + " (Ticket Class: " + str(data[5]) + ")"
+    else:
+        finalString = finalString + "\\n\\nOnly Passenger"
     conn.close()
     return finalString

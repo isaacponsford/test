@@ -17,6 +17,8 @@ def index():
 @app.route('/flights')
 def flightsPage():
     flights = getDistinctFlights()
+
+
     return render_template("layoutselect.html", flights = flights)
 
 @app.route('/plane-view/<id>')
@@ -183,28 +185,36 @@ def passengerAssignPage():
         elif request.form["btn"]=="Input":
 
             try:
-
                 
+                #Get the plane and passenger options, given by the user at view stage (see above)
                 planeOption = plnOption
                 passengerOption = psgrOption
+
+                #Get all passengers and all seats from SQL in a array of tuples in class groups, 
+                # where first element in class number and second is number of passengers or seats in that class
 
                 seats = getClassArray(planeOption)
                 passengers = getPassengerClassArray(passengerOption)
 
+                #Creates a multidimension array for display purposes of class number, passengers, seats and capacity for displau purposes
                 classArray = getFullClassArray(seats, passengers)
 
+                #Inputs seats and passengers and returns the "actual" array, where all passengers should actually sit at the end (e.g. upgrade where over capacity, etc.)
                 actual, upDowns = getPlaneActual(seats, passengers)
 
+                #Creates a new array, much like "FullClassArray", for display purposes only, with now actual and upgrade and downgrades
                 actualArray = getFullActualArray(seats, passengers, actual, upDowns)
 
+                #Inserts passenger flight reference number into SQL link table to relate passenger list to flight number
                 insertPassengerLinkTable(planeOption, passengerOption)
 
+                #Itterate through "actual" list in reverse order (from lowest class to first class)
                 for x in reversed(actual):
                     print(x)
-                    if x[0] > len(passengers): 
-                        getAssignedClassTicket(len(passengers),x[0], x[1], planeOption)
-                    else:
-                        getAssignedClassTicket(x[0], x[0],x[1], planeOption)
+                    # if x[0] > len(passengers): 
+                    #     getAssignedClassTicket(len(passengers),x[0], x[1], planeOption)
+                    # else:
+                    getAssignedClassTicket(x[0], x[0],x[1], planeOption)
 
                 msg = "Data Successfully Inserted"
 
