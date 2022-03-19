@@ -69,12 +69,13 @@ def getPlaneInfo(flightNo):
         current_data = all_data[count]
 
         passengerData = current_data[4]
-
+        
         if passengerData == None:
             occupiedData = 0
-            passengerData = "XX"
+            inputPassengerString = 'Unoccupied\\nClass: ' + str(current_data[2])
         else:
             occupiedData = 1
+            inputPassengerString = passengerAlertData(passengerData)
 
         classData = current_data[2]
 
@@ -82,9 +83,8 @@ def getPlaneInfo(flightNo):
             inputData = (occupiedData * 20) + classData
         except:
             pass
-
-        inputData = passengerData + ":" + str(inputData)
         
+        inputData = inputPassengerString + ";" + str(inputData)
         temp.append(str(inputData))
         titles.append(str(current_data[0]))
 
@@ -218,7 +218,7 @@ def insertModelTable(planeName, filename):
 
 def insertPassengerTable(data):
     conn, cur = connect()
-    base_sql = ("INSERT INTO passengers VALUES (?,?,?,?,?,?)")
+    base_sql = ("INSERT INTO passengers (groupID, flightRef, key, class, requirements, preference) VALUES (?,?,?,?,?,?)")
     cur.execute(base_sql, data)
     conn.commit()
     conn.close()
@@ -305,10 +305,11 @@ def getPassengerClassArray(flightRef):
 #passs=067, flight=add90
 
 def getPassengerGroupDecending(passRef, classRef, flightRef):
+    #Selects all passengers for current class, and lower classes, where not already been seated and on a given flightRef
     conn, cur = connect()
 
     data_tuple = (passRef, classRef, flightRef)
-    base_sql = ("SELECT ticketID, COUNT(*) AS passengerCount, class FROM passengers WHERE flightRef = ? AND class >= ? AND ticketID NOT IN(SELECT passengerRef from airplaneLayout WHERE flightNumber = ? AND passengerRef NOT NULL) GROUP BY ticketID ORDER BY class DESC , passengerCount DESC")
+    base_sql = ("SELECT groupID, COUNT(*) AS passengerCount, class FROM passengers WHERE flightRef = ? AND class >= ? AND ticketID NOT IN(SELECT passengerRef from airplaneLayout WHERE flightNumber = ? AND passengerRef NOT NULL) GROUP BY groupID ORDER BY class DESC , passengerCount DESC")
     cur.execute(base_sql, data_tuple)
     all_data = cur.fetchall()
     conn.close()
@@ -383,13 +384,31 @@ def clearAll():
 
     conn.close()
 
+def getIndividualTicketRefs(groupID):
+    conn, cur = connect()
 
-def getAssignedClassTicket(classRef, amount, flightRef):
+    cur.execute("SELECT ticketID from passengers WHERE groupID = ?", (groupID,))
+    
+    data = cur.fetchall()
+
+    data = SQLSelectClean(data)
+
+    conn.close()
+
+    return data
+
+
+def getAssignedClassTicket(passClassRef,seatClassRef, amount, flightRef):
 
     seatCount = 0
     passRef = getFlightPassengerRef(flightRef)
-    all_pass = getPassengerGroupDecending(passRef, str(classRef), flightRef)
-    all_seat = getClassSeats(flightRef, classRef)
+
+    all_pass = getPassengerGroupDecending(passRef, str(passClassRef), flightRef)
+    all_seat = getClassSeats(flightRef, seatClassRef)
+    
+    if len(all_seat) < amount:
+        all_seat.append(getClassSeats(flightRef, seatClassRef-1))
+
     assigned_tickets =[]
 
     loop_amount = amount
@@ -406,7 +425,45 @@ def getAssignedClassTicket(classRef, amount, flightRef):
     if loop_amount > 0:
         print("Seating Warning @getAssignedClassTicket")
 
+    print(assigned_tickets)
+
     for group_tickets in assigned_tickets:
+
         group = group_tickets[1]
+        groupId = group_tickets[0]
+        ids = getIndividualTicketRefs(groupId)
+        counter = 0
+
+        print(group_tickets)
+
         for ticket in group:
-            insertPassengerRefFlight(flightRef, ticket[0], ticket[1], group_tickets[0])
+            
+           insertPassengerRefFlight(flightRef, ticket[0], ticket[1], ids[counter])
+           counter = counter + 1
+
+def passengerAlertData(passengerID):
+    conn, cur = connect()
+
+    cur.execute("SELECT groupID, flightRef from passengers WHERE ticketID = ?", (passengerID,))
+    
+    data1 = cur.fetchall()[0]
+
+    cur.execute("SELECT flightNumber, columnTitle, rowTitle, class from airplaneLayout WHERE passengerRef = ?", (passengerID,))
+
+    data2 = cur.fetchall()[0]
+
+    base_sql = ("SELECT passengerRef , columnTitle, rowTitle from airplaneLayout WHERE passengerRef IN (SELECT ticketID from passengers WHERE groupID = ? AND flightRef = ? AND passengerRef != ?) ORDER BY columnTitle, rowTitle")
+    data_tuple = (data1[0], data1[1], passengerID)
+
+    cur.execute(base_sql, data_tuple)
+    group_data = cur.fetchall()
+    
+    finalString = "Passenger ID: " + str(passengerID)  + "\\nGroup ID: " + data1[0] + "\\nSeat: " + data2[1] + str(data2[2]) + "\\nClass: " + str(data2[3]) 
+
+    if len(group_data) > 0 :
+        finalString = finalString + "\\n\\nGroup Members:"
+        for data in group_data:
+            finalString = finalString + "\\nID: " + data[0] + " Seat: " + data[1] + str(data[2])
+
+    conn.close()
+    return finalString

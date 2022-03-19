@@ -47,8 +47,19 @@
 
 {% set rowTitles = rowTitles %}
 
-{% set seatColourArray = [[255, 0, 255],[25, 214, 25],[214, 25, 25], [150, 15, 229],[21,0,255],[255,128,0],[255,51,153],[204,153,255]]%}
- 
+{% set seatColourArray = [[255, 0, 0],[255, 128, 0],[204, 204, 0], [0, 204, 0],[0, 204, 204],[0, 0, 204],[102, 0, 204],[204, 0, 102],[96, 96, 96]]%}
+
+{% set seatColourArrayClass = [[255, 153, 153
+    ],[255, 204, 153
+    ],[255, 255, 153
+    ], [153, 255, 153
+    ],[153, 255, 255
+    ],[153, 153, 255
+    ],[204, 153, 255
+    ],[255, 153, 204
+    ],[102, 102, 102
+    ]]%}
+
 
 <div class="form">
     <div class="plane-container">
@@ -67,9 +78,10 @@
                 <svg width={{canvas_size}} height={{canvas_size}}> </svg>
             {% else %}
 
-                {% set seatData = seat.split(':') %}
+                {% set seatData = seat.split(';') %}
                 {% set intSeat = seatData[1] | int %}
-                
+                {% set seatString = "Passenger ID: 35\nGroup ID: k5\nSeat: A28\n Class: 5\nGroup Members:\nID: 36 Seat: C11\nID: 37 Seat: C25" %}
+
                 {% if intSeat > 20 %}
                     {% set occColour = [150, 150, 150] %}
                     {% set intSeat = intSeat - 21 %}
@@ -78,13 +90,13 @@
                     {% set intSeat = intSeat - 1 %}
                 {% endif %}    
 
-                {% if intSeat > 7 %}
+                {% if intSeat > 9 %}
                     {% set seatColour = [255,255,0] %}
                 {% else %}
                     {% set seatColour = seatColourArray[intSeat] %}
                 {% endif %}    
 
-                <svg width={{canvas_size}} height={{canvas_size}} onclick = "alert('{{seatData[0]}}')">
+                <svg width={{canvas_size}} height={{canvas_size}} onclick = "alert('{{ seatData[0] }}')">
                     <rect x={{icon_pad}} y={{icon_pad}} rx={{icon_round}} ry={{icon_round}} width={{icon_size}} height={{icon_size}}
                     style="fill:rgb({{occColour[0]}},{{occColour[1]}},{{occColour[2]}});stroke:rgb({{seatColour[0]}},{{seatColour[1]}},{{seatColour[2]}});stroke-width:{{icon_line_width}};opacity:1" />
                 </svg>

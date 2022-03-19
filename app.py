@@ -200,8 +200,11 @@ def passengerAssignPage():
                 insertPassengerLinkTable(planeOption, passengerOption)
 
                 for x in reversed(actual):
-                    print(x) 
-                    getAssignedClassTicket(x[0], x[1], planeOption)
+                    print(x)
+                    if x[0] > len(passengers): 
+                        getAssignedClassTicket(len(passengers),x[0], x[1], planeOption)
+                    else:
+                        getAssignedClassTicket(x[0], x[0],x[1], planeOption)
 
                 msg = "Data Successfully Inserted"
 
@@ -249,6 +252,7 @@ def databaseClearPage():
 
     if request.method == 'POST':
         msg= ""
+
         try:
             clearAll()
             msg = "Database sucessfully cleared"
