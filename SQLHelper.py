@@ -48,12 +48,6 @@ def SQLSelectClean(all_data):
 def getPlaneInfo(flightNo):
     conn, cur = connect()
 
-    #SELECT a.passengerRef , a.columnTitle, a.rowTitle, p.key, a.class, p.class from airplaneLayout AS a, passengers AS p WHERE a.passengerRef IN (SELECT ticketID from passengers WHERE groupID = ? AND flightRef = ? AND passengerRef != ?)  AND a.passengerRef = p.ticketID ORDER BY columnTitle, rowTitle
-    #{% set intOcc = seatData[2] | int %}
-    #{% set occColour = seatColourArrayClass[intOcc-1] %}
-    #cur.execute("SELECT a.columnTitle, a.rowTitle, a.class, a.type, a.passengerRef, p.class from airplaneLayout AS a, passengers AS p WHERE a.flightNumber = ? AND a.passengerRef = p.ticketID ORDER By a.sequenceNumber", (flightNo,))
-    #             
-
     cur.execute("SELECT a.columnTitle, a.rowTitle, a.class, a.type, a.passengerRef, p.class from airplaneLayout AS a LEFT JOIN passengers AS p ON a.passengerRef = p.ticketID  WHERE a.flightNumber = ? ORDER By a.sequenceNumber", (flightNo,))
 
     all_data = cur.fetchall()

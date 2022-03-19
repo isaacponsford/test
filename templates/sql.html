@@ -60,7 +60,7 @@
 <!-- canvas size = 2 pad + icon size -->
 {% set canvas_size = 22 %}
 
-{% set icon_line_width = 3 %}
+{% set icon_line_width = 4 %}
 {% set icon_round = 4 %}
 
 {% set rowTitles = rowTitles %}
@@ -91,7 +91,8 @@
                 {% set intSeat = seatData[1] | int %}
 
                 {% if intSeat > 20 %}
-                    {% set occColour = [150, 150, 150] %}
+                    {% set intOcc = seatData[2] | int %}
+                    {% set occColour = seatColourArrayClass[intOcc-1] %}
                     {% set intSeat = intSeat - 21 %}
                 {% else %}
                     {% set occColour = [255, 255, 255] %}
