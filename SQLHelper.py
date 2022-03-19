@@ -52,8 +52,9 @@ def getPlaneInfo(flightNo):
     #{% set intOcc = seatData[2] | int %}
     #{% set occColour = seatColourArrayClass[intOcc-1] %}
     #cur.execute("SELECT a.columnTitle, a.rowTitle, a.class, a.type, a.passengerRef, p.class from airplaneLayout AS a, passengers AS p WHERE a.flightNumber = ? AND a.passengerRef = p.ticketID ORDER By a.sequenceNumber", (flightNo,))
-    
-    cur.execute("SELECT columnTitle, rowTitle, class, type, passengerRef from airplaneLayout WHERE flightNumber = ? ORDER By sequenceNumber", (flightNo,))
+    #             
+
+    cur.execute("SELECT a.columnTitle, a.rowTitle, a.class, a.type, a.passengerRef, p.class from airplaneLayout AS a LEFT JOIN passengers AS p ON a.passengerRef = p.ticketID  WHERE a.flightNumber = ? ORDER By a.sequenceNumber", (flightNo,))
 
     all_data = cur.fetchall()
 
@@ -90,7 +91,7 @@ def getPlaneInfo(flightNo):
         except:
             pass
         
-        inputData = inputPassengerString + ";" + str(inputData) #+ ";" + str(current_data[5])
+        inputData = inputPassengerString + ";" + str(inputData) + ";" + str(current_data[5])
         temp.append(str(inputData))
         titles.append(str(current_data[0]))
 
@@ -403,29 +404,21 @@ def getIndividualTicketRefs(groupID):
 
     return data
 
-
-def getAssignedClassTicket(passClassRef,seatClassRef, amount, flightRef):
+def getAssignedClassTicket(inClassRef, amount, flightRef):
 
     seatCount = 0
     passRef = getFlightPassengerRef(flightRef)
 
     #Return a list of passgerers grouped by Group ID, at the current class or lower (greater class number), in order of group size deceding, where passenger are unassigned a seat 
-    all_pass = getPassengerGroupDecending(passRef, str(passClassRef), flightRef)
+    all_pass = getPassengerGroupDecending(passRef, str(inClassRef), flightRef)
     
     #Returns location of all empty seats at for a given class 
-    all_seat = getClassSeats(flightRef, seatClassRef)
+    all_seat = getClassSeats(flightRef, inClassRef)
     
     # if len(all_seat) < amount:
     #     all_seat.append(getClassSeats(flightRef, seatClassRef-1))
     
-    classRef = seatClassRef - 1
-
-    # while len(all_seat) < amount:
-    #     if classRef < 0:
-    #         print("Class Reference Error @getAssignedClassTicket")
-    #         break
-    #     all_seat.append(getClassSeats(flightRef, classRef))
-    #     classRef = classRef - 1
+    classRef = inClassRef - 1
     
     while len(all_pass) < amount:
         if classRef < 0:

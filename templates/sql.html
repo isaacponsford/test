@@ -53,7 +53,7 @@
 
 {% block body %}
 
-<h1> {{fNo}} Layout</h1>
+<h1> {{title}} </h1>
 
 {% set icon_size = 16 %}
 {% set icon_pad = 3 %}
@@ -73,8 +73,8 @@
 <div class="form">
     <div class="plane-container">
 
-    {% for title in cTs %}
-        <h3>{{title}}</h3>
+    {% for columnTitle in cTs %}
+        <h3>{{columnTitle}}</h3>
     {% endfor %}
 
     {% for row in planeLayout %}

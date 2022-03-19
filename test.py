@@ -51,4 +51,6 @@ from tools import createPassCSVArray, createPassengerCSV, getFullActualArray, ge
 
 # print(all_seat)
 
-print(getPlaneSeatClasses("EMB5-62"))
+# print(getPlaneSeatClasses("EMB5-62"))
+
+print(getFlightPassengerRef("X800"))

@@ -3,7 +3,7 @@ import os
 import sqlite3
 
 from importCSV import getPassengerCSV, planeMetrics, tempValid
-from SQLHelper import clearAll, clearPassengersFlightNumber, getAssignedClassTicket, getPlaneInfo, getDistinctFlights, getDistinctPlanes, CSVtoSQL, getPlaneSeatClasses, insertLinkTable, getFlightAirlineModel, insertModelTable, insertPassengerTable, passengerExists, unassignedPlanes, getDistinctPassengersRef, insertPassengerLinkTable, getPassengerClassArray, getClassArray, getPassengerCount
+from SQLHelper import clearAll, clearPassengersFlightNumber, getAssignedClassTicket, getFlightPassengerRef, getPlaneInfo, getDistinctFlights, getDistinctPlanes, CSVtoSQL, getPlaneSeatClasses, insertLinkTable, getFlightAirlineModel, insertModelTable, insertPassengerTable, passengerExists, unassignedPlanes, getDistinctPassengersRef, insertPassengerLinkTable, getPassengerClassArray, getClassArray, getPassengerCount
 from SeatSelectorErrors import BlankNameError, ClassAboveNineError, ClassBelowZeroError, OverCapacityError, PassengerExistsError
 from tools import getFullActualArray, getPlaneActual, totalCapacity, getFullClassArray
 
@@ -29,8 +29,14 @@ def planeViewPage(id):
     noOfColumns, rowTitles, columnTitles = planeMetrics(airlineModel)
     planeLayout = getPlaneInfo(id)
     keyClassArray = getPlaneSeatClasses(id)
+
+    try:
+        passRef = getFlightPassengerRef(id)
+        title = str(id) + " Layout (" + passRef + ")"
+    except:
+        title = str(id) + " Layout"
     
-    return render_template('sql.html', fNo = id , planeLayout = planeLayout, noOfColumns = noOfColumns, cTs=columnTitles, rowTitles=rowTitles,keyClassArray=keyClassArray)
+    return render_template('sql.html', title = title , planeLayout = planeLayout, noOfColumns = noOfColumns, cTs=columnTitles, rowTitles=rowTitles,keyClassArray=keyClassArray)
 
 @app.route('/admin', methods=['POST', 'GET'])
 def adminPage():
@@ -211,11 +217,7 @@ def passengerAssignPage():
 
                 #Itterate through "actual" list in reverse order (from lowest class to first class)
                 for x in reversed(actual):
-                    print(x)
-                    # if x[0] > len(passengers): 
-                    #     getAssignedClassTicket(len(passengers),x[0], x[1], planeOption)
-                    # else:
-                    getAssignedClassTicket(x[0], x[0],x[1], planeOption)
+                    getAssignedClassTicket(x[0], x[1], planeOption)
 
                 msg = "Data Successfully Inserted"
 
