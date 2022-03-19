@@ -1,5 +1,5 @@
 from ftplib import all_errors
-from SQLHelper import clearAll, clearPassengersFlightNumber, getClassSeats, CSVtoSQL, getDistinctPassengersRef, getFlightPassengerRef, getIndividualTicketRefs, getPassengerGroupDecending, insertPassengerRefFlight, insertPlaneLayout, getPlaneInfo, getDistinctFlights, getDistinctPlanes, insertLinkTable, getFlightAirlineModel, getClassArray, passengerAlertData, passengerExists, populateSeat, insertPassengerTable, getPassengerCount, getPassengerClassArray, unassignedPlanes
+from SQLHelper import clearAll, clearPassengersFlightNumber, getClassSeats, CSVtoSQL, getDistinctPassengersRef, getFlightPassengerRef, getIndividualTicketRefs, getPassengerGroupDecending, getPlaneSeatClasses, insertPassengerRefFlight, insertPlaneLayout, getPlaneInfo, getDistinctFlights, getDistinctPlanes, insertLinkTable, getFlightAirlineModel, getClassArray, passengerAlertData, passengerExists, populateSeat, insertPassengerTable, getPassengerCount, getPassengerClassArray, unassignedPlanes
 from importCSV import planeMetrics, getPassengerCSV
 from tools import createPassCSVArray, createPassengerCSV, getFullActualArray, getFullClassArray, getPlaneActual, totalCapacity
 
@@ -37,16 +37,18 @@ from tools import createPassCSVArray, createPassengerCSV, getFullActualArray, ge
 
 # # print()
 
-# # for x in getPassengerCSV(passRef):
-# #     insertPassengerTable(x)
+# # # for x in getPassengerCSV(passRef):
+# # #     insertPassengerTable(x)
 
-flightRef = "EMB5-62"
+# flightRef = "EMB5-62"
 
-passRef = getFlightPassengerRef(flightRef)
+# passRef = getFlightPassengerRef(flightRef)
 
-    #Return a list of passgerers grouped by Group ID, at the current class or lower (greater class number), in order of group size deceding, where passenger are unassigned a seat 
-all_pass = getPassengerGroupDecending(passRef, str(5), flightRef)
+#     #Return a list of passgerers grouped by Group ID, at the current class or lower (greater class number), in order of group size deceding, where passenger are unassigned a seat 
+# all_pass = getPassengerGroupDecending(passRef, str(5), flightRef)
 
-all_seat = getClassSeats(flightRef, 5)
+# all_seat = getClassSeats(flightRef, 5)
 
-print(all_seat)
+# print(all_seat)
+
+print(getPlaneSeatClasses("EMB5-62"))

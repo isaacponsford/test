@@ -48,7 +48,13 @@ def SQLSelectClean(all_data):
 def getPlaneInfo(flightNo):
     conn, cur = connect()
 
+    #SELECT a.passengerRef , a.columnTitle, a.rowTitle, p.key, a.class, p.class from airplaneLayout AS a, passengers AS p WHERE a.passengerRef IN (SELECT ticketID from passengers WHERE groupID = ? AND flightRef = ? AND passengerRef != ?)  AND a.passengerRef = p.ticketID ORDER BY columnTitle, rowTitle
+    #{% set intOcc = seatData[2] | int %}
+    #{% set occColour = seatColourArrayClass[intOcc-1] %}
+    #cur.execute("SELECT a.columnTitle, a.rowTitle, a.class, a.type, a.passengerRef, p.class from airplaneLayout AS a, passengers AS p WHERE a.flightNumber = ? AND a.passengerRef = p.ticketID ORDER By a.sequenceNumber", (flightNo,))
+    
     cur.execute("SELECT columnTitle, rowTitle, class, type, passengerRef from airplaneLayout WHERE flightNumber = ? ORDER By sequenceNumber", (flightNo,))
+
     all_data = cur.fetchall()
 
     airlineModel = getFlightAirlineModel(flightNo)
@@ -84,7 +90,7 @@ def getPlaneInfo(flightNo):
         except:
             pass
         
-        inputData = inputPassengerString + ";" + str(inputData)
+        inputData = inputPassengerString + ";" + str(inputData) #+ ";" + str(current_data[5])
         temp.append(str(inputData))
         titles.append(str(current_data[0]))
 
@@ -514,3 +520,15 @@ def passengerAlertData(passengerID):
         finalString = finalString + "\\n\\nOnly Passenger"
     conn.close()
     return finalString
+
+def getPlaneSeatClasses(flightNo):
+   
+
+    conn, cur = connect()
+
+    cur.execute("SELECT DISTINCT class from airplaneLayout WHERE flightNumber = ? AND class NOT NULL ORDER BY class", (flightNo,))
+
+    all_data = cur.fetchall()
+    all_data = SQLSelectClean(all_data)
+    conn.close()
+    return(all_data)
