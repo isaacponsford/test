@@ -1,4 +1,4 @@
-from SQLHelper import clearAll, clearPassengersFlightNumber, getClassSeats, CSVtoSQL, getDistinctPassengersRef, getFlightPassengerRef, getIndividualTicketRefs, getPassengerGroupDecending, getPlaneSeatClasses, insertPassengerRefFlight, insertPlaneLayout, getPlaneInfo, getDistinctFlights, getDistinctPlanes, insertLinkTable, getFlightAirlineModel, getClassArray, passengerAlertData, passengerExists, populateSeat, insertPassengerTable, getPassengerCount, getPassengerClassArray, unassignedPlanes
+from SQLHelper import clearAll, clearPassengersFlightNumber, getClassSeats, CSVtoSQL, getDistinctPassengersRef, getFlightPassengerRef, getIndividualTicketRefs, getPassengerArray, getPassengerGroupDecending, getPlaneSeatClasses, insertPassengerRefFlight, insertPlaneLayout, getPlaneInfo, getDistinctFlights, getDistinctPlanes, insertLinkTable, getFlightAirlineModel, getClassArray, passengerAlertData, passengerExists, populateSeat, insertPassengerTable, getPassengerCount, getPassengerClassArray, unassignedPlanes
 from importCSV import planeMetrics, getPassengerCSV
 from tools import createPassCSVArray, createPassengerCSV, getFullActualArray, getFullClassArray, getPlaneActual, totalCapacity
 
@@ -25,11 +25,11 @@ from tools import createPassCSVArray, createPassengerCSV, getFullActualArray, ge
 # #     getAssignedClassTicket(i[0], i[1], "EMB5-62")
 
 
-# Plane Array: [(1, 5), (2, 12), (3, 12), (4, 12), (5, 21)]
-array = [(1, 4), (2, 12), (3, 8), (4, 12), (5, 14)] 
-createPassCSVArray("5-AllOK2s", array)
+# # Plane Array: [(1, 5), (2, 12), (3, 12), (4, 12), (5, 21)]
+# array = [(1, 4), (2, 12), (3, 8), (4, 12), (5, 14)] 
+# createPassCSVArray("5-AllOK2s", array)
 
-# # print()
+# # # print()
 
 # # # for x in getPassengerCSV(passRef):
 # # #     insertPassengerTable(x)
@@ -52,3 +52,5 @@ createPassCSVArray("5-AllOK2s", array)
 # print(getPassengerGroupDecending("3-55", "2", "EMB5-62"))
 
 # print(getClassArray("ORD5-62"))s
+
+print(getPassengerArray("5-AllOK"))

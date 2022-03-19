@@ -514,3 +514,11 @@ def getPlaneSeatClasses(flightNo):
     all_data = SQLSelectClean(all_data)
     conn.close()
     return(all_data)
+
+def getPassengerArray(passRef):
+    conn, cur = connect()
+
+    cur.execute("SELECT groupID, count(*) AS amount, class from passengers WHERE flightRef = ? GROUP BY groupID ORDER by class, amount", (passRef,))
+    all_data = cur.fetchall()
+    conn.close()
+    return(all_data)

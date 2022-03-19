@@ -3,7 +3,7 @@ import os
 import sqlite3
 
 from importCSV import getPassengerCSV, planeMetrics, tempValid
-from SQLHelper import clearAll, clearPassengersFlightNumber, getAssignedClassTicket, getFlightPassengerRef, getPlaneInfo, getDistinctFlights, getDistinctPlanes, CSVtoSQL, getPlaneSeatClasses, insertLinkTable, getFlightAirlineModel, insertModelTable, insertPassengerTable, passengerExists, unassignedPlanes, getDistinctPassengersRef, insertPassengerLinkTable, getPassengerClassArray, getClassArray, getPassengerCount
+from SQLHelper import clearAll, clearPassengersFlightNumber, getAssignedClassTicket, getFlightPassengerRef, getPassengerArray, getPlaneInfo, getDistinctFlights, getDistinctPlanes, CSVtoSQL, getPlaneSeatClasses, insertLinkTable, getFlightAirlineModel, insertModelTable, insertPassengerTable, passengerExists, unassignedPlanes, getDistinctPassengersRef, insertPassengerLinkTable, getPassengerClassArray, getClassArray, getPassengerCount
 from SeatSelectorErrors import BlankNameError, ClassAboveNineError, ClassBelowZeroError, OverCapacityError, PassengerExistsError
 from tools import getFullActualArray, getPlaneActual, totalCapacity, getFullClassArray
 
@@ -41,9 +41,7 @@ def planeViewPage(id):
     except:
         title = str(id) + " Layout"
     
-    
-
-    return render_template('sql.html', title = title, info = info, planeLayout = planeLayout, noOfColumns = noOfColumns, cTs=columnTitles, rowTitles=rowTitles,keyClassArray=keyClassArray)
+    return render_template('sql.html', id=id,title = title, info = info, planeLayout = planeLayout, noOfColumns = noOfColumns, cTs=columnTitles, rowTitles=rowTitles,keyClassArray=keyClassArray)
 
 @app.route('/admin', methods=['POST', 'GET'])
 def adminPage():
@@ -281,6 +279,29 @@ def databaseClearPage():
         return render_template('cleardb.html', msg = msg)
     else:
         return render_template('cleardb.html', msg = "")
+
+@app.route('/passenger-table/<id>')
+def passengerTablePage(id):
+
+    passengerArray = []
+    seatCapacity = totalCapacity(getClassArray(id))
+    info = "Number of Seats: " + str(seatCapacity)
+    
+    try:
+        passRef = getFlightPassengerRef(id)
+        passAmount = totalCapacity(getPassengerClassArray(passRef))
+
+        passengerArray = getPassengerArray(passRef)
+
+        info=info + " - Passengers: " + str(passAmount) + " - Percentage Occupancy: " + str(round((passAmount / seatCapacity) * 100)) + "%"
+    except:
+        pass
+        # title = str(id) + " Layout"
+    
+    title = "Passengers for: " + str(id)
+
+    return render_template('passengertable.html', title = title, info = info, passengerArray = passengerArray)
+
 
 if __name__ == "__main__":
     app.run(debug=True)

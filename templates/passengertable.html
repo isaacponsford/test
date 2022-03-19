@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+<style>
+   table, th, td {
+  border-style: outset;
+}
+
+h6 {
+        text-align: left;
+        font-family:verdana;
+        font-size: 15px;
+    }
+
+
+</style>
+
+{% endblock %}
+
+{% block body %}
+
+{% set passengerArray = passengerArray %}
+
+<div class="content">
+    <h1 style="text-align: left">Passengers</h1>
+
+    {% if passengerArray|length < 1 %}
+        <a href="/passenger-assign">No passengers assigned. Please assign passengers by clicking this link</a>
+    {% else %}
+    <h2> {{title}} </h2>
+    <h6> {{info}} </h6>
+    <table>
+        <tr>
+            <th>Group ID</th>
+            <th>Number of Passengers</th>
+            <th>Ticket Class</th>
+        </tr>
+
+        {% for passenger in passengerArray %}
+            <tr>
+                <td style="text-align: center">{{ passenger[0] }}</td> 
+                <td style="text-align: center">{{ passenger[1] }}</td>
+                <td style="text-align: center">{{ passenger[2] }}</td>
+            </tr>
+        {% endfor %}
+
+    </table>
+    {% endif %}
+</div>
+
+{% endblock %}
