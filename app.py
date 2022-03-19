@@ -1,9 +1,9 @@
-from flask import Flask, redirect, render_template, request, url_for
+from flask import Flask, redirect, render_template, request, url_for, g
 import os
 import sqlite3
 
 from importCSV import getPassengerCSV, planeMetrics, tempValid
-from SQLHelper import clearAll, clearPassengersFlightNumber, getPlaneInfo, getDistinctFlights, getDistinctPlanes, CSVtoSQL, insertLinkTable, getFlightAirlineModel, insertModelTable, insertPassengerTable, passengerExists, unassignedPlanes, getDistinctPassengersRef, insertPassengerLinkTable, getPassengerClassArray, getClassArray, getPassengerCount
+from SQLHelper import clearAll, clearPassengersFlightNumber, getAssignedClassTicket, getPlaneInfo, getDistinctFlights, getDistinctPlanes, CSVtoSQL, insertLinkTable, getFlightAirlineModel, insertModelTable, insertPassengerTable, passengerExists, unassignedPlanes, getDistinctPassengersRef, insertPassengerLinkTable, getPassengerClassArray, getClassArray, getPassengerCount
 from SeatSelectorErrors import BlankNameError, ClassAboveNineError, ClassBelowZeroError, OverCapacityError, PassengerExistsError
 from tools import getFullActualArray, getPlaneActual, totalCapacity, getFullClassArray
 
@@ -144,6 +144,11 @@ def newPassengerPage():
     else:
         return render_template('newpassengers.html', msg = "")
 
+global plnOption
+plnOption = ""
+global psgrOption
+psgrOption = ""
+
 @app.route('/passenger-assign', methods=['POST', 'GET'])
 def passengerAssignPage():
 
@@ -156,9 +161,14 @@ def passengerAssignPage():
         if request.form["btn"]=="View":
 
             try:
+                global plnOption
+                global psgrOption
 
                 planeOption = request.form['planeChoice']
                 passengerOption = request.form['passengerChoice']
+
+                plnOption = planeOption
+                psgrOption = passengerOption
 
                 if (totalCapacity(getClassArray(planeOption))) < (getPassengerCount(passengerOption)):
                     raise OverCapacityError
@@ -173,8 +183,10 @@ def passengerAssignPage():
         elif request.form["btn"]=="Input":
 
             try:
-                planeOption = request.form['planeChoice']
-                passengerOption = request.form['passengerChoice']
+
+                
+                planeOption = plnOption
+                passengerOption = psgrOption
 
                 seats = getClassArray(planeOption)
                 passengers = getPassengerClassArray(passengerOption)
@@ -184,11 +196,14 @@ def passengerAssignPage():
                 actual, upDowns = getPlaneActual(seats, passengers)
 
                 actualArray = getFullActualArray(seats, passengers, actual, upDowns)
-                print(actualArray)
+
                 insertPassengerLinkTable(planeOption, passengerOption)
 
-                msg = "Data Successfully Inserted"
+                for x in reversed(actual):
+                    print(x) 
+                    getAssignedClassTicket(x[0], x[1], planeOption)
 
+                msg = "Data Successfully Inserted"
 
             except Exception as e: 
 
@@ -196,16 +211,19 @@ def passengerAssignPage():
                 msg = "Data was not successfully inserted. Try again"
 
         elif request.form["btn"]=="Display":
-            planeOption = request.form['planeChoice']
+
+            planeOption = plnOption
             return redirect(url_for('planeViewPage', id=planeOption))
             
         planes = unassignedPlanes()
         passengers = getDistinctPassengersRef()
-        return render_template('passengerassign.html', planes = planes, passengers = passengers, msg = msg, classArray=classArray, actualArray = actualArray)
+        return render_template('passengerassign.html', planes = planes, passengers = passengers, msg = msg, classArray=classArray, actualArray = actualArray, planeOption = plnOption, passengerOption = psgrOption)
     else:
         planes = unassignedPlanes()
         passengers = getDistinctPassengersRef()
-        return render_template('passengerassign.html', planes = planes, passengers = passengers, msg = "", classArray = [], actualArray=[])
+        planeOption = ""
+        passengerOption = ""
+        return render_template('passengerassign.html', planes = planes, passengers = passengers, msg = "", classArray = [], actualArray=[], planeOption = planeOption, passengerOption = passengerOption)
 
 @app.route('/passenger-remove', methods=['POST', 'GET'])
 def passengerRemovePage():

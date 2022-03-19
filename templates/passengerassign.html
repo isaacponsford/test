@@ -51,8 +51,12 @@
         <small> {{ msg }} </small>
 
         {% if classArray|length < 1 %}
-        <h4 style="text-align: center">Please select A plane</h4>
+        <h4 style="text-align: left">Please select a plane</h4>
         {% else %}
+        <br><br>
+        <h4 style="text-align: left">Flight Number: {{ planeOption }}</h4>
+        <br>
+        <h4 style="text-align: left">Passenger Number: {{ passengerOption }}</h4>
         <br><br>
         <table>
             <tr>
@@ -82,7 +86,6 @@
         {% endif %}
     
         {% if actualArray|length < 1 %}
-            <h4 style="text-align: center">Placeholder</h4>
         {% else %}
         <br><br>
         <table>

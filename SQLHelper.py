@@ -350,8 +350,11 @@ def clearPassengersFlightNumber(flightRef):
     conn, cur = connect()
     
     cur.execute("UPDATE airplaneLayout SET passengerRef = NULL WHERE flightNumber = ?", (flightRef,))
-
     conn.commit()
+
+    cur.execute("UPDATE airplaneLinkTable SET passengerFlightRef = NULL WHERE flightNo = ?", (flightRef,))
+    conn.commit()
+
     conn.close()
 
 def passengerExists(passRef):
@@ -379,3 +382,31 @@ def clearAll():
     conn.commit()
 
     conn.close()
+
+
+def getAssignedClassTicket(classRef, amount, flightRef):
+
+    seatCount = 0
+    passRef = getFlightPassengerRef(flightRef)
+    all_pass = getPassengerGroupDecending(passRef, str(classRef), flightRef)
+    all_seat = getClassSeats(flightRef, classRef)
+    assigned_tickets =[]
+
+    loop_amount = amount
+
+    for passenger in all_pass:
+        currGroupSize = passenger[1]
+        if loop_amount >= currGroupSize:
+            loop_amount = loop_amount - currGroupSize
+            assigned_tickets.append((passenger[0], all_seat[seatCount:(seatCount+currGroupSize)]))
+            seatCount = seatCount + currGroupSize
+        else:
+            pass
+    
+    if loop_amount > 0:
+        print("Seating Warning @getAssignedClassTicket")
+
+    for group_tickets in assigned_tickets:
+        group = group_tickets[1]
+        for ticket in group:
+            insertPassengerRefFlight(flightRef, ticket[0], ticket[1], group_tickets[0])
