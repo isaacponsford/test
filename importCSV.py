@@ -51,8 +51,9 @@ def getPlaneLayout(csv_file):
             rowLayout = row[1::]
             planeLayout.append(rowLayout)
     
-
     return planeLayout
+
+    
         
 def getPassengerCSV(csv_file):
 

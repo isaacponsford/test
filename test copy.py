@@ -40,22 +40,6 @@ outArray = []
 for passID in passIDs:
     if passID[1] == 'W':
         if wC < len(wA):
-            outArray.append((passID[0], seats[wA[wC]][0],seats[wA[wC]][1]))
+            outArray.append((passID[0], wA[wC][0],wA[wC][1]))
             wC = wC + 1
-    
-    if passID[1] == 'A':
-        if aC < len(aA):
-            outArray.append((passID[0], seats[aA[aC]][0],seats[aA[aC]][1]))
-            aC = aC + 1
-
-    if passID[1] == '':
-        if bC < len(bA):
-            outArray.append((passID[0], seats[bA[bC]][0],seats[bA[bC]][1]))
-            bC = bC + 1
         
-    # if passID[1] == 'aw':
-    #     if awC < len(awA):
-    #         outArray.append((passID[0], awA[awC][0],awA[awC][1]))
-    #         awC = awC + 1
-        
-print(outArray)

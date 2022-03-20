@@ -3,7 +3,7 @@ import os
 import sqlite3
 
 from importCSV import getPassengerCSV, planeMetrics, tempValid
-from SQLHelper import clearAll, clearPassengersFlightNumber, getAssignedClassTicket, getFlightPassengerRef, getPassengerArray, getPlaneInfo, getDistinctFlights, getDistinctPlanes, CSVtoSQL, getPlaneSeatClasses, insertLinkTable, getFlightAirlineModel, insertModelTable, insertPassengerTable, passengerExists, unassignedPlanes, getDistinctPassengersRef, insertPassengerLinkTable, getPassengerClassArray, getClassArray, getPassengerCount
+from SQLHelper import clearAll, clearPassengersFlightNumber, getAssignedClassTicket, getFlightPassengerRef, getPassengerArray, getPlaneInfo, getDistinctFlights, getDistinctPlanes, getPlaneSeatClasses, insertLinkTable, getFlightAirlineModel, insertModelTable, insertPassengerTable, passengerExists, planeCSVtoSQL, unassignedPlanes, getDistinctPassengersRef, insertPassengerLinkTable, getPassengerClassArray, getClassArray, getPassengerCount
 from SeatSelectorErrors import BlankNameError, ClassAboveNineError, ClassBelowZeroError, OverCapacityError, PassengerExistsError
 from tools import getFullActualArray, getPlaneActual, totalCapacity, getFullClassArray
 
@@ -58,7 +58,7 @@ def newPlanePage():
             planeOption = request.form['planeLayouts']
             flightNo = request.form['flightNumber']
             
-            CSVtoSQL(flightNo, planeOption)
+            planeCSVtoSQL(flightNo, planeOption)
             insertLinkTable((flightNo, planeOption))
 
             msg = "Data has been successfully inserted"

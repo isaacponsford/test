@@ -10,7 +10,7 @@ def connect():
 
 def insertPlaneLayout(data_tuple):
     conn, cur = connect()
-    base_sql = """insert into airplaneLayout (flightNumber, columnTitle, rowTitle, class, type, sequenceNumber) VALUES (?,?,?,?,?,?)"""
+    base_sql = """insert into airplaneLayout (flightNumber, columnTitle, rowTitle, class, type, sequenceNumber, aw) VALUES (?,?,?,?,?,?,?)"""
     cur.execute(base_sql, data_tuple)
     conn.commit()
     conn.close()
@@ -113,7 +113,7 @@ def getPlaneInfo(flightNo):
     conn.close()
     return(layout)
 
-def CSVtoSQL(flight_number, csv_add):
+def planeCSVtoSQL(flight_number, csv_add):
 
     noOfColumns, rowTitles, columnTitles = planeMetrics(csv_add)
     planeLayout = getPlaneLayout(csv_add)
@@ -126,7 +126,7 @@ def CSVtoSQL(flight_number, csv_add):
 
         if isBlank(planeLayout[rowCounter]):
             insert_row = int(rowTitles[rowCounter-1]) + 1
-            insert_data = (flight_number, "", insert_row, None , 99, seqNum)
+            insert_data = (flight_number, "", insert_row, None , 99, seqNum, None)
             insertPlaneLayout(insert_data)
             seqNum = seqNum + 1
         
@@ -138,13 +138,25 @@ def CSVtoSQL(flight_number, csv_add):
 
                 if current != '':
                     
+                    aw = ""
+
+                    if columnCounter == 0 or columnCounter == noOfColumns-1:
+                        aw = "W"
+                        if columnCounter == 0 and planeLayout[rowCounter][columnCounter + 1] == '':
+                            aw = "AW"
+                        elif columnCounter == noOfColumns-1 and planeLayout[rowCounter][columnCounter - 1] == '':
+                            aw = "AW"
+                    else:
+                        if planeLayout[rowCounter][columnCounter + 1] == '' or planeLayout[rowCounter][columnCounter - 1] == '':
+                            aw = "A"
+
                     insert_column = columnTitles[columnCounter+1]
                     insert_row = rowTitles[rowCounter]
                     insert_class = current
                     insert_type = 1
                     occupied = 0
 
-                    insert_data = (flight_number, insert_column, insert_row, insert_class, insert_type, seqNum)
+                    insert_data = (flight_number, insert_column, insert_row, insert_class, insert_type, seqNum, aw)
                     insertPlaneLayout(insert_data)
                     seqNum = seqNum + 1
 
@@ -218,7 +230,7 @@ def insertModelTable(planeName, filename):
 
 def insertPassengerTable(data):
     conn, cur = connect()
-    base_sql = ("INSERT INTO passengers (groupID, flightRef, key, class, requirements, preference) VALUES (?,?,?,?,?,?)")
+    base_sql = ("INSERT INTO passengers (groupID, flightRef, key, class, splitable, preference) VALUES (?,?,?,?,?,?)")
     cur.execute(base_sql, data)
     conn.commit()
     conn.close()
@@ -275,7 +287,7 @@ def getClassSeats(flightNo, classNo):
     conn, cur = connect()
 
     data_tuple = (classNo,flightNo)
-    base_sql = ("SELECT columnTitle, rowTitle from airplaneLayout where class = ? AND flightNumber = ? AND passengerRef IS NULL ORDER by rowTitle, columnTitle")
+    base_sql = ("SELECT columnTitle, rowTitle,aw from airplaneLayout where class = ? AND flightNumber = ? AND passengerRef IS NULL ORDER by rowTitle, columnTitle")
 
     cur.execute(base_sql, data_tuple)
     all_data = cur.fetchall()
@@ -337,8 +349,6 @@ def insertPassengerRefFlight(flight, column, row, passengerRef):
 def passengerPlanes():
     conn, cur = connect()
 
-    #SELECT flightNumber, count(*) from airplaneLayout AS a2 WHERE passengerRef NOT NULL GROUP by flightNumber
-
     cur.execute("SELECT DISTINCT flightNumber from airplaneLayout")
     all_flights = cur.fetchall()
 
@@ -387,7 +397,7 @@ def clearAll():
 def getIndividualTicketRefs(groupID):
     conn, cur = connect()
 
-    cur.execute("SELECT ticketID from passengers WHERE groupID = ?", (groupID,))
+    cur.execute("SELECT ticketID, preference from passengers WHERE groupID = ? ORDER by preference", (groupID,))
     
     data = cur.fetchall()
 
@@ -442,10 +452,12 @@ def getAssignedClassTicket(inClassRef, actual, flightRef):
             pass
     
     for group_tickets in assigned_tickets:
+    #   = ("1o2",])[[C,18,"W"], [C,19,""],[C,20,"A"]
 
-        group = group_tickets[1]
-        groupId = group_tickets[0]
-        ids = getIndividualTicketRefs(groupId)
+        group = group_tickets[1] # = [[C,18,"W"], [C,19,""],[C,20,"A"]
+        groupId = group_tickets[0] # = "1o2"
+
+        ids = getIndividualTicketRefs(groupId) # = [[56,'A'],[57,''],[58,'W']]
         counter = 0
 
         for ticket in group:
