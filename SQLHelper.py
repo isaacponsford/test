@@ -1,4 +1,3 @@
-from itertools import count
 from math import floor
 import sqlite3
 from importCSV import planeMetrics, getPlaneLayout
