@@ -84,7 +84,7 @@
 <!-- canvas size = 2 pad + icon size -->
 {% set canvas_size = 22 %}
 
-{% set icon_line_width = 4 %}
+{% set icon_line_width = 3 %}
 {% set icon_round = 4 %}
 
 {% set rowTitles = rowTitles %}
@@ -95,9 +95,9 @@
 
 <div class="views">
     <a href = {{url_for('planeViewPage', id = id)}} >Plane View</a>
-    <a href = {{url_for('passengerTablePage', id = id)}} >Passenger View</a>
     <a href = {{url_for('classViewPage', id = id)}} >Class View</a>
     <a href = {{url_for('happinesssViewPage', id = id)}} >Happiness View</a>
+    <a href = {{url_for('passengerTablePage', id = id)}} >Passenger View</a>
 </div>
 
 <br><br><br>

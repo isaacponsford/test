@@ -1,4 +1,5 @@
 from itertools import count
+from math import floor
 import sqlite3
 from importCSV import planeMetrics, getPlaneLayout
 from tools import isBlank, totalCapacity, getPreferedSeats
@@ -85,7 +86,12 @@ def getPlaneInfo(flightNo):
         except:
             pass
         
-        inputData = inputPassengerString + ";" + str(inputData) + ";" + str(current_data[5]) 
+        if current_data[6] != None:
+            inputHappiness = str(floor(current_data[6] * 10))
+        else:
+            inputHappiness = ""
+
+        inputData = inputPassengerString + ";" + str(inputData) + ";" + str(current_data[5]) + ";" + inputHappiness
 
         # if all_data[6] != None:
 

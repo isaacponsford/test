@@ -333,7 +333,7 @@ def happinesssViewPage(id):
     noOfColumns, rowTitles, columnTitles = planeMetrics(airlineModel)
     planeLayout = getPlaneInfo(id)
 
-    keyClassArray = getPlaneSeatClasses(id)
+    keyArray = range(10)
     seatCapacity = totalCapacity(getClassArray(id))
     
     info = "Number of Seats: " + str(seatCapacity)
@@ -347,7 +347,7 @@ def happinesssViewPage(id):
     except:
         title = " Happiness View for " + str(id)
     
-    return render_template('happinessview.html', id=id,title = title, info = info, planeLayout = planeLayout, noOfColumns = noOfColumns, cTs=columnTitles, rowTitles=rowTitles,keyClassArray=keyClassArray)
+    return render_template('happinessview.html', id=id,title = title, info = info, planeLayout = planeLayout, noOfColumns = noOfColumns, cTs=columnTitles, rowTitles=rowTitles, keyArray=keyArray)
 
 if __name__ == "__main__":
     app.run(debug=True)
