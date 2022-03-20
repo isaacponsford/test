@@ -222,7 +222,7 @@ def passengerAssignPage():
 
                 #Itterate through "actual" list in reverse order (from lowest class to first class)
                 for x in reversed(actual):
-                    getAssignedClassTicket(x[0], x[1], planeOption)
+                    getAssignedClassTicket(x[0], actual, planeOption)
 
                 msg = "Data Successfully Inserted"
 
@@ -300,8 +300,29 @@ def passengerTablePage(id):
     
     title = "Passengers for: " + str(id)
 
-    return render_template('passengertable.html', title = title, info = info, passengerArray = passengerArray)
+    return render_template('passengertable.html', id=id,title = title, info = info, passengerArray = passengerArray)
 
+@app.route('/class-view/<id>')
+def classViewPage(id):
+
+    airlineModel = getFlightAirlineModel(id)
+
+    noOfColumns, rowTitles, columnTitles = planeMetrics(airlineModel)
+    planeLayout = getPlaneInfo(id)
+    keyClassArray = getPlaneSeatClasses(id)
+    seatCapacity = totalCapacity(getClassArray(id))
+    info = "Number of Seats: " + str(seatCapacity)
+
+    try:
+        passRef = getFlightPassengerRef(id)
+        passAmount = totalCapacity(getPassengerClassArray(passRef))
+
+        title = str(id) + " Layout (" + passRef + ")"
+        info=info + " - Passengers: " + str(passAmount) + " - Percentage Occupancy: " + str(round((passAmount / seatCapacity) * 100)) + "%"
+    except:
+        title = str(id) + " Layout"
+    
+    return render_template('classview.html', id=id,title = title, info = info, planeLayout = planeLayout, noOfColumns = noOfColumns, cTs=columnTitles, rowTitles=rowTitles,keyClassArray=keyClassArray)
 
 if __name__ == "__main__":
     app.run(debug=True)

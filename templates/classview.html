@@ -102,7 +102,8 @@
                 {% set intSeat = seatData[1] | int %}
 
                 {% if intSeat > 20 %}
-                    {% set occColour = [150,150,150] %}
+                    {% set intOcc = seatData[2] | int %}
+                    {% set occColour = seatColourArrayClass[intOcc-1] %}
                     {% set intSeat = intSeat - 21 %}
                 {% else %}
                     {% set occColour = [255, 255, 255] %}
@@ -141,7 +142,7 @@
             {% set intKeyClass = keyClass | int %}
 
             {% set seatColour = seatColourArray[intKeyClass-1] %}
-            {% set occColour = [150,150,150] %}
+            {% set occColour = seatColourArrayClass[intKeyClass-1] %}
 
             <svg width={{canvas_size}} height={{canvas_size}}>
                 <rect x={{icon_pad}} y={{icon_pad}} rx={{icon_round}} ry={{icon_round}} width={{icon_size}} height={{icon_size}}

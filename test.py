@@ -1,4 +1,4 @@
-from SQLHelper import clearAll, clearPassengersFlightNumber, getClassSeats, CSVtoSQL, getDistinctPassengersRef, getFlightPassengerRef, getIndividualTicketRefs, getPassengerArray, getPassengerGroupDecending, getPlaneSeatClasses, insertPassengerRefFlight, insertPlaneLayout, getPlaneInfo, getDistinctFlights, getDistinctPlanes, insertLinkTable, getFlightAirlineModel, getClassArray, passengerAlertData, passengerExists, populateSeat, insertPassengerTable, getPassengerCount, getPassengerClassArray, unassignedPlanes
+from SQLHelper import clearAll, clearPassengersFlightNumber, getAssignedClassTicket, getClassSeats, CSVtoSQL, getDistinctPassengersRef, getFlightPassengerRef, getIndividualTicketRefs, getLayoutClassArray, getPassengerArray, getPassengerGroupDecending, getPassengersWithRef, getPlaneSeatClasses, insertPassengerRefFlight, insertPlaneLayout, getPlaneInfo, getDistinctFlights, getDistinctPlanes, insertLinkTable, getFlightAirlineModel, getClassArray, passengerAlertData, passengerExists, populateSeat, insertPassengerTable, getPassengerCount, getPassengerClassArray, unassignedPlanes
 from importCSV import planeMetrics, getPassengerCSV
 from tools import createPassCSVArray, createPassengerCSV, getFullActualArray, getFullClassArray, getPlaneActual, totalCapacity
 
@@ -26,31 +26,32 @@ from tools import createPassCSVArray, createPassengerCSV, getFullActualArray, ge
 
 
 # # Plane Array: [(1, 5), (2, 12), (3, 12), (4, 12), (5, 21)]
-# array = [(1, 4), (2, 12), (3, 8), (4, 12), (5, 14)] 
-# createPassCSVArray("5-AllOK2s", array)
 
-# # # print()
+# array = [(1, 8), (2, 2), (3, 10), (4, 5), (5, 25)] 
+# createPassCSVArray("5-1UP1DOWN", array)
 
-# # # for x in getPassengerCSV(passRef):
-# # #     insertPassengerTable(x)
+# # # # print()
 
-# flightRef = "EMB5-62"
+# # # # for x in getPassengerCSV(passRef):
+# # # #     insertPassengerTable(x)
 
-# passRef = getFlightPassengerRef(flightRef)
+# # flightRef = "EMB5-62"
 
-#     #Return a list of passgerers grouped by Group ID, at the current class or lower (greater class number), in order of group size deceding, where passenger are unassigned a seat 
-# all_pass = getPassengerGroupDecending(passRef, str(5), flightRef)
+# # passRef = getFlightPassengerRef(flightRef)
 
-# all_seat = getClassSeats(flightRef, 5)
+# # #     #Return a list of passgerers grouped by Group ID, at the current class or lower (greater class number), in order of group size deceding, where passenger are unassigned a seat 
+# # # all_pass = getPassengerGroupDecending(passRef, str(5), flightRef)
 
-# print(all_seat)
+# # print(getClassArray("EMB5-62"))
 
-# print(getPlaneSeatClasses("EMB5-62"))
+# print(getLayoutClassArray("EMB5-62"))
 
-# print(getFlightPassengerRef("X800"))
+# passRef = getFlightPassengerRef("EMB5-62")
 
-# print(getPassengerGroupDecending("3-55", "2", "EMB5-62"))
+# #Return a list of passgerers grouped by Group ID, at the current class or lower (greater class number), in order of group size deceding, where passenger are unassigned a seat 
+# all_pass = getPassengerGroupDecending(passRef, str(1), "EMB5-62")
+# print(all_pass)
 
-# print(getClassArray("ORD5-62"))s
+print(getPassengersWithRef("1o2", "5-1UP1DOWN"))
 
-print(getPassengerArray("5-AllOK"))
+#print(getClassSeats("EMB5-62", 1))

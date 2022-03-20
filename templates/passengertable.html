@@ -22,9 +22,16 @@ h6 {
 
 {% set passengerArray = passengerArray %}
 
+
+
 <div class="content">
     <h1 style="text-align: left">Passengers</h1>
 
+    <a href = {{url_for('planeViewPage', id = id)}} >Plane View</a>
+    <a href = {{url_for('passengerTablePage', id = id)}} >Passenger View</a>
+    <a href = {{url_for('classViewPage', id = id)}} >Class View</a>
+
+    <br><br>
     {% if passengerArray|length < 1 %}
         <a href="/passenger-assign">No passengers assigned. Please assign passengers by clicking this link</a>
     {% else %}

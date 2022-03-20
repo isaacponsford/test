@@ -397,10 +397,14 @@ def getIndividualTicketRefs(groupID):
 
     return data
 
-def getAssignedClassTicket(inClassRef, amount, flightRef):
+def getAssignedClassTicket(inClassRef, actual, flightRef):
 
     seatCount = 0
     passRef = getFlightPassengerRef(flightRef)
+
+    for x in actual:
+        if x[0] == inClassRef:
+            amount = x[1]
 
     #Return a list of passgerers grouped by Group ID, at the current class or lower (greater class number), in order of group size deceding, where passenger are unassigned a seat 
     all_pass = getPassengerGroupDecending(passRef, str(inClassRef), flightRef)
@@ -408,14 +412,11 @@ def getAssignedClassTicket(inClassRef, amount, flightRef):
     #Returns location of all empty seats at for a given class 
     all_seat = getClassSeats(flightRef, inClassRef)
     
-    # if len(all_seat) < amount:
-    #     all_seat.append(getClassSeats(flightRef, seatClassRef-1))
-    
     classRef = inClassRef - 1
     
     while len(all_pass) < amount:
         if classRef < 0:
-            print("Class Reference Error @getAssignedClassTicket")
+            #print("Class Reference Error @getAssignedClassTicket")
             break
         all_pass = getPassengerGroupDecending(passRef, str(classRef), flightRef)
         classRef = classRef - 1
@@ -440,9 +441,6 @@ def getAssignedClassTicket(inClassRef, amount, flightRef):
         else:
             pass
     
-    if loop_amount > 0:
-        print("Seating Warning @getAssignedClassTicket")
-
     for group_tickets in assigned_tickets:
 
         group = group_tickets[1]
@@ -454,6 +452,48 @@ def getAssignedClassTicket(inClassRef, amount, flightRef):
             
            insertPassengerRefFlight(flightRef, ticket[0], ticket[1], ids[counter])
            counter = counter + 1
+
+    if loop_amount > 0:
+        if inClassRef ==1:
+            remainingPassengers = []
+            overs = []
+            overCumSum = 0
+            passRef = getFlightPassengerRef(flightRef)
+            layoutArray = getLayoutClassArray(flightRef)
+
+            for classIndex in range(len(actual)-1):
+                currentOvers = (actual[classIndex][1] - layoutArray[classIndex][1])
+                overs.append((actual[classIndex][0],currentOvers))
+                overCumSum = overCumSum + currentOvers
+
+            passLeftover = getPassengerGroupDecending(passRef, str(1), flightRef)
+
+            leftoverCumSum = 0
+            for leftover in passLeftover:
+                leftoverCumSum = leftoverCumSum + leftover[1]
+                remaingGroup = getPassengersWithRef(leftover[0], passRef)
+                for passenger in remaingGroup:
+                    remainingPassengers.append(passenger)
+            
+            if leftoverCumSum != overCumSum:
+                print("leftover warning @ getAssignedClassTicket")
+            
+            passengerCount = 0
+
+            for classRemaining in overs:
+                currentClass = classRemaining[0]
+                seats = getClassSeats(flightRef, currentClass)
+                for x in range(classRemaining[1]):
+
+                    insertPassengerRefFlight(flightRef, seats[x][0], seats[x][1], remainingPassengers[passengerCount][0])
+
+                    passengerCount = passengerCount + 1
+
+        else:
+            print("Warning @getAssignedClassTicket")
+            print(inClassRef)
+        
+
 
 def passengerAlertData(passengerID):
     conn, cur = connect()
@@ -519,6 +559,26 @@ def getPassengerArray(passRef):
     conn, cur = connect()
 
     cur.execute("SELECT groupID, count(*) AS amount, class from passengers WHERE flightRef = ? GROUP BY groupID ORDER by class, amount", (passRef,))
+    all_data = cur.fetchall()
+    conn.close()
+    return(all_data)
+
+def getLayoutClassArray(flightNo):
+    conn, cur = connect()
+
+    cur.execute("SELECT class, count(*) from airplaneLayout WHERE flightNumber = ? AND passengerRef NOT NULL GROUP BY class ORDER by class", (flightNo,))
+
+    all_data = cur.fetchall()
+    conn.close()
+    return(all_data)
+
+def getPassengersWithRef(groupID, passRef):
+    conn, cur = connect()
+
+    data_tuple = (groupID, passRef)
+    baseSQL = "SELECT ticketID, groupID, key, class, preference from passengers WHERE groupID = ? and flightRef = ?"
+    cur.execute(baseSQL, data_tuple)
+
     all_data = cur.fetchall()
     conn.close()
     return(all_data)
