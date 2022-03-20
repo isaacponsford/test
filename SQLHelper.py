@@ -48,7 +48,7 @@ def SQLSelectClean(all_data):
 def getPlaneInfo(flightNo):
     conn, cur = connect()
 
-    cur.execute("SELECT a.columnTitle, a.rowTitle, a.class, a.type, a.passengerRef, p.class from airplaneLayout AS a LEFT JOIN passengers AS p ON a.passengerRef = p.ticketID  WHERE a.flightNumber = ? ORDER By a.sequenceNumber", (flightNo,))
+    cur.execute("SELECT a.columnTitle, a.rowTitle, a.class, a.type, a.passengerRef, p.class ,p.happiness from airplaneLayout AS a LEFT JOIN passengers AS p ON a.passengerRef = p.ticketID  WHERE a.flightNumber = ? ORDER By a.sequenceNumber", (flightNo,))
 
     all_data = cur.fetchall()
 
@@ -85,7 +85,11 @@ def getPlaneInfo(flightNo):
         except:
             pass
         
-        inputData = inputPassengerString + ";" + str(inputData) + ";" + str(current_data[5])
+        inputData = inputPassengerString + ";" + str(inputData) + ";" + str(current_data[5]) 
+
+        # if all_data[6] != None:
+
+        
         temp.append(str(inputData))
         titles.append(str(current_data[0]))
 
@@ -363,6 +367,11 @@ def clearPassengersFlightNumber(flightRef):
     cur.execute("UPDATE airplaneLayout SET passengerRef = NULL WHERE flightNumber = ?", (flightRef,))
     conn.commit()
 
+    passRef = getFlightPassengerRef(flightRef)
+
+    cur.execute("UPDATE passengers SET happiness = 0.5 WHERE flightRef = ?", (passRef,))
+    conn.commit()
+
     cur.execute("UPDATE airplaneLinkTable SET passengerFlightRef = NULL WHERE flightNo = ?", (flightRef,))
     conn.commit()
 
@@ -566,7 +575,6 @@ def passengerAlertData(passengerID):
 
 def getPlaneSeatClasses(flightNo):
    
-
     conn, cur = connect()
 
     cur.execute("SELECT DISTINCT class from airplaneLayout WHERE flightNumber = ? AND class NOT NULL ORDER BY class", (flightNo,))
@@ -579,7 +587,7 @@ def getPlaneSeatClasses(flightNo):
 def getPassengerArray(passRef):
     conn, cur = connect()
 
-    cur.execute("SELECT groupID, count(*) AS amount, class from passengers WHERE flightRef = ? GROUP BY groupID ORDER by class, amount", (passRef,))
+    cur.execute("SELECT groupID, count(*) AS amount, class, IIF(splitable != 'X', 'Yes', '') from passengers WHERE flightRef = ? GROUP BY groupID ORDER by class, amount", (passRef,))
     all_data = cur.fetchall()
     conn.close()
     return(all_data)
@@ -598,8 +606,106 @@ def getPassengersWithRef(groupID, passRef):
 
     data_tuple = (groupID, passRef)
     baseSQL = "SELECT ticketID, groupID, key, class, preference from passengers WHERE groupID = ? and flightRef = ?"
+    
     cur.execute(baseSQL, data_tuple)
 
     all_data = cur.fetchall()
     conn.close()
     return(all_data)
+
+def happinessFunction(passRef):
+
+    preferenceIncrement = 0.1
+    classIncrement = 0.2
+    nonPreferenceIncrement = 0.05
+    groupingIncrement = 0.1
+
+    groupHappinessFunction(passRef, groupingIncrement) 
+
+    conn, cur = connect()
+
+    cur.execute("SELECT p.ticketID, a.class, p.class, a.aw, p.preference, p.happiness from passengers as p LEFT JOIN airplaneLayout as a ON a.passengerRef = p.ticketID WHERE p.flightRef = ?", (passRef,))
+
+    all_passengers = cur.fetchall()
+
+    for passenger in all_passengers:
+        currentID,seatClass,ticketClass, actualAW, prefAw, happiness = passenger
+
+        classHappiness = (int(ticketClass) - seatClass) * classIncrement
+
+        if actualAW == prefAw:
+            prefHappiness = preferenceIncrement
+        elif (prefAw == 'A' or prefAw == 'W') and actualAW == 'AW':
+            prefHappiness = preferenceIncrement
+        elif prefAw == '' and (actualAW == 'W' or actualAW == 'AW'):
+            prefHappiness = nonPreferenceIncrement
+        else:
+            prefHappiness = 0
+
+        happiness = round(happiness + prefHappiness + classHappiness,2)
+        if happiness > 1:
+            happiness = 1
+        elif happiness < 0:
+            happiness - 0
+
+        data_tuple = (happiness, currentID)
+        base_SQL = "UPDATE passengers SET happiness = ? where ticketID = ?"
+        cur.execute(base_SQL, data_tuple)
+        conn.commit()
+
+    conn.close()
+
+def groupHappinessFunction(passRef, groupingIncrement):
+    conn, cur = connect()
+
+    allPassengerGroups = getPassengerArray(passRef)
+
+    for passengerGroup in allPassengerGroups:
+
+        print(passengerGroup)
+
+        data_tuple = (passRef, passengerGroup[0])
+        base_SQL = "SELECT p.ticketID, a.rowTitle as r, a.columnTitle as c, p.happiness from passengers as p LEFT JOIN airplaneLayout as a ON a.passengerRef = p.ticketID WHERE p.flightRef = ? and p.groupID = ? ORDER By r, c"
+        cur.execute(base_SQL, data_tuple)
+        all_passengers = cur.fetchall()
+        if len(all_passengers) == 1:
+            continue
+        print(all_passengers)
+
+        minRow = all_passengers[0][1]
+        maxRow = all_passengers[0][1]
+
+        minCol = ord(all_passengers[0][2])
+        maxCol = ord(all_passengers[0][2])
+        
+        for passenger in all_passengers:
+            if passenger[1] > maxRow:
+                maxRow = passenger[1]
+            elif passenger[1] < minRow:
+                minRow = passenger[1]
+
+            if ord(passenger[2]) > maxCol:
+                maxCol = ord(passenger[2])
+
+            elif ord(passenger[2]) < minCol:
+                minCol = ord(passenger[2])
+
+        area = (maxRow - minRow ) * (maxCol - minCol +1)
+
+        change = groupingIncrement - (area/8) * (2*groupingIncrement)
+        
+        for passenger in all_passengers:
+            
+            newHappiness = round(passenger[3] + change,2)
+
+            if newHappiness > 1:
+                newHappiness = 1
+            elif newHappiness < 0:
+                newHappiness - 0
+
+            data_tuple = (newHappiness, passenger[0])
+            base_SQL = "UPDATE passengers SET happiness = ? where ticketID = ?"
+            cur.execute(base_SQL, data_tuple)
+            conn.commit()
+        
+    conn.close()

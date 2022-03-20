@@ -13,6 +13,23 @@ h6 {
         font-size: 15px;
     }
 
+.views {
+
+    text-align: center;
+    font-family:verdana;
+    font-size: 22px;
+    background-color: rgb(223, 223, 223);
+    width: 700px;
+    border: 2px black solid;
+    border-radius: 15px;
+    padding: 15px;
+
+}
+
+a{
+    padding-left: 22px;
+}
+
 
 </style>
 
@@ -22,15 +39,16 @@ h6 {
 
 {% set passengerArray = passengerArray %}
 
+<h1 style="text-align: left">Passengers</h1>
 
-
-<div class="content">
-    <h1 style="text-align: left">Passengers</h1>
-
+<div class="views">
     <a href = {{url_for('planeViewPage', id = id)}} >Plane View</a>
     <a href = {{url_for('passengerTablePage', id = id)}} >Passenger View</a>
     <a href = {{url_for('classViewPage', id = id)}} >Class View</a>
+    <a href = {{url_for('happinesssViewPage', id = id)}} >Happiness View</a>
+</div>
 
+<div class="content">
     <br><br>
     {% if passengerArray|length < 1 %}
         <a href="/passenger-assign">No passengers assigned. Please assign passengers by clicking this link</a>
@@ -42,6 +60,7 @@ h6 {
             <th>Group ID</th>
             <th>Number of Passengers</th>
             <th>Ticket Class</th>
+            <th>Splitable?</th>
         </tr>
 
         {% for passenger in passengerArray %}
@@ -49,6 +68,7 @@ h6 {
                 <td style="text-align: center">{{ passenger[0] }}</td> 
                 <td style="text-align: center">{{ passenger[1] }}</td>
                 <td style="text-align: center">{{ passenger[2] }}</td>
+                <td style="text-align: center">{{ passenger[3] }}</td>
             </tr>
         {% endfor %}
 

@@ -3,7 +3,7 @@ import os
 import sqlite3
 
 from importCSV import getPassengerCSV, planeMetrics, tempValid
-from SQLHelper import clearAll, clearPassengersFlightNumber, getAssignedClassTicket, getFlightPassengerRef, getPassengerArray, getPlaneInfo, getDistinctFlights, getDistinctPlanes, getPlaneSeatClasses, insertLinkTable, getFlightAirlineModel, insertModelTable, insertPassengerTable, passengerExists, planeCSVtoSQL, unassignedPlanes, getDistinctPassengersRef, insertPassengerLinkTable, getPassengerClassArray, getClassArray, getPassengerCount
+from SQLHelper import clearAll, clearPassengersFlightNumber, getAssignedClassTicket, getFlightPassengerRef, getPassengerArray, getPlaneInfo, getDistinctFlights, getDistinctPlanes, getPlaneSeatClasses, happinessFunction, insertLinkTable, getFlightAirlineModel, insertModelTable, insertPassengerTable, passengerExists, planeCSVtoSQL, unassignedPlanes, getDistinctPassengersRef, insertPassengerLinkTable, getPassengerClassArray, getClassArray, getPassengerCount
 from SeatSelectorErrors import BlankNameError, ClassAboveNineError, ClassBelowZeroError, OverCapacityError, PassengerExistsError
 from tools import getFullActualArray, getPlaneActual, totalCapacity, getFullClassArray
 
@@ -222,7 +222,9 @@ def passengerAssignPage():
                 #Itterate through "actual" list in reverse order (from lowest class to first class)
                 for x in reversed(actual):
                     getAssignedClassTicket(x[0], actual, planeOption)
-
+                
+                happinessFunction(passengerOption)
+                
                 msg = "Data Successfully Inserted"
 
             except Exception as e: 
@@ -322,6 +324,30 @@ def classViewPage(id):
         title = str(id) + " Layout"
     
     return render_template('classview.html', id=id,title = title, info = info, planeLayout = planeLayout, noOfColumns = noOfColumns, cTs=columnTitles, rowTitles=rowTitles,keyClassArray=keyClassArray)
+
+@app.route('/happiness-view/<id>')
+def happinesssViewPage(id):
+
+    airlineModel = getFlightAirlineModel(id)
+
+    noOfColumns, rowTitles, columnTitles = planeMetrics(airlineModel)
+    planeLayout = getPlaneInfo(id)
+
+    keyClassArray = getPlaneSeatClasses(id)
+    seatCapacity = totalCapacity(getClassArray(id))
+    
+    info = "Number of Seats: " + str(seatCapacity)
+
+    try:
+        passRef = getFlightPassengerRef(id)
+        passAmount = totalCapacity(getPassengerClassArray(passRef))
+
+        title = title = " Happiness View for " + str(id) +"(" + passRef + ")"
+        info=info + " - Passengers: " + str(passAmount) + " - Percentage Occupancy: " + str(round((passAmount / seatCapacity) * 100)) + "%"
+    except:
+        title = " Happiness View for " + str(id)
+    
+    return render_template('happinessview.html', id=id,title = title, info = info, planeLayout = planeLayout, noOfColumns = noOfColumns, cTs=columnTitles, rowTitles=rowTitles,keyClassArray=keyClassArray)
 
 if __name__ == "__main__":
     app.run(debug=True)

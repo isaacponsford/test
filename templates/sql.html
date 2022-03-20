@@ -54,6 +54,22 @@
         font-size: 15px;
     }
 
+    .views {
+
+        text-align: center;
+        font-family:verdana;
+        font-size: 22px;
+        background-color: rgb(223, 223, 223);
+        width: 700px;
+        border: 2px black solid;
+        border-radius: 15px;
+        padding: 15px;      
+
+    }
+
+    a{
+        padding-left: 22px;
+    }
 
 </style>
 
@@ -77,9 +93,14 @@
 
 {% set seatColourArrayClass = [[255, 102, 102],[255, 178, 102],[255, 255, 102],[102, 255, 102],[102, 255, 255],[102, 102, 255],[178, 102, 255],[255, 102, 178],[192, 192, 192]]%}
 
-<a href = {{url_for('planeViewPage', id = id)}} >Plane View</a>
-<a href = {{url_for('passengerTablePage', id = id)}} >Passenger View</a>
-<a href = {{url_for('classViewPage', id = id)}} >Class View</a>
+<div class="views">
+    <a href = {{url_for('planeViewPage', id = id)}} >Plane View</a>
+    <a href = {{url_for('passengerTablePage', id = id)}} >Passenger View</a>
+    <a href = {{url_for('classViewPage', id = id)}} >Class View</a>
+    <a href = {{url_for('happinesssViewPage', id = id)}} >Happiness View</a>
+</div>
+
+<br><br><br>
 
 <div class="form">
     <div class="plane-container">
