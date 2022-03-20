@@ -309,7 +309,7 @@ def getPassengerGroupDecending(passRef, classRef, flightRef):
     conn, cur = connect()
 
     data_tuple = (passRef, classRef, flightRef)
-    base_sql = ("SELECT groupID, COUNT(*) AS passengerCount, class FROM passengers WHERE flightRef = ? AND class >= ? AND ticketID NOT IN(SELECT passengerRef from airplaneLayout WHERE flightNumber = ? AND passengerRef NOT NULL) GROUP BY groupID ORDER BY class DESC , passengerCount DESC")
+    base_sql = ("SELECT groupID, COUNT(*) AS passengerCount, class FROM passengers WHERE flightRef = ? AND class >= ? AND ticketID NOT IN(SELECT passengerRef from airplaneLayout WHERE flightNumber = ? AND passengerRef NOT NULL) GROUP BY groupID ORDER BY class DESC , splitable DESC, passengerCount DESC")
     cur.execute(base_sql, data_tuple)
     all_data = cur.fetchall()
     conn.close()

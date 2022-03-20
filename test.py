@@ -28,7 +28,7 @@ from tools import createPassCSVArray, createPassengerCSV, getFullActualArray, ge
 # # Plane Array: [(1, 5), (2, 12), (3, 12), (4, 12), (5, 21)]
 
 # array = [(1, 8), (2, 2), (3, 10), (4, 5), (5, 25)] 
-# createPassCSVArray("5-1UP1DOWN", array)
+createPassCSVArray("5-1UP1DOWN", array)
 
 # # # # print()
 

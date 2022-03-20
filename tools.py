@@ -51,7 +51,7 @@ def createPassCSVArray(passengerNum, array):
     file = open(csv_file, 'w', encoding='UTF8', newline='')
     writer = csv.writer(file)
 
-    row = ["groupID","flightRef","key","class","requirements", "preferences"]
+    row = ["groupID","flightRef","key","class","splitable", "preferences"]
     writer.writerow(row)
 
     for i in array:
