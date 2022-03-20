@@ -92,7 +92,6 @@ def newCSVPage():
             fn = csv.filename.replace(" ", "").lower()
             csv.save(os.path.join("plane_layouts", fn))
             tempMin, tempMax = tempValid(fn.split(".")[0])
-            print(tempValid(fn.split(".")[0]))
 
             if tempMin < 0:
                 raise ClassBelowZeroError

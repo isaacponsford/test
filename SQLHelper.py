@@ -1,7 +1,7 @@
 from itertools import count
 import sqlite3
 from importCSV import planeMetrics, getPlaneLayout
-from tools import isBlank, totalCapacity
+from tools import isBlank, totalCapacity, getPreferedSeats
 
 def connect():
     conn = sqlite3.connect("seatSelector.db", check_same_thread=False)
@@ -230,7 +230,7 @@ def insertModelTable(planeName, filename):
 
 def insertPassengerTable(data):
     conn, cur = connect()
-    base_sql = ("INSERT INTO passengers (groupID, flightRef, key, class, splitable, preference) VALUES (?,?,?,?,?,?)")
+    base_sql = ("INSERT INTO passengers (groupID, flightRef, key, class, splitable, preference, happiness) VALUES (?,?,?,?,?,?,0.5)")
     cur.execute(base_sql, data)
     conn.commit()
     conn.close()
@@ -401,7 +401,7 @@ def getIndividualTicketRefs(groupID):
     
     data = cur.fetchall()
 
-    data = SQLSelectClean(data)
+    #data = SQLSelectClean(data)
 
     conn.close()
 
@@ -454,16 +454,15 @@ def getAssignedClassTicket(inClassRef, actual, flightRef):
     for group_tickets in assigned_tickets:
     #   = ("1o2",])[[C,18,"W"], [C,19,""],[C,20,"A"]
 
-        group = group_tickets[1] # = [[C,18,"W"], [C,19,""],[C,20,"A"]
+        seats = group_tickets[1] # = [[C,18,"W"], [C,19,""],[C,20,"A"]
         groupId = group_tickets[0] # = "1o2"
 
-        ids = getIndividualTicketRefs(groupId) # = [[56,'A'],[57,''],[58,'W']]
-        counter = 0
+        passIDs = getIndividualTicketRefs(groupId) # = [[56,'A'],[57,''],[58,'W']]
 
-        for ticket in group:
-            
-           insertPassengerRefFlight(flightRef, ticket[0], ticket[1], ids[counter])
-           counter = counter + 1
+        preferedSeats = getPreferedSeats(passIDs, seats)
+
+        for seat in preferedSeats:
+            insertPassengerRefFlight(flightRef, seat[1], seat[2], seat[0])
 
     if loop_amount > 0:
         if inClassRef ==1:
@@ -492,9 +491,10 @@ def getAssignedClassTicket(inClassRef, actual, flightRef):
             
             passengerCount = 0
 
-            for classRemaining in overs:
+            for classRemaining in overs: # [1,2], [2,2]
                 currentClass = classRemaining[0]
-                seats = getClassSeats(flightRef, currentClass)
+                seats = getClassSeats(flightRef, currentClass) # [C,18,'W']
+
                 for x in range(classRemaining[1]):
 
                     insertPassengerRefFlight(flightRef, seats[x][0], seats[x][1], remainingPassengers[passengerCount][0])
@@ -510,7 +510,7 @@ def getAssignedClassTicket(inClassRef, actual, flightRef):
 def passengerAlertData(passengerID):
     conn, cur = connect()
 
-    cur.execute("SELECT groupID, flightRef, key, class from passengers WHERE ticketID = ?", (passengerID,))
+    cur.execute("SELECT groupID, flightRef, key, class, preference, happiness from passengers WHERE ticketID = ?", (passengerID,))
     
     data1 = cur.fetchall()[0]
 
@@ -531,10 +531,19 @@ def passengerAlertData(passengerID):
     cur.execute(base_sql, data_tuple)
     group_data = cur.fetchall()
     
-    finalString = "Passenger ID: " + str(passengerID)  + " (" + ac + ")" + "\\nGroup ID: " + data1[0] + " (Group Size: " + str(len(group_data) + 1) + " People)\\nSeat: " + data2[1] + str(data2[2]) + "\\nSeat Class: " + str(data2[3]) 
+    finalString = "Passenger ID: " + str(passengerID)  + " (" + ac + ")" + "\\nGroup ID: " + data1[0] + " (Group Size: " + str(len(group_data) + 1) + " People)\\nSeat: " + str(data2[2]) + data2[1] + "\\nSeat Class: " + str(data2[3]) 
 
     if data1[3] != data2[3]:
         finalString = finalString + " (Ticket Class: " + str(data1[3]) + ")"
+
+    if data1[4] == 'W':
+        prefString = "Window"
+    elif data1[4] == 'A':
+        prefString = "Aisle"
+    elif data1[4] == '':
+        prefString = "No Preference"
+
+    finalString = finalString + "\\nSeat Preference: " + prefString + "\\nHappiness (0-10): " + str(data1[5]*10) 
 
     if len(group_data) > 0 :
         finalString = finalString + "\\n\\nGroup Members:"
@@ -547,7 +556,7 @@ def passengerAlertData(passengerID):
             else:
                 ac = "Error"
 
-            finalString = finalString + "\\nSeat: " + data[1] + str(data[2]) + " - ID: " + data[0] + " (" + ac + ") - Seat Class: " + str(data[4])
+            finalString = finalString + "\\nSeat: "  + str(data[2]) + data[1] + " - ID: " + data[0] + " (" + ac + ") - Seat Class: " + str(data[4])
             if data[4] != data[5]:
                 finalString = finalString + " (Ticket Class: " + str(data[5]) + ")"
     else:

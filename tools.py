@@ -266,3 +266,92 @@ def listExtend(array, desiredLength):
             out.append((i+1, 0))
 
     return out
+
+def getPreferedSeats(passIDs, seats):
+
+    # group_tickets = ("1o2",[['C',18,"W"], ['C',19,""],['C',20,"W"],['C',21,'W'],['C',22,"W"]])
+    # # seats = group_tickets[1] # = [[C,18,"W"], [C,19,""],[C,20,"A"]
+    # # groupId = group_tickets[0] # = "1o2"
+
+    # passIDs = [[56,'A'],[57,''],[58,'A'],[59,'A'],[60,'']]
+
+    wA = []
+    aA = []
+    bA = []
+    awA = []
+
+    wC = 0
+    aC = 0
+    bC = 0
+    awC = 0
+
+    for x in range(len(seats)):
+        curr = seats[x]
+        if curr[2] == 'W':
+            wA.append(x)
+        elif curr[2] == 'A':
+            aA.append(x)
+        elif curr[2] == '':
+            bA.append(x)
+        elif curr[2] == 'AW':
+            awA.append(x)
+
+    outArray = []
+    remainingPassengers = []
+
+    for passID in passIDs:
+
+        if passID[1] == 'W':
+            if wC < len(wA):
+                outArray.append((passID[0], seats[wA[wC]][0],seats[wA[wC]][1]))
+                wC = wC + 1
+                continue
+            else:
+                if awC < len(awA):
+                    outArray.append((passID[0], seats[awA[awC]][0],seats[awA[awC]][1]))
+                    awC = awC + 1
+                    continue
+        
+        if passID[1] == 'A':
+            if aC < len(aA):
+                outArray.append((passID[0], seats[aA[aC]][0],seats[aA[aC]][1]))
+                aC = aC + 1
+                continue
+            else:
+                if awC < len(awA):
+                    outArray.append((passID[0], seats[awA[awC]][0],seats[awA[awC]][1]))
+                    awC = awC + 1
+                    continue
+
+        if passID[1] == '':
+            if bC < len(bA):
+                outArray.append((passID[0], seats[bA[bC]][0],seats[bA[bC]][1]))
+                bC = bC + 1
+                continue
+
+        remainingPassengers.append(passID)
+
+    for passID in remainingPassengers:
+
+        if awC < len(awA):
+            outArray.append((passID[0], seats[awA[awC]][0],seats[awA[awC]][1]))
+            awC = awC + 1
+            continue
+
+        if wC < len(wA):
+            outArray.append((passID[0], seats[wA[wC]][0],seats[wA[wC]][1]))
+            wC = wC + 1
+            continue
+                
+        if aC < len(aA):
+            outArray.append((passID[0], seats[aA[aC]][0],seats[aA[aC]][1]))
+            aC = aC + 1
+            continue
+
+        if bC < len(bA):
+            outArray.append((passID[0], seats[bA[bC]][0],seats[bA[bC]][1]))
+            bC = bC + 1
+            continue
+
+    return outArray
+    
