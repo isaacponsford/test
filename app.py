@@ -16,9 +16,8 @@ def index():
 
 @app.route('/flights')
 def flightsPage():
+
     flights = getDistinctFlights()
-
-
     return render_template("layoutselect.html", flights = flights)
 
 @app.route('/plane-view/<id>')
@@ -66,7 +65,6 @@ def newPlanePage():
             msg = "Flight Number already exists, go to flight select to see flight"
         except Exception as e:
             msg = "Data has not been successfully inserted. Try again"
-            print(e)
 
         layouts = getDistinctPlanes()
         return render_template('newplane.html', layouts = layouts, msg = msg)
@@ -229,7 +227,6 @@ def passengerAssignPage():
 
             except Exception as e: 
 
-                print(e)
                 msg = "Data was not successfully inserted. Try again"
 
         elif request.form["btn"]=="Display":
@@ -258,8 +255,7 @@ def passengerRemovePage():
             clearPassengersFlightNumber(planeOption)
             msg = "Plane successfully cleared"
         except Exception as e:
-            msg = "Plane NOT successfully cleared"
-            print(e)
+            msg = "Plane not successfully cleared"
         planes = getDistinctFlights()
         return render_template('passengerremove.html', planes = planes, msg = msg)
     else:

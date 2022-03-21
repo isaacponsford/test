@@ -92,9 +92,6 @@ def getPlaneInfo(flightNo):
 
         inputData = inputPassengerString + ";" + str(inputData) + ";" + str(current_data[5]) + ";" + inputHappiness
 
-        # if all_data[6] != None:
-
-        
         temp.append(str(inputData))
         titles.append(str(current_data[0]))
 
@@ -163,7 +160,6 @@ def planeCSVtoSQL(flight_number, csv_add):
                     insert_row = rowTitles[rowCounter]
                     insert_class = current
                     insert_type = 1
-                    occupied = 0
 
                     insert_data = (flight_number, insert_column, insert_row, insert_class, insert_type, seqNum, aw)
                     insertPlaneLayout(insert_data)
@@ -323,8 +319,6 @@ def getPassengerClassArray(flightRef):
     conn.close()
     return(all_data)
 
-#passs=067, flight=add90
-
 def getPassengerGroupDecending(passRef, classRef, flightRef):
     #Selects all passengers for current class, and lower classes, where not already been seated and on a given flightRef
     conn, cur = connect()
@@ -411,14 +405,10 @@ def clearAll():
 def getIndividualTicketRefs(groupID):
     conn, cur = connect()
 
-    cur.execute("SELECT ticketID, preference from passengers WHERE groupID = ? ORDER by preference", (groupID,))
-    
+    cur.execute("SELECT ticketID, preference from passengers WHERE groupID = ? ORDER by preference", (groupID,))    
     data = cur.fetchall()
 
-    #data = SQLSelectClean(data)
-
     conn.close()
-
     return data
 
 def getAssignedClassTicket(inClassRef, actual, flightRef):
@@ -440,7 +430,6 @@ def getAssignedClassTicket(inClassRef, actual, flightRef):
     
     while len(all_pass) < amount:
         if classRef < 0:
-            #print("Class Reference Error @getAssignedClassTicket")
             break
         all_pass = getPassengerGroupDecending(passRef, str(classRef), flightRef)
         classRef = classRef - 1
@@ -458,7 +447,6 @@ def getAssignedClassTicket(inClassRef, actual, flightRef):
         #If there is space to put the entire group into this class, then allocate those seats
 
         if loop_amount >= currGroupSize:
-
             loop_amount = loop_amount - currGroupSize
             assigned_tickets.append((passenger[0], all_seat[seatCount:(seatCount+currGroupSize)]))
             seatCount = seatCount + currGroupSize
@@ -499,10 +487,7 @@ def getAssignedClassTicket(inClassRef, actual, flightRef):
                 remaingGroup = getPassengersWithRef(leftover[0], passRef)
                 for passenger in remaingGroup:
                     remainingPassengers.append(passenger)
-            
-            if leftoverCumSum != overCumSum:
-                print("leftover warning @ getAssignedClassTicket")
-            
+                        
             passengerCount = 0
 
             for classRemaining in overs: # [1,2], [2,2]
@@ -510,14 +495,11 @@ def getAssignedClassTicket(inClassRef, actual, flightRef):
                 seats = getClassSeats(flightRef, currentClass) # [C,18,'W']
 
                 for x in range(classRemaining[1]):
-
                     insertPassengerRefFlight(flightRef, seats[x][0], seats[x][1], remainingPassengers[passengerCount][0])
-
                     passengerCount = passengerCount + 1
 
         else:
-            print("Warning @getAssignedClassTicket")
-            print(inClassRef)
+            pass
         
 
 
@@ -667,15 +649,12 @@ def groupHappinessFunction(passRef, groupingIncrement):
 
     for passengerGroup in allPassengerGroups:
 
-        print(passengerGroup)
-
         data_tuple = (passRef, passengerGroup[0])
         base_SQL = "SELECT p.ticketID, a.rowTitle as r, a.columnTitle as c, p.happiness from passengers as p LEFT JOIN airplaneLayout as a ON a.passengerRef = p.ticketID WHERE p.flightRef = ? and p.groupID = ? ORDER By r, c"
         cur.execute(base_SQL, data_tuple)
         all_passengers = cur.fetchall()
         if len(all_passengers) == 1:
             continue
-        print(all_passengers)
 
         minRow = all_passengers[0][1]
         maxRow = all_passengers[0][1]

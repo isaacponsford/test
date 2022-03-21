@@ -22,7 +22,6 @@ def createPassengerCSV(passengerNum, passengerMax):
         code = str(codeLetter) + str(codeNum)
 
         for i in range(groupSize):
-            #if passengerCount < passengerMax:
             keyNum = randint(1,100)
             if keyNum < 70:
                 key = 'A'
@@ -39,10 +38,6 @@ def createPassengerCSV(passengerNum, passengerMax):
     file.close()
 
 def createPassCSVArray(passengerNum, array):
-
-    #array = [[1,20],[2,40],[3,40],[4,120]]
-
-    passengerCount = 0
 
     prefArray = ['W', 'A']
     maxGroupSize = 5
@@ -268,12 +263,6 @@ def listExtend(array, desiredLength):
     return out
 
 def getPreferedSeats(passIDs, seats):
-
-    # group_tickets = ("1o2",[['C',18,"W"], ['C',19,""],['C',20,"W"],['C',21,'W'],['C',22,"W"]])
-    # # seats = group_tickets[1] # = [[C,18,"W"], [C,19,""],[C,20,"A"]
-    # # groupId = group_tickets[0] # = "1o2"
-
-    # passIDs = [[56,'A'],[57,''],[58,'A'],[59,'A'],[60,'']]
 
     wA = []
     aA = []
