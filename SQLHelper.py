@@ -651,7 +651,7 @@ def happinessFunction(passRef):
         if happiness > 1:
             happiness = 1
         elif happiness < 0:
-            happiness - 0
+            happiness = 0
 
         data_tuple = (happiness, currentID)
         base_SQL = "UPDATE passengers SET happiness = ? where ticketID = ?"

@@ -197,7 +197,7 @@ def passengerAssignPage():
 
             try:
                 
-                #Get the plane and passenger options, given by the user at view stage (see above)
+                    #Get the plane and passenger options, given by the user at view stage (see above)
                 planeOption = plnOption
                 passengerOption = psgrOption
 
