@@ -297,7 +297,6 @@ def passengerTablePage(id):
         info=info + " - Passengers: " + str(passAmount) + " - Percentage Occupancy: " + str(round((passAmount / seatCapacity) * 100)) + "%"
     except:
         pass
-        # title = str(id) + " Layout"
     
     title = "Passengers for: " + str(id)
 
@@ -344,15 +343,12 @@ def happinesssViewPage(id):
 
         title = title = " Happiness View for " + str(id) +"(" + passRef + ")"
         info=info + " - Passengers: " + str(passAmount) + " - Percentage Occupancy: " + str(round((passAmount / seatCapacity) * 100)) + "%"
-    except:
-        title = " Happiness View for " + str(id)
-    
-    try:
-        avgHappy = round(getAverageHappiness("54P-12DOWN")* 10,2) 
+        avgHappy = round(getAverageHappiness("54P-12DOWN")* 10,2)
         happinessString = "Average Happiness: " + str(avgHappy)
     except:
-        happinessString = ""
-        
+        title = " Happiness View for " + str(id)
+        happinessString = "" 
+
     return render_template('happinessview.html', id=id,title = title, info = info, happinessString=happinessString, planeLayout = planeLayout, noOfColumns = noOfColumns, cTs=columnTitles, rowTitles=rowTitles, keyArray=keyArray)
 
 if __name__ == "__main__":
