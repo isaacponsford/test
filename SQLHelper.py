@@ -714,3 +714,13 @@ def groupHappinessFunction(passRef, groupingIncrement):
             conn.commit()
         
     conn.close()
+
+def getAverageHappiness(flightRef):
+    conn, cur = connect()
+
+    cur.execute("SELECT AVG(happiness) from passengers where flightRef = ?", (flightRef,))
+
+    all_data = cur.fetchone()[0]
+    
+    conn.close()
+    return(all_data)

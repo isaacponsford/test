@@ -3,7 +3,7 @@ import os
 import sqlite3
 
 from importCSV import getPassengerCSV, planeMetrics, tempValid
-from SQLHelper import clearAll, clearPassengersFlightNumber, getAssignedClassTicket, getFlightPassengerRef, getPassengerArray, getPlaneInfo, getDistinctFlights, getDistinctPlanes, getPlaneSeatClasses, happinessFunction, insertLinkTable, getFlightAirlineModel, insertModelTable, insertPassengerTable, passengerExists, planeCSVtoSQL, unassignedPlanes, getDistinctPassengersRef, insertPassengerLinkTable, getPassengerClassArray, getClassArray, getPassengerCount
+from SQLHelper import clearAll, clearPassengersFlightNumber, getAssignedClassTicket, getAverageHappiness, getFlightPassengerRef, getPassengerArray, getPlaneInfo, getDistinctFlights, getDistinctPlanes, getPlaneSeatClasses, happinessFunction, insertLinkTable, getFlightAirlineModel, insertModelTable, insertPassengerTable, passengerExists, planeCSVtoSQL, unassignedPlanes, getDistinctPassengersRef, insertPassengerLinkTable, getPassengerClassArray, getClassArray, getPassengerCount
 from SeatSelectorErrors import BlankNameError, ClassAboveNineError, ClassBelowZeroError, OverCapacityError, PassengerExistsError
 from tools import getFullActualArray, getPlaneActual, totalCapacity, getFullClassArray
 
@@ -347,7 +347,13 @@ def happinesssViewPage(id):
     except:
         title = " Happiness View for " + str(id)
     
-    return render_template('happinessview.html', id=id,title = title, info = info, planeLayout = planeLayout, noOfColumns = noOfColumns, cTs=columnTitles, rowTitles=rowTitles, keyArray=keyArray)
+    try:
+        avgHappy = round(getAverageHappiness("54P-12DOWN")* 10,2) 
+        happinessString = "Average Happiness: " + str(avgHappy)
+    except:
+        happinessString = ""
+        
+    return render_template('happinessview.html', id=id,title = title, info = info, happinessString=happinessString, planeLayout = planeLayout, noOfColumns = noOfColumns, cTs=columnTitles, rowTitles=rowTitles, keyArray=keyArray)
 
 if __name__ == "__main__":
     app.run(debug=True)
