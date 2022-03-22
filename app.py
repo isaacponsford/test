@@ -107,10 +107,10 @@ def newCSVPage():
             msg = "Plane name already exists. Go to 'new plane' on \n admin page to create a new instance of this plane"
         except ClassBelowZeroError:
             msg = "Current CSV includes classes which are less than 0. \nThis application only accepts classes from 1 to 9"
-            os.remove(os.path.join("plane_layouts", fn))
+            #os.remove(os.path.join("plane_layouts", fn))
         except ClassAboveNineError:
             msg = "Current CSV includes classes which are greater than 9. \nThis application only accepts classes from 1 to 9"
-            os.remove(os.path.join("plane_layouts", fn))
+            #os.remove(os.path.join("plane_layouts", fn))
         except:
             msg = "Data not inputed successfully. Please try again"
 
