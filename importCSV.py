@@ -1,3 +1,8 @@
+# Name: Isaac Ponsford
+# Student ID: 201458733
+# Title: importCSV.py
+# Description: Includes all functions which interact with the external CSV files.
+
 import csv
 
 def planeMetrics(csv_file):

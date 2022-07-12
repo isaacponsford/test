@@ -1,3 +1,8 @@
+# Name: Isaac Ponsford
+# Student ID: 201458733
+# Title: SQLHelper.py
+# Description: Includes all functions which interact with the database.
+
 from math import floor
 import sqlite3
 from importCSV import planeMetrics, getPlaneLayout

@@ -1,3 +1,8 @@
+# Name: Isaac Ponsford
+# Student ID: 201458733
+# Title: app.py
+# Description: The main bulk of the project. This renders all the webpage and completes all functionality based on user input. app.py uses all functions and code in all the other external files and hangles errors.
+
 from flask import Flask, redirect, render_template, request, url_for
 import os
 import sqlite3

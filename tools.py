@@ -1,3 +1,8 @@
+# Name: Isaac Ponsford
+# Student ID: 201458733
+# Title: tools.py
+# Description: Miscellaneous tools and functions for the rest of the code
+
 import csv
 from random import randint
 
