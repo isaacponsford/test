@@ -79,6 +79,7 @@
 
 <h1> {{title}} </h1>
 <h6> {{info}} </h6>
+
 {% set icon_size = 16 %}
 {% set icon_pad = 3 %}
 <!-- canvas size = 2 pad + icon size -->
@@ -123,7 +124,7 @@
                 {% set intSeat = seatData[1] | int %}
 
                 {% if intSeat > 20 %}
-                    {% set occColour = [150,150,150] %}
+                    {% set occColour = [40,40,40] %}
                     {% set intSeat = intSeat - 21 %}
                 {% else %}
                     {% set occColour = [255, 255, 255] %}
